@@ -1,7 +1,7 @@
 import React from "react";
 
 function TestComponent() {
-  return <div>Hi hau</div>;
+  return <div>Hi </div>;
 }
 
 export default TestComponent;
