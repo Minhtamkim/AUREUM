@@ -1,11 +1,5 @@
-import React, { useState } from "react";
-import {
-  DesktopOutlined,
-  FileOutlined,
-  PieChartOutlined,
-  TeamOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { useState } from "react";
+import { PieChartOutlined } from "@ant-design/icons";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import { Link, Outlet } from "react-router-dom";
 
@@ -21,9 +15,9 @@ function getItem(label, key, icon, children) {
 }
 
 const items = [
-  getItem("Category", "/dashboard/category", <PieChartOutlined />),
-  getItem("Voucher", "/dashboard/voucher", <PieChartOutlined />),
   getItem("Product", "/dashboard/product", <PieChartOutlined />),
+  getItem("Account", "/dashboard/account", <PieChartOutlined />),
+  getItem("Voucher", "/dashboard/voucher", <PieChartOutlined />),
 ];
 
 const Dashboard = () => {
@@ -34,11 +28,7 @@ const Dashboard = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sider
-        collapsible
-        collapsed={collapsed}
-        onCollapse={(value) => setCollapsed(value)}
-      >
+      <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
         <div className="demo-logo-vertical" />
         <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline" items={items} />
       </Sider>
@@ -60,9 +50,7 @@ const Dashboard = () => {
             <Outlet />
           </div>
         </Content>
-        <Footer style={{ textAlign: "center" }}>
-          Ant Design ©{new Date().getFullYear()} Created by Ant UED
-        </Footer>
+        <Footer style={{ textAlign: "center" }}>Ant Design ©{new Date().getFullYear()} Created by Ant UED</Footer>
       </Layout>
     </Layout>
   );
