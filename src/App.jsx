@@ -1,18 +1,50 @@
-import { useState } from "react";
+import { createBrowserRouter, RouterProvider } from "react-router-dom";
+import Home from "./pages/home";
+import RegisterPage from "./pages/register";
+import Dashboard from "./components/dashboard";
+import ManageProduct from "./pages/admin/manage-product";
+import ManageAccount from "./pages/admin/manage-account";
+import LoginPage from "./pages/Login";
+import Layout from "./components/layout";
 
 function App() {
-  const [count, setCount] = useState(0);
+  const router = createBrowserRouter([
+    {
+      path: "",
+      element: <Layout />,
+      children: [
+        {
+          path: "",
+          element: <Home />,
+        },
+        {
+          path: "login",
+          element: <LoginPage />,
+        },
+        {
+          path: "register",
+          element: <RegisterPage />,
+        },
+      ],
+    },
 
-  const handleCount = () => {
-    setCount(count + 1);
-  };
+    {
+      path: "dashboard",
+      element: <Dashboard />,
+      children: [
+        {
+          path: "product",
+          element: <ManageProduct />,
+        },
+        {
+          path: "account",
+          element: <ManageAccount />,
+        },
+      ],
+    },
+  ]);
 
-  return (
-    <div>
-      <h1>{count}</h1>
-      <button onClick={handleCount}>Button</button>
-    </div>
-  );
+  return <RouterProvider router={router} />;
 }
 
 export default App;
