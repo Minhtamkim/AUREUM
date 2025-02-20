@@ -44,7 +44,7 @@ const LoginPage = () => {
         <h2 className="text-2xl font-bold text-center mb-4">AUREUM chào bạn</h2>
         <p className="text-center text-gray-600 mb-6">
           Bạn chưa có tài khoản?{" "}
-          <a href="#" className="text-yellow-600">
+          <a href="/register" className="text-yellow-600">
             Tạo tài khoản
           </a>
         </p>
