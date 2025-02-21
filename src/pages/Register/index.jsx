@@ -1,5 +1,11 @@
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
 import { useState } from "react";
-import { FaUser, FaPhone, FaLock, FaEnvelope, FaEye, FaEyeSlash } from "react-icons/fa";
+import { FaUser, FaPhone, FaLock, FaEnvelope, FaEye, FaEyeSlash, FaGoogle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import api from "../../config/axios";
+import { FcGoogle } from "react-icons/fc";
+import { auth } from "../../config/firebase";
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -7,10 +13,13 @@ const RegisterPage = () => {
     phoneNumber: "",
     email: "",
     password: "",
-    confirmPassword: "",
   });
+
+  const navigate = useNavigate();
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const [passwordStrength, setPasswordStrength] = useState(0);
+  const [isLoading] = useState(false);
 
   const validateForm = () => {
     const newErrors = {};
@@ -34,17 +43,103 @@ const RegisterPage = () => {
   };
 
   const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: value }));
+    const { name, value, type, checked } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
+
+    if (name === "password") {
+      setPasswordStrength(validateForm(value));
+    }
+
+    validateField(name, type === "checkbox" ? checked : value);
   };
 
-  const handleSubmit = (e) => {
+  const validateField = (name, value) => {
+    let newErrors = { ...errors };
+
+    switch (name) {
+      case "fullName":
+        if (!value) newErrors.fullName = "Full name is required";
+        else if (value.length < 2) newErrors.fullName = "Name must be at least 2 characters";
+        else if (!/^[A-Za-z\s]+$/.test(value)) newErrors.fullName = "Only alphabets and spaces allowed";
+        else delete newErrors.fullName;
+        break;
+
+      case "email":
+        if (!value) newErrors.email = "Email is required";
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) newErrors.email = "Invalid email format";
+        else delete newErrors.email;
+        break;
+
+      case "username":
+        if (!value) newErrors.username = "Username is required";
+        else if (value.length < 4) newErrors.username = "Username must be at least 4 characters";
+        else if (value.length > 20) newErrors.username = "Username must not exceed 20 characters";
+        else if (!/^[a-zA-Z0-9]+$/.test(value)) newErrors.username = "Only alphanumeric characters allowed";
+        else delete newErrors.username;
+        break;
+
+      case "password":
+        if (!value) newErrors.password = "Password is required";
+        else if (value.length < 8) newErrors.password = "Password must be at least 8 characters";
+        else if (!/(?=.*[A-Z])/.test(value)) newErrors.password = "Include at least one uppercase letter";
+        else if (!/(?=.*[a-z])/.test(value)) newErrors.password = "Include at least one lowercase letter";
+        else if (!/(?=.*[0-9])/.test(value)) newErrors.password = "Include at least one number";
+        else if (!/(?=.*[!@#$%^&*])/.test(value)) newErrors.password = "Include at least one special character";
+        else delete newErrors.password;
+        break;
+
+      case "terms":
+        if (!value) newErrors.terms = "You must accept the terms and conditions";
+        else delete newErrors.terms;
+        break;
+
+      default:
+        break;
+    }
+
+    setErrors(newErrors);
+  };
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (validateForm()) {
-      console.log("Register successful", formData);
+
+    console.log(formData);
+
+    try {
+      // promise
+      const response = await api.post("register", formData);
+      toast.success("Successfully create new account!");
+      navigate("/login");
+    } catch (err) {
+      // bị lỗi => showw message lỗi
+      toast.error(err.response.data);
+      console.log(err.response.data);
     }
   };
+  const handleLoginGoogle = () => {
+    console.log("login google...");
+    const provider = new GoogleAuthProvider();
+    signInWithPopup(auth, provider)
+      .then((result) => {
+        const token = result.user.accessToken;
+        const user = result.user;
 
+        console.log(user);
+      })
+      .catch((error) => {
+        // Handle Errors here.
+        const errorCode = error.code;
+        const errorMessage = error.message;
+        // The email of the user's account used.
+        const email = error.customData.email;
+        // The AuthCredential type that was used.
+        const credential = GoogleAuthProvider.credentialFromError(error);
+        // ...
+      });
+  };
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f8f2ea]">
       <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
@@ -52,6 +147,7 @@ const RegisterPage = () => {
         <p className="text-center text-gray-600 mb-6">Để tạo tài khoản, xin hãy nhập thông tin dưới đây:</p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          <ToastContainer />
           <div>
             <label htmlFor="fullName" className="block text-sm font-medium text-gray-700">
               Họ và tên
@@ -164,12 +260,42 @@ const RegisterPage = () => {
             {errors.confirmPassword && <p className="text-red-500 text-sm mt-1">{errors.confirmPassword}</p>}
           </div>
 
-          <button
-            type="submit"
-            className="w-full py-2 px-4 bg-black text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500"
+          <div>
+            <button
+              type="submit"
+              disabled={isLoading || Object.keys(errors).length > 0}
+              className={`w-full flex justify-center py-2 px-4 border border-black shadow-sm text-sm font-medium text-white ${
+                isLoading || Object.keys(errors).length > 0
+                  ? "bg-gray-700 cursor-not-allowed"
+                  : "bg-black hover:bg-gray-800"
+              } focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500`}
+            >
+              {isLoading ? (
+                <svg
+                  className="w-5 h-5 animate-spin text-white"
+                  xmlns="http://www.w3.org/2000/svg"
+                  fill="none"
+                  viewBox="0 0 24 24"
+                >
+                  <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                  <path
+                    className="opacity-75"
+                    fill="currentColor"
+                    d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                  ></path>
+                </svg>
+              ) : (
+                "Đăng ký tài khoản"
+              )}
+            </button>
+          </div>
+
+          <div
+            onClick={handleLoginGoogle}
+            className="w-full flex justify-center items-center py-2 px-4 border border-gray-300 rounded-md shadow-sm text-sm font-medium text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500 disabled:opacity-50 disabled:cursor-not-allowed"
           >
-            Đăng ký tài khoản
-          </button>
+            <FcGoogle className="text-2xl" />
+          </div>
         </form>
       </div>
     </div>
