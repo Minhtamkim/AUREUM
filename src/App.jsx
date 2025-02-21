@@ -6,9 +6,9 @@ import ManageAccount from "./pages/admin/manage-account";
 import LoginPage from "./pages/Login";
 import Layout from "./components/layout";
 import ProfileAccount from "./pages/profileAccount/profile";
-import PoliciesPage from "./pages/policies";
-import AccountPage from "./pages/account";
 import RegisterPage from "./pages/Register";
+import PoliciesPage from "./pages/aboutaureum/policies";
+import AccountPage from "./pages/aboutaureum/account";
 
 function App() {
   const router = createBrowserRouter([

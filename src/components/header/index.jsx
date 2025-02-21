@@ -32,11 +32,7 @@ const Header = () => {
     <header className="w-full bg-[#2d2d2b] shadow-md h-4-">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-center py-2">
-          <img
-            src="/public/images/aureum.png"
-            alt="Logo"
-            className="h-24 w-auto object-contain"
-          />
+          <img src="/public/images/aureum.png" alt="Logo" className="h-24 w-auto object-contain" />
         </div>
         <div className="flex items-center justify-between py-4">
           {/* Desktop Navigation */}
@@ -90,11 +86,7 @@ const Header = () => {
               className="md:hidden text-white hover:text-blue-400 transition-colors duration-200"
               aria-label="Menu"
             >
-              {isMenuOpen ? (
-                <FiX className="w-6 h-6" />
-              ) : (
-                <FiMenu className="w-6 h-6" />
-              )}
+              {isMenuOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
             </button>
           </div>
         </div>
@@ -135,10 +127,7 @@ const Header = () => {
             <div className="bg-white p-6 rounded-lg w-full max-w-md mx-4">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold">Account</h2>
-                <button
-                  onClick={() => setIsUserModalOpen(false)}
-                  className="text-gray-600 hover:text-blue-600"
-                >
+                <button onClick={() => setIsUserModalOpen(false)} className="text-gray-600 hover:text-blue-600">
                   <FiX className="w-6 h-6" />
                 </button>
               </div>
