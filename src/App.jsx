@@ -6,7 +6,8 @@ import ManageProduct from "./pages/admin/manage-product";
 import ManageAccount from "./pages/admin/manage-account";
 import LoginPage from "./pages/Login";
 import Layout from "./components/layout";
-import PoliciesPage from "./pages/policies";
+import ProfileAccount from "./pages/profileAccount/profile";
+
 
 function App() {
   const router = createBrowserRouter([
@@ -19,18 +20,22 @@ function App() {
           element: <Home />,
         },
         {
-          path: "login",
-          element: <LoginPage />,
+          path: "profile",
+          element: <ProfileAccount />,
         },
-        {
-          path: "register",
-          element: <RegisterPage />,
-        },
-        {
           path: "policies",
           element: <PoliciesPage />,
         },
       ],
+    },
+
+    {
+      path: "login",
+      element: <LoginPage />,
+    },
+    {
+      path: "register",
+      element: <RegisterPage />,
     },
 
     {
