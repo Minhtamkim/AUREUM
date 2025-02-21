@@ -6,6 +6,7 @@ import ManageProduct from "./pages/admin/manage-product";
 import ManageAccount from "./pages/admin/manage-account";
 import LoginPage from "./pages/Login";
 import Layout from "./components/layout";
+import PoliciesPage from "./pages/policies";
 
 function App() {
   const router = createBrowserRouter([
@@ -24,6 +25,10 @@ function App() {
         {
           path: "register",
           element: <RegisterPage />,
+        },
+        {
+          path: "policies",
+          element: <PoliciesPage />,
         },
       ],
     },
