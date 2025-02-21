@@ -1,9 +1,7 @@
 function PoliciesPage() {
   return (
     <div>
-      {/* Banner tìm kiếm */}
       <div className="relative h-24 flex items-center justify-center bg-[#f8f6f3] p-10 z-0">
-        {/* Hình nền với lớp phủ */}
         <div className="absolute inset-0 rounded-lg overflow-hidden">
           <div
             className=" mx-10   rounded-lg absolute inset-0 bg-cover bg-center bg-no-repeat opacity-70"
@@ -11,7 +9,6 @@ function PoliciesPage() {
           ></div>
         </div>
 
-        {/* Nội dung hiển thị phía trên */}
         <div className="relative text-center px-4 z-10">
           <h2 className="text-lg font-semibold text-gray-800">Xin chào, chúng tôi có thể giúp gì cho bạn?</h2>
           <div className="mt-2">
@@ -24,22 +21,44 @@ function PoliciesPage() {
         </div>
       </div>
 
-      {/* Nội dung chính */}
       <div className="bg-[#f8f6f3] min-h-screen py-10 px-10">
         <div className="  w-full flex ">
-          {/* Sidebar */}
           <div className="w-1/3 border-r pr-4 text-gray-700 px-10">
             <ul className="space-y-2 text-lg">
-              <li className="font-semibold">Tài khoản</li>
-              <li>Hướng dẫn nhập hàng</li>
-              <li>Chính sách đổi trả</li>
-              <li>Chính sách bảo mật</li>
-              <li>Điều khoản sử dụng</li>
-              <li>Các câu hỏi thường gặp</li>
+              <li>
+                <a href="/account" className="hover:text-black -500">
+                  Tài khoản
+                </a>
+              </li>
+              <li className="font-semibold">Phương thức vận chuyển</li>
+              <li>
+                <a href="/huong-dan-nhap-hang" className="hover:text-black -500">
+                  Hướng dẫn nhập hàng
+                </a>
+              </li>
+              <li>
+                <a href="/chinh-sach-doi-tra" className="hover:text-black -500">
+                  Chính sách đổi trả
+                </a>
+              </li>
+              <li>
+                <a href="/chinh-sach-bao-mat" className="hover:text-black -500">
+                  Chính sách bảo mật
+                </a>
+              </li>
+              <li>
+                <a href="/dieu-khoan-su-dung" className="hover:text-black -500">
+                  Điều khoản sử dụng
+                </a>
+              </li>
+              <li>
+                <a href="/cau-hoi-thuong-gap" className="hover:text-black -500">
+                  Các câu hỏi thường gặp
+                </a>
+              </li>
             </ul>
           </div>
 
-          {/* Content */}
           <div className="w-full pl-20  gap-x-4 ">
             <nav className="text-lg text-gray-600 mb-4">
               <span className="text-gray-500">Trang chủ &gt; </span>
