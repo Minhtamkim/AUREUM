@@ -25,6 +25,7 @@ function TermsofusePage() {
                   Chính sách đổi trả
                 </a>
               </li>
+
               <li>
                 <a href="/privacypolicy" className="hover:text-black -500">
                   Chính sách bảo mật

@@ -30,6 +30,7 @@ function FrequentlyaskedquestionsPage() {
                   Chính sách bảo mật
                 </a>
               </li>
+
               <li>
                 <a href="/termsofuse" className="hover:text-black -500">
                   Điều khoản sử dụng

@@ -31,6 +31,7 @@ function PoliciesPage() {
                   Điều khoản sử dụng
                 </a>
               </li>
+
               <li>
                 <a href="/frequentlyaskedquestions" className="hover:text-black -500">
                   Các câu hỏi thường gặp

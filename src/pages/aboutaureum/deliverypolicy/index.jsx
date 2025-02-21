@@ -26,6 +26,7 @@ function DeliveryPolicyPage() {
                   Chính sách bảo mật
                 </a>
               </li>
+
               <li>
                 <a href="/termsofuse" className="hover:text-black -500">
                   Điều khoản sử dụng
@@ -68,8 +69,7 @@ function DeliveryPolicyPage() {
               3. Đăng nhập hoặc đăng ký tài khoản
             </h2>
             <p className="text-gray-700 leading-relaxed mb-3">
-              Quý khách có thể đăng nhập hoặc đặt hàng mà không cần tài khoản, nhưng cần cung cấp thông tin nhận hàng
-              chính xác.
+              Quý khách cầncần đăng nhập để đặt hàng để AUREUM có thông tin nhận hàng chính xác.
             </p>
 
             <h2 className="text-lg font-bold mb-3 relative inline-block after:content-[''] after:block after:w-full after:h-0.5 after:bg-gray-400 after:mt-1">
@@ -83,8 +83,7 @@ function DeliveryPolicyPage() {
               5. Chọn phương thức thanh toán
             </h2>
             <p className="text-gray-700 leading-relaxed mb-3">
-              Quý khách có thể chọn thanh toán khi nhận hàng (COD), thanh toán trực tiếp tại cửa hàng hoặc thanh toán
-              online qua ngân hàng, ví điện tử.
+              Quý khách có thể chọn thanh toán khi nhận hàng (COD), thanh toán online qua ngân hàng, ví điện tử.
             </p>
 
             <h2 className="text-lg font-bold mb-3 relative inline-block after:content-[''] after:block after:w-full after:h-0.5 after:bg-gray-400 after:mt-1">
@@ -101,8 +100,8 @@ function DeliveryPolicyPage() {
               Thời gian và quy trình giao hàng
             </h2>
             <p className="text-gray-700 leading-relaxed mb-3">
-              Ồ Láng Viện sẽ liên lạc để thống nhất thời gian giao hàng trong vòng 24-48 giờ. Trường hợp chậm trễ do
-              nguyên nhân khách quan, chúng tôi sẽ thông báo sớm nhất.
+              AUREUM sẽ liên lạc để thống nhất thời gian giao hàng trong vòng 24-48 giờ. Trường hợp chậm trễ do nguyên
+              nhân khách quan, chúng tôi sẽ thông báo sớm nhất.
             </p>
 
             <h2 className="text-lg font-bold mb-3 relative inline-block after:content-[''] after:block after:w-full after:h-0.5 after:bg-gray-400 after:mt-1">

@@ -11,6 +11,7 @@ function AccountPage() {
                   Phương thức vận chuyển
                 </a>
               </li>
+
               <li>
                 <a href="/deliverypolicy" className="hover:text-black -500">
                   Chính sách đặt và giao hàng
@@ -53,8 +54,8 @@ function AccountPage() {
             </h2>
 
             <p className="text-gray-700 leading-relaxed mb-3">
-              Quý khách vui lòng nhấn vào nút Đăng nhập - Đăng ký tài khoản trên góc phải màn hình và chọn Đăng ký/Đăng
-              ký ngay để điền các thông tin được yêu cầu, sau đó nhấn nút Đăng ký.
+              Quý khách vui lòng nhấn vào nút Đăng nhập - Đăng ký tài khoản trên góc phải màn hình và chọn Đăng ký ngay
+              để điền các thông tin được yêu cầu, sau đó nhấn nút Đăng ký.
             </p>
             <h2 className="text-lg font-bold mb-3 relative inline-block after:content-[''] after:block after:w-full after:h-0.5 after:bg-gray-400 after:mt-1">
               Tại sao tôi không thể đăng nhập vào tài khoản của tôi?
@@ -84,7 +85,7 @@ function AccountPage() {
               Đăng ký thành viên tại Aureum giúp ích gì cho tôi?
             </h2>
             <p className="text-gray-700 leading-relaxed">
-              Việc đăng ký tài khoản là cơ hội để quý khách trở thành một trong những khách hàng thân thiết tại Aureum,
+              Việc đăng ký tài khoản là cơ hội để quý khách trở thành một trong những khách hàng thân thiết tại AUREUM,
               với cơ hội nhận nhanh nhất các chương trình khuyến mãi, thông tin ưu đãi khi mua sắm.
             </p>
           </div>
