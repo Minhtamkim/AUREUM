@@ -12,27 +12,27 @@ function PoliciesPage() {
               </li>
               <li className="font-semibold">Phương thức vận chuyển</li>
               <li>
-                <a href="/huong-dan-nhap-hang" className="hover:text-black -500">
-                  Hướng dẫn nhập hàng
+                <a href="/deliverypolicy" className="hover:text-black -500">
+                  Chính sách đặt và giao hàng
                 </a>
               </li>
               <li>
-                <a href="/chinh-sach-doi-tra" className="hover:text-black -500">
+                <a href="/returnpolicy" className="hover:text-black -500">
                   Chính sách đổi trả
                 </a>
               </li>
               <li>
-                <a href="/chinh-sach-bao-mat" className="hover:text-black -500">
+                <a href="/privacypolicy" className="hover:text-black -500">
                   Chính sách bảo mật
                 </a>
               </li>
               <li>
-                <a href="/dieu-khoan-su-dung" className="hover:text-black -500">
+                <a href="/termsofuse" className="hover:text-black -500">
                   Điều khoản sử dụng
                 </a>
               </li>
               <li>
-                <a href="/cau-hoi-thuong-gap" className="hover:text-black -500">
+                <a href="/frequentlyaskedquestions" className="hover:text-black -500">
                   Các câu hỏi thường gặp
                 </a>
               </li>
@@ -46,6 +46,7 @@ function PoliciesPage() {
             </nav>
 
             <h2 className="text-2xl font-bold mb-3">Phí vận chuyển tại Aureum</h2>
+            <hr className="my-4 border-black -300" />
 
             <p className="text-gray-700 leading-relaxed mb-3">
               Aureum miễn phí vận chuyển tại các tỉnh/thành phố có cửa hàng của Aureum cho các đơn hàng từ
