@@ -9,6 +9,11 @@ import ProfileAccount from "./pages/profileAccount/profile";
 import RegisterPage from "./pages/Register";
 import PoliciesPage from "./pages/aboutaureum/policies";
 import AccountPage from "./pages/aboutaureum/account";
+import PrivacyPolicyPage from "./pages/aboutaureum/privacypolicy";
+import DeliveryPolicyPage from "./pages/aboutaureum/deliverypolicy";
+import TermsofusePage from "./pages/aboutaureum/termsofuse";
+import ReturnPolicyPage from "./pages/aboutaureum/returnpolicy";
+import FrequentlyaskedquestionsPage from "./pages/aboutaureum/frequentlyaskedquestions";
 
 function App() {
   const router = createBrowserRouter([
@@ -31,6 +36,26 @@ function App() {
         {
           path: "account",
           element: <AccountPage />,
+        },
+        {
+          path: "privacypolicy",
+          element: <PrivacyPolicyPage />,
+        },
+        {
+          path: "deliverypolicy",
+          element: <DeliveryPolicyPage />,
+        },
+        {
+          path: "termsofuse",
+          element: <TermsofusePage />,
+        },
+        {
+          path: "returnpolicy",
+          element: <ReturnPolicyPage />,
+        },
+        {
+          path: "frequentlyaskedquestions",
+          element: <FrequentlyaskedquestionsPage />,
         },
       ],
     },
