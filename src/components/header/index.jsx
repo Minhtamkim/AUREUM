@@ -29,19 +29,19 @@ const Header = () => {
   }, []);
 
   return (
-    <header className="w-full bg-[#2d2d2b] shadow-md">
+    <header className="w-full bg-[#2d2d2b] shadow-md h-4-">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-center py-4">
+        <div className="flex items-center justify-center py-2">
           <img
             src="/public/images/aureum.png"
             alt="Logo"
-            className="h-18 w-auto object-contain"
+            className="h-24 w-auto object-contain"
           />
         </div>
-        <div className="flex items-center justify-between py-6">
+        <div className="flex items-center justify-between py-4">
           {/* Desktop Navigation */}
           <div></div>
-          <nav className="hidden md:flex items-center space-x-8 ">
+          <nav className="hidden md:flex items-center space-x-8 pl-35">
             {menuItems.map((item) => (
               <a
                 key={item.id}
