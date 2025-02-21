@@ -2,11 +2,16 @@ import { useState } from "react";
 import { FaEye, FaEyeSlash, FaLock, FaEnvelope } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { SiFacebook } from "react-icons/si";
+import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from "react-toastify";
+import api from "../../config/axios";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({ email: "", password: "", rememberMe: false });
   const [errors, setErrors] = useState({});
   const [showPassword, setShowPassword] = useState(false);
+  const navigate = useNavigate();
+  const [isLoading, setIsLoading] = useState(false);
 
   const validateForm = () => {
     const newErrors = {};
@@ -28,13 +33,34 @@ const LoginPage = () => {
 
   const handleChange = (e) => {
     const { name, value, type, checked } = e.target;
-    setFormData((prev) => ({ ...prev, [name]: type === "checkbox" ? checked : value }));
+    setFormData((prev) => ({
+      ...prev,
+      [name]: type === "checkbox" ? checked : value,
+    }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     if (validateForm()) {
-      console.log("Login successful", formData);
+      setIsLoading(true);
+
+      try {
+        const response = await api.post("login", formData);
+        const { token, data } = response;
+        const { roleEnum } = data;
+        console.log(roleEnum);
+        localStorage.setItem("token", token);
+        toast.success("Successfully login!");
+        if (roleEnum === "ADMIN") {
+          navigate("/dashboard");
+        } else if (roleEnum === "CUSTOMER") {
+          navigate("/");
+        }
+      } catch (err) {
+        toast.error(err.response);
+      } finally {
+        setIsLoading(false);
+      }
     }
   };
 
@@ -44,12 +70,14 @@ const LoginPage = () => {
         <h2 className="text-2xl font-bold text-center mb-4">AUREUM chào bạn</h2>
         <p className="text-center text-gray-600 mb-6">
           Bạn chưa có tài khoản?{" "}
-          <a href="#" className="text-yellow-600">
+          <a href="/register" className="text-yellow-600">
             Tạo tài khoản
           </a>
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          <ToastContainer />
+
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Email
@@ -120,9 +148,25 @@ const LoginPage = () => {
 
           <button
             type="submit"
+            disabled={isLoading}
             className="w-full py-2 px-4 bg-black text-white hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-black"
           >
-            Đăng nhập
+            {isLoading ? (
+              <svg
+                className="animate-spin -ml-1 mr-3 h-5 w-5 text-white"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                viewBox="0 0 24 24"
+              >
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                <path
+                  className="opacity-75"
+                  fill="currentColor"
+                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                ></path>
+              </svg>
+            ) : null}
+            {isLoading ? "Đăng nhập..." : "Đăng nhập"}
           </button>
         </form>
 
@@ -132,7 +176,11 @@ const LoginPage = () => {
             <button className="flex items-center justify-center w-12 h-12 border border-gray-300 rounded-full hover:bg-gray-100">
               <SiFacebook className="text-blue-600 text-2xl" />
             </button>
-            <button className="flex items-center justify-center w-12 h-12 border border-gray-300 rounded-full hover:bg-gray-100">
+            <button
+              type="button"
+              className="flex items-center justify-center w-12 h-12 border border-gray-300 rounded-full hover:bg-gray-100"
+              onClick={() => console.log("Google sign in clicked")}
+            >
               <FcGoogle className="text-2xl" />
             </button>
           </div>
