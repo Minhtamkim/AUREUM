@@ -53,7 +53,7 @@ const columns = [
 function ManageAccount() {
   return (
     <div>
-      <DashboardTemplates title={"Account"} columns={columns} />
+      <DashboardTemplates title={"Account"} columns={columns} uri={"account"} />
     </div>
   );
 }

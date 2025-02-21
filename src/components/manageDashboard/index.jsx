@@ -11,7 +11,7 @@ function DashboardTemplates({ title, columns, uri }) {
   useEffect(() => {
     const tableColumns = [
       ...columns,
-      [
+      ...[
         {
           title: "Action",
           dataIndex: "id",
