@@ -170,6 +170,14 @@ const RegisterPage = () => {
           >
             Đăng ký tài khoản
           </button>
+          <div className="flex justify-center gap-1">
+            <a className="text-gray-400" href="">
+              Bạn đã có tài khoản?
+            </a>
+            <a className="text-yellow-600 font-semibold" href="/Login">
+              Đăng nhập
+            </a>
+          </div>
         </form>
       </div>
     </div>
