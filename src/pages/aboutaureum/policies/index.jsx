@@ -1,26 +1,6 @@
 function PoliciesPage() {
   return (
     <div>
-      <div className="relative h-24 flex items-center justify-center bg-[#f8f6f3] p-10 z-0">
-        <div className="absolute inset-0 rounded-lg overflow-hidden">
-          <div
-            className=" mx-10   rounded-lg absolute inset-0 bg-cover bg-center bg-no-repeat opacity-70"
-            style={{ backgroundImage: "url('./images/Banner.jpg')" }}
-          ></div>
-        </div>
-
-        <div className="relative text-center px-4 z-10">
-          <h2 className="text-lg font-semibold text-gray-800">Xin chào, chúng tôi có thể giúp gì cho bạn?</h2>
-          <div className="mt-2">
-            <input
-              type="text"
-              placeholder="Nhập từ khóa tìm kiếm sản phẩm, thương hiệu bạn mong muốn..."
-              className="w-[500px] p-2 rounded-full border border-gray-300 shadow-sm focus:ring focus:ring-blue-300 text-sm"
-            />
-          </div>
-        </div>
-      </div>
-
       <div className="bg-[#f8f6f3] min-h-screen py-10 px-10">
         <div className="  w-full flex ">
           <div className="w-1/3 border-r pr-4 text-gray-700 px-10">
