@@ -8,11 +8,11 @@ import Layout from "./components/layout";
 import ProfileAccount from "./pages/profileAccount/profile";
 import RegisterPage from "./pages/Register";
 import PoliciesPage from "./pages/aboutaureum/policies";
-import AccountPage from "./pages/aboutaureum/account";
-import PrivacyPolicyPage from "./pages/aboutaureum/privacypolicy";
-import DeliveryPolicyPage from "./pages/aboutaureum/deliverypolicy";
+import AccountPage from "./pages/aboutAureum/policyAccount";
+import PrivacyPolicyPage from "./pages/aboutAureum/policyPrivacy";
+import DeliveryPolicyPage from "./pages/aboutAureum/policyDelivery";
 import TermsofusePage from "./pages/aboutaureum/termsofuse";
-import ReturnPolicyPage from "./pages/aboutaureum/returnpolicy";
+import ReturnPolicyPage from "./pages/aboutAureum/policyReturn";
 import FrequentlyaskedquestionsPage from "./pages/aboutaureum/frequentlyaskedquestions";
 
 function App() {
