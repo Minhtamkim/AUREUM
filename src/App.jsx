@@ -15,6 +15,7 @@ import TermsofusePage from "./pages/aboutaureum/termsofuse";
 import ReturnPolicyPage from "./pages/aboutAureum/policyReturn";
 import FrequentlyaskedquestionsPage from "./pages/aboutaureum/frequentlyaskedquestions";
 import BlogPost from "./pages/Blog";
+import Cart from "./pages/cart";
 
 function App() {
   const router = createBrowserRouter([
@@ -61,6 +62,10 @@ function App() {
         {
           path: "blog",
           element: <BlogPost />,
+        },
+        {
+          path: "cart",
+          element: <Cart />,
         },
       ],
     },
