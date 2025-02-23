@@ -76,10 +76,17 @@ const Footer = () => {
             <h3 className="text-white text-lg font-semibold mb-4">Hổ Trợ</h3>
             <ul className="space-y-4">
               <li className="flex items-center">
-                <span>Câu Hỏi Thường Gặp</span>
+                <a
+                  href="/frequentlyaskedquestions"
+                  className="hover:text-[#e3d0b1]"
+                >
+                  Các câu hỏi thường gặp
+                </a>
               </li>
               <li className="flex items-center">
-                <span>Đổi Trả Khách Hàng</span>
+                <a href="/returnpolicy" className="hover:text-[#e3d0b1]">
+                  Chính sách đổi trả
+                </a>
               </li>
             </ul>
           </div>
@@ -89,13 +96,19 @@ const Footer = () => {
             <h3 className="text-white text-lg font-semibold mb-4">Thông Tin</h3>
             <ul className="space-y-4">
               <li className="flex items-center">
-                <span>Chính Sách Bảo Mật</span>
+                <a href="/privacypolicy" className="hover:text-[#e3d0b1]">
+                  Chính sách bảo mật
+                </a>
               </li>
               <li className="flex items-center">
-                <span>Điều Khoản Sử Dụng</span>
+                <a href="/termsofuse" className="hover:text-[#e3d0b1]">
+                  Điều khoản sử dụng
+                </a>
               </li>
               <li className="flex items-center">
-                <span>Liên Hệ</span>
+                <a href="/contact" className="hover:text-[#e3d0b1]">
+                  Liên Hệ
+                </a>
               </li>
             </ul>
             <div className="mt-10">

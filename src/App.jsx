@@ -17,6 +17,7 @@ import FrequentlyaskedquestionsPage from "./pages/aboutaureum/frequentlyaskedque
 import BlogPost from "./pages/Blog";
 import Cart from "./pages/cart";
 import ProductDetail from "./pages/product";
+import ContactPage from "./pages/aboutaureum/contact";
 
 function App() {
   const router = createBrowserRouter([
@@ -59,6 +60,10 @@ function App() {
         {
           path: "frequentlyaskedquestions",
           element: <FrequentlyaskedquestionsPage />,
+        },
+        {
+          path: "contact",
+          element: <ContactPage />,
         },
         {
           path: "blog",
