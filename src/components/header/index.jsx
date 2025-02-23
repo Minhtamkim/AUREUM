@@ -1,3 +1,4 @@
+
 import { useState, useEffect } from "react";
 import { FiUser, FiSearch, FiShoppingCart, FiMenu, FiX } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
@@ -149,5 +150,6 @@ const Header = () => {
     </header>
   );
 };
+
 
 export default Header;
