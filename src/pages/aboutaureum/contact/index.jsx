@@ -1,4 +1,4 @@
-function PoliciesPage() {
+function ContactPage() {
   return (
     <div>
       <div className="bg-[#f8f6f3] min-h-screen py-10 px-10">
@@ -10,7 +10,11 @@ function PoliciesPage() {
                   Tài khoản
                 </a>
               </li>
-              <li className="font-semibold">Phương thức vận chuyển</li>
+              <li>
+                <a href="/policies" className="hover:text-black -500">
+                  Phương thức vận chuyển
+                </a>
+              </li>
               <li>
                 <a href="/deliverypolicy" className="hover:text-black -500">
                   Chính sách đặt và giao hàng
@@ -52,28 +56,20 @@ function PoliciesPage() {
                 </a>{" "}
                 &gt;{" "}
               </span>
-              <span className="font-semibold">Phương thức vận chuyển</span>
+              <span className="font-semibold">Liên Hệ</span>
             </nav>
 
-            <h2 className="text-2xl font-bold mb-3">
-              Phí vận chuyển tại Aureum
-            </h2>
+            <h2 className="text-2xl font-bold mb-3">Liên hệ chúng tôi</h2>
             <hr className="my-4 border-black -300" />
 
-            <p className="text-gray-700 leading-relaxed mb-3">
-              Aureum miễn phí vận chuyển tại các tỉnh/thành phố có cửa hàng của
-              Aureum cho các đơn hàng từ
-              <strong> 90.000đ</strong> trở lên. Các đơn hàng dưới 90.000đ quý
-              khách chỉ mất
-              <strong> 10.000đ</strong> phí vận chuyển.
-            </p>
-
-            <p className="text-gray-700 leading-relaxed">
-              Đối với những khách hàng thuộc các tỉnh/thành phố không có cửa
-              hàng Aureum sẽ miễn phí vận chuyển đối với đơn hàng từ{" "}
-              <strong>249.000đ</strong> trở lên. Đơn hàng dưới 249.000đ có cước
-              phí vận chuyển là <strong>25.000đ</strong>.
-            </p>
+            <div className=" flex justify-between">
+              <p className="text-gray-700 leading-relaxed mb-3">
+                <strong> Email:</strong> support@aureum.com
+              </p>
+              <p className="text-gray-700 leading-relaxed mb-3 pr-100">
+                <strong> Hotline:</strong> 02835359973
+              </p>
+            </div>
           </div>
         </div>
       </div>
@@ -81,4 +77,4 @@ function PoliciesPage() {
   );
 }
 
-export default PoliciesPage;
+export default ContactPage;

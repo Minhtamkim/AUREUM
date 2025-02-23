@@ -35,8 +35,8 @@ function FrequentlyaskedquestionsPage() {
                 <a href="/termsofuse" className="hover:text-black -500">
                   Điều khoản sử dụng
                 </a>
-                <li className="font-semibold">Các câu hỏi thường gặp </li>
               </li>
+              <li className="font-semibold">Các câu hỏi thường gặp </li>
             </ul>
           </div>
 
