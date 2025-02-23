@@ -14,6 +14,9 @@ import DeliveryPolicyPage from "./pages/aboutAureum/policyDelivery";
 import TermsofusePage from "./pages/aboutaureum/termsofuse";
 import ReturnPolicyPage from "./pages/aboutAureum/policyReturn";
 import FrequentlyaskedquestionsPage from "./pages/aboutaureum/frequentlyaskedquestions";
+import BlogPost from "./pages/Blog";
+import Cart from "./pages/cart";
+import ProductDetail from "./pages/product";
 
 function App() {
   const router = createBrowserRouter([
@@ -56,6 +59,18 @@ function App() {
         {
           path: "frequentlyaskedquestions",
           element: <FrequentlyaskedquestionsPage />,
+        },
+        {
+          path: "blog",
+          element: <BlogPost />,
+        },
+        {
+          path: "cart",
+          element: <Cart />,
+        },
+        {
+          path: "product",
+          element: <ProductDetail />,
         },
       ],
     },
