@@ -45,15 +45,18 @@ const Footer = () => {
                 </div>
               </form>
             </div>
-            <img
-              src="/public/images/aureum.png"
-              alt="Company Logo"
-              className="h-16 w-auto mb-4 mt-4"
-              onError={(e) => {
-                e.target.src = "/public/images/aureum.png";
-                e.target.onerror = null;
-              }}
-            />
+            <a href="/">
+              {" "}
+              <img
+                src="/public/images/aureum.png"
+                alt="Company Logo"
+                className="h-16 w-auto mb-4 mt-4"
+                onError={(e) => {
+                  e.target.src = "/public/images/aureum.png";
+                  e.target.onerror = null;
+                }}
+              />
+            </a>
             <p className="text-sm leading-7">
               CÔNG TY TNHH AUREUM SKINCARE Địa chỉ : Lô E2a-7, Đường D1, Đ. D1,
               Long Thạnh Mỹ, Thành Phố Thủ Đức, Thành phố Hồ Chí Minh 700000,
@@ -67,7 +70,9 @@ const Footer = () => {
           <div>
             <h3 className="text-white text-lg font-semibold mb-4">Về AUREUM</h3>
             <ul className="space-y-4">
-              <span>Câu Chuyện Thương Hiệu</span>
+              <a href="/aboutUs" className="hover:text-[#e3d0b1]">
+                Câu chuyện thương hiệu
+              </a>
             </ul>
           </div>
 
@@ -77,14 +82,14 @@ const Footer = () => {
             <ul className="space-y-4">
               <li className="flex items-center">
                 <a
-                  href="/frequentlyaskedquestions"
+                  href="/frequentlyAskedQuestions"
                   className="hover:text-[#e3d0b1]"
                 >
                   Các câu hỏi thường gặp
                 </a>
               </li>
               <li className="flex items-center">
-                <a href="/returnpolicy" className="hover:text-[#e3d0b1]">
+                <a href="/returnPolicy" className="hover:text-[#e3d0b1]">
                   Chính sách đổi trả
                 </a>
               </li>
@@ -96,12 +101,12 @@ const Footer = () => {
             <h3 className="text-white text-lg font-semibold mb-4">Thông Tin</h3>
             <ul className="space-y-4">
               <li className="flex items-center">
-                <a href="/privacypolicy" className="hover:text-[#e3d0b1]">
+                <a href="/privacyPolicy" className="hover:text-[#e3d0b1]">
                   Chính sách bảo mật
                 </a>
               </li>
               <li className="flex items-center">
-                <a href="/termsofuse" className="hover:text-[#e3d0b1]">
+                <a href="/termsOfUse" className="hover:text-[#e3d0b1]">
                   Điều khoản sử dụng
                 </a>
               </li>
@@ -116,7 +121,7 @@ const Footer = () => {
             </div>
             <div className="mt-10">
               <h3 className="text-white text-lg font-semibold mb-4">
-                Follow Us
+                Theo Dõi Chúng Tôi
               </h3>
               <div className="flex space-x-4">
                 {[

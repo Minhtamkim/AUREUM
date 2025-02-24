@@ -13,7 +13,7 @@ const Header = () => {
     { id: 1, name: "Trang Chủ", path: "/" },
     { id: 2, name: "Sản Phẩm", path: "product" },
     { id: 3, name: "Bài Viết", path: "blog" },
-    { id: 4, name: "Về Chúng Tôi", path: "#" },
+    { id: 4, name: "Về Chúng Tôi", path: "aboutUs" },
     { id: 5, name: "Giải Đáp Skin Treatment", path: "#" },
   ];
 
