@@ -18,6 +18,8 @@ import BlogPost from "./pages/Blog";
 import Cart from "./pages/cart";
 import ProductDetail from "./pages/product";
 import ContactPage from "./pages/aboutaureum/contact";
+import AccountInfor from "./pages/AccountInfor";
+import AccountInfoPage from "./pages/AccountInfor";
 
 function App() {
   const router = createBrowserRouter([
@@ -87,6 +89,10 @@ function App() {
     {
       path: "register",
       element: <RegisterPage />,
+    },
+    {
+      path: "accountinfor",
+      element: <AccountInfoPage />,
     },
 
     {

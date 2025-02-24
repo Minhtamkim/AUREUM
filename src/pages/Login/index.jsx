@@ -83,10 +83,7 @@ const LoginPage = () => {
           <ToastContainer />
 
           <div>
-            <label
-              htmlFor="email"
-              className="block text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
               Email
             </label>
             <div className="relative mt-1">
@@ -103,16 +100,11 @@ const LoginPage = () => {
                 onChange={handleChange}
               />
             </div>
-            {errors.email && (
-              <p className="text-red-500 text-sm mt-1">{errors.email}</p>
-            )}
+            {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
           </div>
 
           <div>
-            <label
-              htmlFor="password"
-              className="block text-sm font-medium text-gray-700"
-            >
+            <label htmlFor="password" className="block text-sm font-medium text-gray-700">
               Mật khẩu
             </label>
             <div className="relative mt-1">
@@ -136,9 +128,7 @@ const LoginPage = () => {
                 {showPassword ? <FaEyeSlash /> : <FaEye />}
               </button>
             </div>
-            {errors.password && (
-              <p className="text-red-500 text-sm mt-1">{errors.password}</p>
-            )}
+            {errors.password && <p className="text-red-500 text-sm mt-1">{errors.password}</p>}
           </div>
 
           <div className="flex items-center justify-between">
@@ -151,10 +141,7 @@ const LoginPage = () => {
                 checked={formData.rememberMe}
                 onChange={handleChange}
               />
-              <label
-                htmlFor="rememberMe"
-                className="ml-2 text-sm text-gray-700"
-              >
+              <label htmlFor="rememberMe" className="ml-2 text-sm text-gray-700">
                 Ghi nhớ mật khẩu cho lần sau
               </label>
             </div>
@@ -175,14 +162,7 @@ const LoginPage = () => {
                 fill="none"
                 viewBox="0 0 24 24"
               >
-                <circle
-                  className="opacity-25"
-                  cx="12"
-                  cy="12"
-                  r="10"
-                  stroke="currentColor"
-                  strokeWidth="4"
-                ></circle>
+                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
                 <path
                   className="opacity-75"
                   fill="currentColor"
