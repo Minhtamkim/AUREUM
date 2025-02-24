@@ -1,8 +1,11 @@
-import { Button, Form, Popconfirm, Table } from "antd";
+import { Button, Form, Input, Modal, Popconfirm, Table, Upload } from "antd";
 import { useEffect, useState } from "react";
 import api from "../../config/axios";
+import FormItem from "antd/es/form/FormItem";
+import uploadFile from "../../utils/upload";
+import { toast } from "react-toastify";
 
-function DashboardTemplates({ title, columns, uri }) {
+function DashboardTemplates({ title, columns, uri, formItems }) {
   const [newColumns, setNewColumns] = useState(columns);
   const [isOpen, setOpen] = useState(false);
   const [form] = Form.useForm();
@@ -66,10 +69,57 @@ function DashboardTemplates({ title, columns, uri }) {
     fetchData();
   }, []);
 
+  const handleOpenModal = () => {
+    setOpen(true);
+  };
+
+  const handleCloseModal = () => {
+    setOpen(false);
+  };
+
+  const handleSubmitForm = async (values) => {
+    console.log(values);
+
+    // upload tấm ảnh lên Firebase storage
+    if (values.image) {
+      const url = await uploadFile(values.image.file.originFileObj);
+      values.image = url;
+    }
+
+    await api.post("product", values);
+
+    toast.success("Successfully create new product!");
+    handleCloseModal();
+    fetchData();
+    form.resetFields();
+  };
+
   return (
     <div>
-      <Button type="primary"> Create {title}</Button>
+      <Button onClick={handleOpenModal} type="primary">
+        Create {title}
+      </Button>
       <Table columns={newColumns} dataSource={data} />;
+      <Modal
+        title={`Create new ${title}`}
+        open={isOpen}
+        onClose={handleCloseModal}
+        onCancel={handleCloseModal}
+        onOk={() => form.submit()}
+      >
+        <Form
+          labelCol={{
+            span: 24,
+          }}
+          form={form}
+          onFinish={handleSubmitForm}
+        >
+          <FormItem label="Id" name="id" hidden>
+            <Input />
+          </FormItem>
+          {formItems}
+        </Form>
+      </Modal>
     </div>
   );
 }
