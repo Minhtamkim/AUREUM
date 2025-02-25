@@ -7,19 +7,14 @@ import LoginPage from "./pages/Login";
 import Layout from "./components/layout";
 import ProfileAccount from "./pages/profileAccount/profile";
 import RegisterPage from "./pages/Register";
-import PoliciesPage from "./pages/aboutaureum/policies";
-import AccountPage from "./pages/aboutAureum/policyAccount";
-import PrivacyPolicyPage from "./pages/aboutAureum/policyPrivacy";
-import DeliveryPolicyPage from "./pages/aboutAureum/policyDelivery";
-import TermsofusePage from "./pages/aboutaureum/termsofuse";
-import ReturnPolicyPage from "./pages/aboutAureum/policyReturn";
-import FrequentlyaskedquestionsPage from "./pages/aboutaureum/frequentlyaskedquestions";
 import BlogPost from "./pages/Blog";
 import Cart from "./pages/cart";
 import ProductDetail from "./pages/product";
+
 import ContactPage from "./pages/aboutaureum/contact";
 import AccountInfor from "./pages/AccountInfor";
 import AccountInfoPage from "./pages/AccountInfor";
+
 
 function App() {
   const router = createBrowserRouter([
@@ -36,31 +31,31 @@ function App() {
           element: <ProfileAccount />,
         },
         {
-          path: "policies",
-          element: <PoliciesPage />,
+          path: "policiesShipping",
+          element: <PoliciesShipping />,
         },
         {
           path: "account",
           element: <AccountPage />,
         },
         {
-          path: "privacypolicy",
+          path: "privacyPolicy",
           element: <PrivacyPolicyPage />,
         },
         {
-          path: "deliverypolicy",
+          path: "deliveryPolicy",
           element: <DeliveryPolicyPage />,
         },
         {
-          path: "termsofuse",
-          element: <TermsofusePage />,
+          path: "termsOfUse",
+          element: <TermsOfUsePage />,
         },
         {
-          path: "returnpolicy",
+          path: "returnPolicy",
           element: <ReturnPolicyPage />,
         },
         {
-          path: "frequentlyaskedquestions",
+          path: "frequentlyAskedQuestions",
           element: <FrequentlyaskedquestionsPage />,
         },
         {
@@ -78,6 +73,10 @@ function App() {
         {
           path: "product",
           element: <ProductDetail />,
+        },
+        {
+          path: "aboutUs",
+          element: <AboutUs />,
         },
       ],
     },
