@@ -10,11 +10,15 @@ import RegisterPage from "./pages/Register";
 import BlogPost from "./pages/Blog";
 import Cart from "./pages/cart";
 import ProductDetail from "./pages/product";
-
-import ContactPage from "./pages/aboutaureum/contact";
-import AccountInfor from "./pages/AccountInfor";
-import AccountInfoPage from "./pages/AccountInfor";
-
+import PoliciesShipping from "./pages/policies/policyShipping";
+import AccountPage from "./pages/policies/policyAccount";
+import PrivacyPolicyPage from "./pages/policies/policyPrivacy";
+import DeliveryPolicyPage from "./pages/policies/policyDelivery";
+import ReturnPolicyPage from "./pages/policies/policyReturn";
+import ContactPage from "./pages/policies/contact";
+import FrequentlyaskedquestionsPage from "./pages/policies/faq";
+import TermsOfUsePage from "./pages/policies/termsOfUse";
+import AboutUs from "./pages/aboutUs";
 
 function App() {
   const router = createBrowserRouter([
@@ -88,10 +92,6 @@ function App() {
     {
       path: "register",
       element: <RegisterPage />,
-    },
-    {
-      path: "accountinfor",
-      element: <AccountInfoPage />,
     },
 
     {
