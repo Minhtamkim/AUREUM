@@ -77,31 +77,28 @@ function DashboardTemplates({ title, columns, uri, formItems }) {
     setOpen(false);
   };
 
-  const handleSubmitForm = async (values) => {
-    console.log(values);
-
-    // upload tấm ảnh lên Firebase storage
-    if (values.image) {
-      const url = await uploadFile(values.image.file.originFileObj);
-      values.image = url;
-    }
-
-    await api.post("product", values);
-
-    toast.success("Successfully create new product!");
-    handleCloseModal();
-    fetchData();
-    form.resetFields();
+  const handleSubmitForm = () => {
+    // console.log(values);
+    // // upload tấm ảnh lên Firebase storage
+    // if (values.image) {
+    //   const url = await uploadFile(values.image.file.originFileObj);
+    //   values.image = url;
+    // }
+    // await api.post("product", values);
+    // toast.success("Successfully create new product!");
+    // handleCloseModal();
+    // fetchData();
+    // form.resetFields();
   };
 
   return (
     <div>
       <Button onClick={handleOpenModal} type="primary">
-        Create {title}
+        Create New {title}
       </Button>
       <Table columns={newColumns} dataSource={data} />;
       <Modal
-        title={`Create new ${title}`}
+        title={`Create New ${title}`}
         open={isOpen}
         onClose={handleCloseModal}
         onCancel={handleCloseModal}

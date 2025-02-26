@@ -77,7 +77,9 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-center py-2">
           <a href="/">
+
             <img src="/public/images/aureum.png" alt="Logo" className="h-24 w-auto object-contain" />
+
           </a>
         </div>
         <div className="flex items-center justify-between py-4">
