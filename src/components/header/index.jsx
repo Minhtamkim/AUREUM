@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FiUser, FiSearch, FiShoppingCart, FiMenu, FiX } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
@@ -8,8 +8,20 @@ const Header = () => {
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
+  const timeoutRef = useRef(null);
   const navigate = useNavigate();
 
+  const handleMouseEnter = (id) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setOpenDropdown(id);
+  };
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setOpenDropdown(null);
+    }, 100);
+  };
   const menuItems = [
     { id: 1, name: "Trang Chủ", path: "/" },
     { id: 2, name: "Sản Phẩm", path: "product", hasDropdown: true },
@@ -76,8 +88,8 @@ const Header = () => {
               <div
                 key={item.id}
                 className="relative group"
-                onMouseEnter={() => item.hasDropdown && setOpenDropdown(item.id)}
-                onMouseLeave={() => item.hasDropdown && setOpenDropdown(null)}
+                onMouseEnter={() => item.hasDropdown && handleMouseEnter(item.id)}
+                onMouseLeave={(e) => item.hasDropdown && handleMouseLeave(e)}
               >
                 <a
                   href={item.path}
@@ -107,7 +119,7 @@ const Header = () => {
 
                       {Object.entries(
                         dropdownItems.thuongHieu
-                          .sort((a, b) => a.name.localeCompare(b.name)) // Sắp xếp theo ABC
+                          .sort((a, b) => a.name.localeCompare(b.name))
                           .reduce((acc, item) => {
                             const firstLetter = item.name[0].toUpperCase(); // Lấy chữ cái đầu
                             if (!acc[firstLetter]) acc[firstLetter] = [];
