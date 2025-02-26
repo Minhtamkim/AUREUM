@@ -1,21 +1,65 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { FiUser, FiSearch, FiShoppingCart, FiMenu, FiX } from "react-icons/fi";
 import { useNavigate } from "react-router-dom";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [cartCount, setCartCount] = useState(3);
+  const [cartCount] = useState(3);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
+  const [openDropdown, setOpenDropdown] = useState(null);
+  const timeoutRef = useRef(null);
   const navigate = useNavigate();
 
+  const handleMouseEnter = (id) => {
+    if (timeoutRef.current) {
+      clearTimeout(timeoutRef.current);
+    }
+    setOpenDropdown(id);
+  };
+  const handleMouseLeave = () => {
+    timeoutRef.current = setTimeout(() => {
+      setOpenDropdown(null);
+    }, 100);
+  };
   const menuItems = [
     { id: 1, name: "Trang Chủ", path: "/" },
-    { id: 2, name: "Sản Phẩm", path: "product" },
+    { id: 2, name: "Sản Phẩm", path: "product", hasDropdown: true },
     { id: 3, name: "Bài Viết", path: "blog" },
     { id: 4, name: "Về Chúng Tôi", path: "aboutUs" },
     { id: 5, name: "Giải Đáp Skin Treatment", path: "#" },
   ];
+
+  const dropdownItems = {
+    sanPham: [
+      { id: 1, name: "Tẩy Trang", path: "/product/tay-trang" },
+      { id: 2, name: "Sữa Rửa Mặt", path: "/product/rua-mat" },
+      { id: 3, name: "Toner ", path: "/product/nuoc-can-bang" },
+      { id: 4, name: "Serum", path: "/product/serum" },
+      { id: 5, name: "Dưỡng Ẩm", path: "/product/duong-am" },
+      { id: 6, name: "Kem chống nắng ", path: "/product/mat-na" },
+      { id: 7, name: "Mặt nạ ", path: "/product/mat-na" },
+      { id: 8, name: "Dưỡng Mắt", path: "/product/duong-mat" },
+      { id: 9, name: "Dưỡng môi ", path: "/product/mat-na" },
+      { id: 10, name: "Tất cả sản phẩm", path: "/product" },
+    ],
+    thuongHieu: [
+      { id: 8, name: "Akincare", path: "/brand/akincare" },
+      { id: 9, name: "Altruist", path: "/brand/altruist" },
+      { id: 10, name: "AnteAGE", path: "/brand/anteage" },
+      { id: 11, name: "Bioderma", path: "/brand/bioderma" },
+      { id: 12, name: "La Roche-Posay", path: "/brand/la-roche-posay" },
+      { id: 13, name: "Obagi", path: "/brand/obagi" },
+      { id: 14, name: "SkinCeuticals", path: "/brand/skinceuticals" },
+    ],
+    thanhPhan: [
+      { id: 15, name: "AHA & BHA", path: "/ingredient/aha-bha" },
+      { id: 16, name: "Retinoids", path: "/ingredient/retinoids" },
+      { id: 17, name: "Vitamin C", path: "/ingredient/vitamin-c" },
+      { id: 18, name: "Peel Da", path: "/ingredient/peel-da" },
+      { id: 19, name: "Yếu Tố Tăng Trưởng", path: "/ingredient/yttt" },
+    ],
+  };
 
   const handleResize = () => {
     if (window.innerWidth > 768) {
@@ -33,11 +77,9 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-center py-2">
           <a href="/">
-            <img
-              src="/images/aureum.png"
-              alt="Logo"
-              className="h-24 w-auto object-contain"
-            />
+
+            <img src="/public/images/aureum.png" alt="Logo" className="h-24 w-auto object-contain" />
+
           </a>
         </div>
         <div className="flex items-center justify-between py-4">
@@ -45,13 +87,83 @@ const Header = () => {
           <div></div>
           <nav className="hidden md:flex items-center space-x-8 pl-35">
             {menuItems.map((item) => (
-              <a
+              <div
                 key={item.id}
-                href={item.path}
-                className="text-white hover:text-blue-200 transition-colors duration-200 font-medium"
+                className="relative group"
+                onMouseEnter={() => item.hasDropdown && handleMouseEnter(item.id)}
+                onMouseLeave={(e) => item.hasDropdown && handleMouseLeave(e)}
               >
-                {item.name}
-              </a>
+                <a
+                  href={item.path}
+                  className="text-white font-medium relative transition
+                  after:absolute after:left-0 after:bottom-[-2px] after:w-0 after:h-[1px] after:bg-[#e3d0b1] after:transition-all after:duration-300 hover:after:w-full"
+                >
+                  {item.name}
+                </a>
+
+                {openDropdown === item.id && (
+                  <div className="absolute left-[-100px]  top-full mt-2 bg-black/20 backdrop-blur-md p-6  shadow-lg grid grid-cols-[2fr_3fr_2fr] gap-12 min-w-[900px] z-50">
+                    <div>
+                      <h3 className="text-white font-bold text-lg uppercase tracking-wide">Sản Phẩm</h3>
+                      {dropdownItems.sanPham.map((subItem) => (
+                        <a
+                          key={subItem.id}
+                          href={subItem.path}
+                          className="block text-gray-200 hover:text-white mt-2 text-sm"
+                        >
+                          {subItem.name}
+                        </a>
+                      ))}
+                    </div>
+
+                    <div className="border-l border-gray-300/50 pl-6">
+                      <h3 className="text-white font-bold text-lg uppercase tracking-wide">Thương Hiệu</h3>
+
+                      {Object.entries(
+                        dropdownItems.thuongHieu
+                          .sort((a, b) => a.name.localeCompare(b.name))
+                          .reduce((acc, item) => {
+                            const firstLetter = item.name[0].toUpperCase(); // Lấy chữ cái đầu
+                            if (!acc[firstLetter]) acc[firstLetter] = [];
+                            acc[firstLetter].push(item);
+                            return acc;
+                          }, {})
+                      ).map(([letter, items]) => (
+                        <div key={letter} className="mt-4">
+                          {/* CHỮ CÁI ĐẦU TO HƠN */}
+                          <h4 className="text-white text-2xl font-bold uppercase">{letter}</h4>
+                          <div className="grid grid-cols-2 gap-2 mt-2">
+                            {" "}
+                            {/* Hiển thị 2 cột */}
+                            {items.map((subItem) => (
+                              <a
+                                key={subItem.id}
+                                href={subItem.path}
+                                className="block text-gray-300 hover:text-white text-sm"
+                              >
+                                {subItem.name}
+                              </a>
+                            ))}
+                          </div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <div className="border-l border-gray-300 -500/50 pl-6">
+                      <h3 className="text-white font-bold text-lg uppercase tracking-wide">Thành Phần</h3>
+                      {dropdownItems.thanhPhan.map((subItem) => (
+                        <a
+                          key={subItem.id}
+                          href={subItem.path}
+                          className="block text-gray-200 hover:text-white mt-2 text-sm"
+                        >
+                          {subItem.name}
+                        </a>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
             ))}
           </nav>
           {/* Right Icons */}
@@ -92,11 +204,7 @@ const Header = () => {
               className="md:hidden text-white hover:text-blue-400 transition-colors duration-200"
               aria-label="Menu"
             >
-              {isMenuOpen ? (
-                <FiX className="w-6 h-6" />
-              ) : (
-                <FiMenu className="w-6 h-6" />
-              )}
+              {isMenuOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
             </button>
           </div>
         </div>
@@ -137,10 +245,7 @@ const Header = () => {
             <div className="bg-white p-6 rounded-lg w-full max-w-md mx-4">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold">Account</h2>
-                <button
-                  onClick={() => setIsUserModalOpen(false)}
-                  className="text-gray-600 hover:text-blue-600"
-                >
+                <button onClick={() => setIsUserModalOpen(false)} className="text-gray-600 hover:text-blue-600">
                   <FiX className="w-6 h-6" />
                 </button>
               </div>
