@@ -34,7 +34,7 @@ const Header = () => {
         <div className="flex items-center justify-center py-2">
           <a href="/">
             <img
-              src="/public/images/aureum.png"
+              src="/images/aureum.png"
               alt="Logo"
               className="h-24 w-auto object-contain"
             />
