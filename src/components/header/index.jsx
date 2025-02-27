@@ -98,10 +98,20 @@ const Header = () => {
                         <a
                           key={category.id}
                           className="block text-gray-200 hover:text-white mt-2 text-sm"
+<<<<<<< HEAD
+=======
+                          onClick={() => navigate(`products/${category.id}`)}
+>>>>>>> 98061225bcff844526f71e38bbb9b4ff93df66c6
                         >
                           {category.name}
                         </a>
                       ))}
+                      <a
+                        href="/product"
+                        className="block text-black -400 hover:text-black -300 font-semibold mt-2 text-sm uppercase"
+                      >
+                        Tất cả sản phẩm &rarr;
+                      </a>
                     </div>
                   </div>
                 )}

@@ -1,16 +1,19 @@
 import { useEffect, useState } from "react";
 import { Button, Form, Image, Input, Modal, Popconfirm, Select, Table, Upload } from "antd";
 import { PlusOutlined } from "@ant-design/icons";
-import FormItem from "antd/es/form/FormItem";
 import { useForm } from "antd/es/form/Form";
 import { createProduct, deleteProduct, getProduct, updateProduct } from "../../../services/api.product";
 import { getCategory } from "../../../services/api.category";
 import { toast } from "react-toastify";
 import uploadFile from "../../../utils/upload";
+import { getBrand } from "../../../services/api.brand";
+import { getIngredient } from "../../../services/api.ingredient";
 
 function ManageProduct() {
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
+  const [brands, setBrands] = useState([]);
+  const [ingredients, setIngredients] = useState([]);
   const [open, setOpen] = useState(false);
   const [form] = useForm();
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -63,9 +66,21 @@ function ManageProduct() {
     setCategories(data);
   };
 
+  const fetchBrands = async () => {
+    const data = await getBrand();
+    setBrands(data);
+  };
+
+  const fetchIngredients = async () => {
+    const data = await getIngredient();
+    setIngredients(data);
+  };
+
   useEffect(() => {
     fetchProduct();
     fetchCategories();
+    fetchBrands();
+    fetchIngredients();
   }, []);
 
   const columns = [
@@ -83,6 +98,7 @@ function ManageProduct() {
       title: "Brand",
       dataIndex: "brand",
       key: "brand",
+      render: (brand) => brand?.name,
     },
     {
       title: "Description",
@@ -104,6 +120,22 @@ function ManageProduct() {
       dataIndex: "category",
       key: "category",
       render: (category) => category?.name,
+    },
+    {
+      title: "Ingredient",
+      dataIndex: "ingredient",
+      key: "ingredient",
+      render: (ingredients) => ingredients?.map((ing) => ing.name).join(", ") || "No ingredient",
+      // render: (ingredients) =>
+      //   ingredients?.length > 0 ? (
+      //     <ul>
+      //       {ingredients.map((ing) => (
+      //         <li key={ing.id}>{ing.name}</li>
+      //       ))}
+      //     </ul>
+      //   ) : (
+      //     "No ingredient"
+      //   ),
     },
     {
       title: "Image",
@@ -197,11 +229,11 @@ function ManageProduct() {
           setOpen(true);
         }}
       >
-        Create new product
+        Create New Product
       </Button>
       <Table dataSource={products.filter((product) => !product.deleted)} columns={columns} />
 
-      <Modal title="Product" open={open} onCancel={() => setOpen(false)} onOk={() => form.submit()}>
+      <Modal title="Create New Product" open={open} onCancel={() => setOpen(false)} onOk={() => form.submit()}>
         <Form
           labelCol={{
             span: 24,
@@ -212,7 +244,7 @@ function ManageProduct() {
           <Form.Item label="Id" name="id" hidden>
             <Input />
           </Form.Item>
-          <FormItem
+          <Form.Item
             label="Name"
             name="name"
             rules={[
@@ -227,20 +259,26 @@ function ManageProduct() {
             ]}
           >
             <Input />
-          </FormItem>
-          <FormItem
+          </Form.Item>
+          <Form.Item
             label="Brand"
-            name="brand"
+            name="brandId"
             rules={[
               {
                 required: true,
-                message: "Brand name can not be empty!",
+                message: "One category must be selected!",
               },
             ]}
           >
-            <Input />
-          </FormItem>
-          <FormItem
+            <Select>
+              {brands?.map((brand) => (
+                <Select.Option value={brand.id} key={brand.id}>
+                  {brand.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item
             label="Description"
             name="description"
             rules={[
@@ -255,8 +293,8 @@ function ManageProduct() {
             ]}
           >
             <Input.TextArea />
-          </FormItem>
-          <FormItem
+          </Form.Item>
+          <Form.Item
             label="Quantity"
             name="quantity"
             rules={[
@@ -267,8 +305,8 @@ function ManageProduct() {
             ]}
           >
             <Input />
-          </FormItem>
-          <FormItem
+          </Form.Item>
+          <Form.Item
             label="Price"
             name="price"
             rules={[
@@ -279,14 +317,14 @@ function ManageProduct() {
             ]}
           >
             <Input />
-          </FormItem>
-          <FormItem
-            label="CategoryID"
+          </Form.Item>
+          <Form.Item
+            label="Category"
             name="categoryId"
             rules={[
               {
                 required: true,
-                message: "At least one category must be selected!",
+                message: "One category must be selected!",
               },
             ]}
           >
@@ -297,8 +335,21 @@ function ManageProduct() {
                 </Select.Option>
               ))}
             </Select>
-          </FormItem>
-          <FormItem
+          </Form.Item>
+          <Form.Item
+            label="Ingredient"
+            name="ingredientId"
+            rules={[{ required: true, message: "At least one ingredient must be selected!" }]}
+          >
+            <Select mode="multiple">
+              {ingredients?.map((ingredient) => (
+                <Select.Option value={ingredient.id} key={ingredient.id}>
+                  {ingredient.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item
             label="Code"
             name="code"
             rules={[
@@ -309,8 +360,8 @@ function ManageProduct() {
             ]}
           >
             <Input />
-          </FormItem>
-          <FormItem label="Image" name="image">
+          </Form.Item>
+          <Form.Item label="Image" name="image">
             <Upload
               action="https://14.225.211.152:8081/api"
               listType="picture-card"
@@ -320,7 +371,7 @@ function ManageProduct() {
             >
               {fileList.length >= 8 ? null : uploadButton}
             </Upload>
-          </FormItem>
+          </Form.Item>
         </Form>
       </Modal>
       {previewImage && (

@@ -19,6 +19,13 @@ import ContactPage from "./pages/policies/contact";
 import FrequentlyaskedquestionsPage from "./pages/policies/faq";
 import TermsOfUsePage from "./pages/policies/termsOfUse";
 import AboutUs from "./pages/aboutUs";
+<<<<<<< HEAD
+=======
+import QuizPage from "./pages/Quiz";
+
+import ProductsPage from "./pages/product/product_category";
+import ManageCategory from "./pages/admin/manage-category";
+>>>>>>> 98061225bcff844526f71e38bbb9b4ff93df66c6
 
 function App() {
   const router = createBrowserRouter([
@@ -82,6 +89,18 @@ function App() {
           path: "aboutUs",
           element: <AboutUs />,
         },
+<<<<<<< HEAD
+=======
+        {
+          path: "quiz",
+          element: <QuizPage />,
+        },
+
+        {
+          path: "products/:category_id",
+          element: <ProductsPage />,
+        },
+>>>>>>> 98061225bcff844526f71e38bbb9b4ff93df66c6
       ],
     },
 
@@ -105,6 +124,10 @@ function App() {
         {
           path: "account",
           element: <ManageAccount />,
+        },
+        {
+          path: "category",
+          element: <ManageCategory />,
         },
       ],
     },
