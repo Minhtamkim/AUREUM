@@ -57,7 +57,11 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-center py-2">
           <a href="/">
-            <img src="/public/images/aureum.png" alt="Logo" className="h-24 w-auto object-contain" />
+            <img
+              src="/images/aureum.png"
+              alt="Logo"
+              className="h-24 w-auto object-contain"
+            />
           </a>
         </div>
         <div className="flex items-center justify-between py-4">
@@ -71,7 +75,9 @@ const Header = () => {
               <div
                 key={item.id}
                 className="relative group"
-                onMouseEnter={() => item.hasDropdown && handleMouseEnter(item.id)}
+                onMouseEnter={() =>
+                  item.hasDropdown && handleMouseEnter(item.id)
+                }
                 onMouseLeave={(e) => item.hasDropdown && handleMouseLeave(e)}
               >
                 <a
@@ -85,7 +91,9 @@ const Header = () => {
                 {openDropdown === item.id && (
                   <div className="absolute left-[-100px]  top-full mt-2 bg-black/20 backdrop-blur-md p-6  shadow-lg grid grid-cols-[2fr_3fr_2fr] gap-12 min-w-[900px] z-50">
                     <div>
-                      <h3 className="text-white font-bold text-lg uppercase tracking-wide">Sản Phẩm</h3>
+                      <h3 className="text-white font-bold text-lg uppercase tracking-wide">
+                        Sản Phẩm
+                      </h3>
                       {categories.map((category) => (
                         <a
                           key={category.id}
@@ -148,7 +156,11 @@ const Header = () => {
               className="md:hidden text-white hover:text-blue-400 transition-colors duration-200"
               aria-label="Menu"
             >
-              {isMenuOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
+              {isMenuOpen ? (
+                <FiX className="w-6 h-6" />
+              ) : (
+                <FiMenu className="w-6 h-6" />
+              )}
             </button>
           </div>
         </div>
@@ -189,7 +201,10 @@ const Header = () => {
             <div className="bg-white p-6 rounded-lg w-full max-w-md mx-4">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold">Account</h2>
-                <button onClick={() => setIsUserModalOpen(false)} className="text-gray-600 hover:text-blue-600">
+                <button
+                  onClick={() => setIsUserModalOpen(false)}
+                  className="text-gray-600 hover:text-blue-600"
+                >
                   <FiX className="w-6 h-6" />
                 </button>
               </div>
