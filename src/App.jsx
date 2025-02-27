@@ -20,6 +20,7 @@ import FrequentlyaskedquestionsPage from "./pages/policies/faq";
 import TermsOfUsePage from "./pages/policies/termsOfUse";
 import AboutUs from "./pages/aboutUs";
 import QuizPage from "./pages/Quiz";
+
 import ProductsPage from "./pages/product/product_category";
 
 function App() {
@@ -88,10 +89,12 @@ function App() {
           path: "quiz",
           element: <QuizPage />,
         },
+
         {
           path: "products/:category_id",
           element: <ProductsPage />,
         },
+
       ],
     },
 

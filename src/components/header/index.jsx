@@ -95,6 +95,12 @@ const Header = () => {
                           {category.name}
                         </a>
                       ))}
+                      <a
+                        href="/product"
+                        className="block text-black -400 hover:text-black -300 font-semibold mt-2 text-sm uppercase"
+                      >
+                        Tất cả sản phẩm &rarr;
+                      </a>
                     </div>
                   </div>
                 )}
