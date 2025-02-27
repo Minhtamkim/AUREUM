@@ -117,6 +117,7 @@ const Footer = () => {
               </li>
             </ul>
             <div className="mt-10">
+              <img src="/images/image 9.png" alt="Logo" />
               <img src="https://i.postimg.cc/90c0205K/image-9.png" alt="Logo" />
             </div>
             <div className="mt-10">

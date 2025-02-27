@@ -30,7 +30,7 @@ const Header = () => {
     { id: 2, name: "Sản Phẩm", path: "product", hasDropdown: true },
     { id: 3, name: "Bài Viết", path: "blog" },
     { id: 4, name: "Về Chúng Tôi", path: "aboutUs" },
-    { id: 5, name: "Giải Đáp Skin Treatment", path: "#" },
+    { id: 5, name: "Xác Định Loại Da", path: "#" },
   ];
 
   useEffect(() => {
@@ -57,6 +57,7 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-center py-2">
           <a href="/">
+            <img src="/images/aureum.png" alt="Logo" className="h-24 w-auto object-contain" />
             <img
               src="/images/aureum.png"
               alt="Logo"
@@ -64,11 +65,11 @@ const Header = () => {
             />
           </a>
         </div>
-        <div className="flex items-center justify-between py-4">
+        <div className="flex items-center py-4">
           {/* Desktop Navigation */}
           {/* Navigate*/}
           <nav
-            className="hidden md:flex items-center space-x-8 pl-75
+            className="hidden md:flex items-center space-x-8 justify-center flex-1 pl-35
           hover:shadow-lg  ease-in-out cursor-pointer"
           >
             {menuItems.map((item) => (
