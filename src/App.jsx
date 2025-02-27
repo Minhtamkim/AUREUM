@@ -21,6 +21,7 @@ import TermsOfUsePage from "./pages/policies/termsOfUse";
 import AboutUs from "./pages/aboutUs";
 import QuizPage from "./pages/Quiz";
 
+
 import ProductsPage from "./pages/product/product_category";
 
 function App() {
@@ -90,6 +91,7 @@ function App() {
           element: <QuizPage />,
         },
 
+
         {
           path: "products/:category_id",
           element: <ProductsPage />,
@@ -118,6 +120,10 @@ function App() {
         {
           path: "account",
           element: <ManageAccount />,
+        },
+        {
+          path: "category",
+          element: <ManageCategory />,
         },
       ],
     },
