@@ -21,8 +21,8 @@ import TermsOfUsePage from "./pages/policies/termsOfUse";
 import AboutUs from "./pages/aboutUs";
 import QuizPage from "./pages/Quiz";
 
-
 import ProductsPage from "./pages/product/product_category";
+import ManageCategory from "./pages/admin/manage-category";
 
 function App() {
   const router = createBrowserRouter([
@@ -91,12 +91,10 @@ function App() {
           element: <QuizPage />,
         },
 
-
         {
           path: "products/:category_id",
           element: <ProductsPage />,
         },
-
       ],
     },
 
