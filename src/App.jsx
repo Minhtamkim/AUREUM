@@ -20,8 +20,7 @@ import FrequentlyaskedquestionsPage from "./pages/policies/faq";
 import TermsOfUsePage from "./pages/policies/termsOfUse";
 import AboutUs from "./pages/aboutUs";
 import QuizPage from "./pages/Quiz";
-import QuizDetail from "./pages/Quiz/QuizDetail";
-
+import ManageCategory from "./pages/admin/manage-category";
 
 function App() {
   const router = createBrowserRouter([
@@ -89,10 +88,6 @@ function App() {
           path: "quiz",
           element: <QuizPage />,
         },
-        {
-          path: "quizDetail",
-          element: <QuizDetail />,
-        },
       ],
     },
 
@@ -116,6 +111,10 @@ function App() {
         {
           path: "account",
           element: <ManageAccount />,
+        },
+        {
+          path: "category",
+          element: <ManageCategory />,
         },
       ],
     },
