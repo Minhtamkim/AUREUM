@@ -18,6 +18,8 @@ const items = [
   getItem("Account", "/dashboard/account", <UserOutlined />),
   getItem("Product", "/dashboard/product", <ProductOutlined />),
   getItem("Category", "/dashboard/category", <PieChartOutlined />),
+  getItem("Ingredient", "/dashboard/ingredient", <PieChartOutlined />),
+  getItem("Brand", "/dashboard/brand", <PieChartOutlined />),
 ];
 
 const Dashboard = () => {
