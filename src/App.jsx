@@ -21,7 +21,7 @@ import TermsOfUsePage from "./pages/policies/termsOfUse";
 import AboutUs from "./pages/aboutUs";
 import QuizPage from "./pages/Quiz";
 import QuizDetail from "./pages/Quiz/QuizDetail";
-
+import QuizResult from "./pages/Quiz/QuizResult";
 
 function App() {
   const router = createBrowserRouter([
@@ -92,6 +92,10 @@ function App() {
         {
           path: "quizDetail",
           element: <QuizDetail />,
+        },
+        {
+          path: "quizResult",
+          element: <QuizResult />,
         },
       ],
     },
