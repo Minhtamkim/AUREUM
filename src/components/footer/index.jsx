@@ -48,7 +48,7 @@ const Footer = () => {
             <a href="/">
               {" "}
               <img
-                src="/public/images/aureum.png"
+                src="/images/aureum.png"
                 alt="Company Logo"
                 className="h-16 w-auto mb-4 mt-4"
                 onError={(e) => {
@@ -117,7 +117,7 @@ const Footer = () => {
               </li>
             </ul>
             <div className="mt-10">
-              <img src="/public/images/image 9.png" alt="Logo" />
+              <img src="/images/image 9.png" alt="Logo" />
             </div>
             <div className="mt-10">
               <h3 className="text-white text-lg font-semibold mb-4">
