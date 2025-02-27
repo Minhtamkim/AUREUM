@@ -55,13 +55,12 @@ const Header = () => {
   return (
     <header className="w-full bg-[#2d2d2b] shadow-md h-4-">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-center py-2">
+        <div className="flex items-center justify-center py-2 ">
           <a href="/">
-            <img src="/images/aureum.png" alt="Logo" className="h-24 w-auto object-contain" />
             <img
-              src="/images/aureum.png"
+              src="/images/logoAureum.png"
               alt="Logo"
-              className="h-24 w-auto object-contain"
+              className="h-20 w-auto"
             />
           </a>
         </div>
@@ -69,7 +68,7 @@ const Header = () => {
           {/* Desktop Navigation */}
           {/* Navigate*/}
           <nav
-            className="hidden md:flex items-center space-x-8 justify-center flex-1 pl-35
+            className="hidden md:flex items-center space-x-8 justify-center flex-1 pl-30
           hover:shadow-lg  ease-in-out cursor-pointer"
           >
             {menuItems.map((item) => (
