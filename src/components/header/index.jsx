@@ -58,7 +58,7 @@ const Header = () => {
         <div className="flex items-center justify-center py-2">
           <a href="/">
             <img
-              src="https://i.postimg.cc/8P1fQKTc/logo-aureum-1.png"
+              src="/images/aureum.png"
               alt="Logo"
               className="h-24 w-auto object-contain"
             />
@@ -74,7 +74,7 @@ const Header = () => {
             {menuItems.map((item) => (
               <div
                 key={item.id}
-                className="relative group "
+                className="relative group"
                 onMouseEnter={() =>
                   item.hasDropdown && handleMouseEnter(item.id)
                 }
@@ -98,10 +98,7 @@ const Header = () => {
                         <a
                           key={category.id}
                           className="block text-gray-200 hover:text-white mt-2 text-sm"
-<<<<<<< HEAD
-=======
                           onClick={() => navigate(`products/${category.id}`)}
->>>>>>> 98061225bcff844526f71e38bbb9b4ff93df66c6
                         >
                           {category.name}
                         </a>
