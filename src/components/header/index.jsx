@@ -87,10 +87,20 @@ const Header = () => {
                     <div>
                       <h3 className="text-white font-bold text-lg uppercase tracking-wide">Sản Phẩm</h3>
                       {categories.map((category) => (
-                        <a key={category.id} className="block text-gray-200 hover:text-white mt-2 text-sm">
+                        <a
+                          key={category.id}
+                          className="block text-gray-200 hover:text-white mt-2 text-sm"
+                          onClick={() => navigate(`products/${category.id}`)}
+                        >
                           {category.name}
                         </a>
                       ))}
+                      <a
+                        href="/product"
+                        className="block text-black -400 hover:text-black -300 font-semibold mt-2 text-sm uppercase"
+                      >
+                        Tất cả sản phẩm &rarr;
+                      </a>
                     </div>
                   </div>
                 )}
