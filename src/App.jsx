@@ -20,8 +20,6 @@ import FrequentlyaskedquestionsPage from "./pages/policies/faq";
 import TermsOfUsePage from "./pages/policies/termsOfUse";
 import AboutUs from "./pages/aboutUs";
 import QuizPage from "./pages/Quiz";
-import QuizDetail from "./pages/Quiz/QuizDetail";
-import QuizResult from "./pages/Quiz/QuizResult";
 
 function App() {
   const router = createBrowserRouter([
@@ -89,13 +87,10 @@ function App() {
           path: "quiz",
           element: <QuizPage />,
         },
+
         {
-          path: "quizDetail",
-          element: <QuizDetail />,
-        },
-        {
-          path: "quizResult",
-          element: <QuizResult />,
+          path: "products/:category_id",
+          element: <ProductsPage />,
         },
       ],
     },
@@ -120,6 +115,18 @@ function App() {
         {
           path: "account",
           element: <ManageAccount />,
+        },
+        {
+          path: "category",
+          element: <ManageCategory />,
+        },
+        {
+          path: "ingredient",
+          element: <ManageIngredient />,
+        },
+        {
+          path: "brand",
+          element: <ManageBrand />,
         },
       ],
     },
