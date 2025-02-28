@@ -339,9 +339,15 @@ const QuizResult = () => {
           )}
         </div>
 
-        <button onClick={() => navigate("/quiz")} className="mt-6 px-6 py-3 bg-blue-500 text-white rounded-lg">
+        <a
+          href="/quiz"
+          className="mt-5 px-6 py-3 text-white rounded-full 
+              block mx-auto text-center font-semibold 
+              bg-gradient-to-r from-pink-400 to-purple-400
+              shadow-lg transition-all duration-300 transform hover:scale-105"
+        >
           Làm bài lại
-        </button>
+        </a>
       </div>
     </div>
   );
