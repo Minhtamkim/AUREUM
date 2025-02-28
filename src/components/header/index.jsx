@@ -28,7 +28,7 @@ const Header = () => {
   };
   const menuItems = [
     { id: 1, name: "Trang Chủ", path: "/" },
-    { id: 2, name: "Sản Phẩm", path: "product", hasDropdown: true },
+    { id: 2, name: "Sản Phẩm", path: "/products", hasDropdown: true },
     { id: 3, name: "Bài Viết", path: "blog" },
     { id: 4, name: "Về Chúng Tôi", path: "aboutUs" },
     { id: 5, name: "Xác Định Loại Da", path: "#" },
@@ -95,13 +95,13 @@ const Header = () => {
                         <a
                           key={category.id}
                           className="block text-gray-100 hover:text-white mt-1 text-sm"
-                          onClick={() => navigate(`products/${category.id}`)}
+                          onClick={() => navigate(`/products/${category.id}`)}
                         >
                           {category.name}
                         </a>
                       ))}
                       <a
-                        href="/product"
+                        href="/products"
                         className="block text-black -400  hover:text-white -300 font-semibold mt-2 text-sm uppercase"
                       >
                         Tất cả sản phẩm &rarr;
@@ -114,7 +114,7 @@ const Header = () => {
                           <a
                             key={brand.id}
                             className="block text-gray-100 hover:text-white mt-1 text-sm"
-                            onClick={() => navigate(`products/${brand.id}`)}
+                            onClick={() => navigate(`/products/brand/${brand.id}`)}
                           >
                             {brand.name}
                           </a>
@@ -128,7 +128,7 @@ const Header = () => {
                           <a
                             key={ingredient.id}
                             className="block text-gray-100 hover:text-white mt-1 text-sm"
-                            onClick={() => navigate(`products/${ingredient.id}`)}
+                            onClick={() => navigate(`/products/${ingredient.id}`)}
                           >
                             {ingredient.name}
                           </a>
