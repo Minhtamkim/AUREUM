@@ -124,7 +124,7 @@ const Header = () => {
                     <div>
                       <div className="border-l border-gray-300 -500/50 pl-4">
                         <h3 className="text-white font-bold text-lg uppercase tracking-wide">Thành phần</h3>
-                        {ingredient.map((ingredient) => (
+                        {ingredient.slice(0, 15).map((ingredient) => (
                           <a
                             key={ingredient.id}
                             className="block text-gray-100 hover:text-white mt-1 text-sm"
