@@ -486,7 +486,7 @@ const QuizDetail = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-pink-50 via-blue-50 to-purple-50 flex items-center justify-center p-4">
+    <div className="max-w-full w-screen h-screen flex flex-col items-center justify-center bg-[#FAF0E8] text-center">
       <div className="max-w-3xl w-full bg-white/80 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-xl">
         <div className="flex items-center justify-center gap-3 mb-8">
           <FaHeart className="text-pink-400 text-2xl md:text-3xl animate-pulse" />
@@ -544,7 +544,6 @@ const QuizDetail = () => {
         ) : (
           <div className="text-center">
             <h2 className="text-2xl font-bold text-green-600 mb-4">Bạn đã hoàn thành bài kiểm tra!</h2>
-            
           </div>
         )}
       </div>
