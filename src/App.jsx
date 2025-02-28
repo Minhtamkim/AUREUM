@@ -27,6 +27,7 @@ import ManageIngredient from "./pages/admin/manage-ingredient";
 import ManageBrand from "./pages/admin/manage-brand";
 import QuizDetail from "./pages/Quiz/QuizDetail";
 import QuizResult from "./pages/Quiz/QuizResult";
+import ProductsBrandPage from "./pages/product/product_brand";
 
 function App() {
   const router = createBrowserRouter([
@@ -83,7 +84,7 @@ function App() {
           element: <Cart />,
         },
         {
-          path: "product",
+          path: "products",
           element: <ProductDetail />,
         },
         {
@@ -105,6 +106,10 @@ function App() {
         {
           path: "products/:category_id",
           element: <ProductsPage />,
+        },
+        {
+          path: "products/brand/:brand_id",
+          element: <ProductsBrandPage />,
         },
       ],
     },
