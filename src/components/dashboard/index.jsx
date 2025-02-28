@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { PieChartOutlined } from "@ant-design/icons";
+import { PieChartOutlined, ProductFilled, ProductOutlined, UserOutlined } from "@ant-design/icons";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import { Link, Outlet } from "react-router-dom";
 
@@ -15,9 +15,11 @@ function getItem(label, key, icon, children) {
 }
 
 const items = [
-  getItem("Product", "/dashboard/product", <PieChartOutlined />),
-  getItem("Account", "/dashboard/account", <PieChartOutlined />),
-  getItem("Voucher", "/dashboard/voucher", <PieChartOutlined />),
+  getItem("Account", "/dashboard/account", <UserOutlined />),
+  getItem("Product", "/dashboard/product", <ProductOutlined />),
+  getItem("Category", "/dashboard/category", <PieChartOutlined />),
+  getItem("Ingredient", "/dashboard/ingredient", <PieChartOutlined />),
+  getItem("Brand", "/dashboard/brand", <PieChartOutlined />),
 ];
 
 const Dashboard = () => {

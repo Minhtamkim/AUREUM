@@ -30,7 +30,7 @@ const Header = () => {
     { id: 2, name: "Sản Phẩm", path: "product", hasDropdown: true },
     { id: 3, name: "Bài Viết", path: "blog" },
     { id: 4, name: "Về Chúng Tôi", path: "aboutUs" },
-    { id: 5, name: "Giải Đáp Skin Treatment", path: "#" },
+    { id: 5, name: "Xác Định Loại Da", path: "#" },
   ];
 
   useEffect(() => {
@@ -55,23 +55,29 @@ const Header = () => {
   return (
     <header className="w-full bg-[#2d2d2b] shadow-md h-4-">
       <div className="container mx-auto px-4">
-        <div className="flex items-center justify-center py-2">
+        <div className="flex items-center justify-center py-2 ">
           <a href="/">
-            <img src="/public/images/aureum.png" alt="Logo" className="h-24 w-auto object-contain" />
+            <img
+              src="/images/logoAureum.png"
+              alt="Logo"
+              className="h-20 w-auto"
+            />
           </a>
         </div>
-        <div className="flex items-center justify-between py-4">
+        <div className="flex items-center py-4">
           {/* Desktop Navigation */}
           {/* Navigate*/}
           <nav
-            className="hidden md:flex items-center space-x-8 pl-75
+            className="hidden md:flex items-center space-x-8 justify-center flex-1 pl-30
           hover:shadow-lg  ease-in-out cursor-pointer"
           >
             {menuItems.map((item) => (
               <div
                 key={item.id}
                 className="relative group"
-                onMouseEnter={() => item.hasDropdown && handleMouseEnter(item.id)}
+                onMouseEnter={() =>
+                  item.hasDropdown && handleMouseEnter(item.id)
+                }
                 onMouseLeave={(e) => item.hasDropdown && handleMouseLeave(e)}
               >
                 <a
@@ -85,12 +91,24 @@ const Header = () => {
                 {openDropdown === item.id && (
                   <div className="absolute left-[-100px]  top-full mt-2 bg-black/20 backdrop-blur-md p-6  shadow-lg grid grid-cols-[2fr_3fr_2fr] gap-12 min-w-[900px] z-50">
                     <div>
-                      <h3 className="text-white font-bold text-lg uppercase tracking-wide">Sản Phẩm</h3>
+                      <h3 className="text-white font-bold text-lg uppercase tracking-wide">
+                        Sản Phẩm
+                      </h3>
                       {categories.map((category) => (
-                        <a key={category.id} className="block text-gray-200 hover:text-white mt-2 text-sm">
+                        <a
+                          key={category.id}
+                          className="block text-gray-200 hover:text-white mt-2 text-sm"
+                          onClick={() => navigate(`products/${category.id}`)}
+                        >
                           {category.name}
                         </a>
                       ))}
+                      <a
+                        href="/product"
+                        className="block text-black -400 hover:text-black -300 font-semibold mt-2 text-sm uppercase"
+                      >
+                        Tất cả sản phẩm &rarr;
+                      </a>
                     </div>
                   </div>
                 )}
@@ -138,7 +156,11 @@ const Header = () => {
               className="md:hidden text-white hover:text-blue-400 transition-colors duration-200"
               aria-label="Menu"
             >
-              {isMenuOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
+              {isMenuOpen ? (
+                <FiX className="w-6 h-6" />
+              ) : (
+                <FiMenu className="w-6 h-6" />
+              )}
             </button>
           </div>
         </div>
@@ -179,7 +201,10 @@ const Header = () => {
             <div className="bg-white p-6 rounded-lg w-full max-w-md mx-4">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold">Account</h2>
-                <button onClick={() => setIsUserModalOpen(false)} className="text-gray-600 hover:text-blue-600">
+                <button
+                  onClick={() => setIsUserModalOpen(false)}
+                  className="text-gray-600 hover:text-blue-600"
+                >
                   <FiX className="w-6 h-6" />
                 </button>
               </div>

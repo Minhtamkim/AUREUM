@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import api from "../../config/axios";
-// import api from "../../config/axios";
 
 export default function ProductDetail() {
-  const [product, setProducts] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [trang, setTrang] = useState(1);
+  const spMoiTrang = 20;
 
   useEffect(() => {
     const fetchData = async () => {
@@ -13,22 +14,53 @@ export default function ProductDetail() {
     fetchData();
   }, []);
 
+  const tongTrang = Math.ceil(products.length / spMoiTrang);
+  const sanPhamHienTai = products.slice(
+    (trang - 1) * spMoiTrang,
+    trang * spMoiTrang
+  );
+
   return (
-    <div className="grid grid-cols-4 gap-12 mt-6 px-10 my-6">
-      {product.map((product, index) => (
-        <div
-          key={index}
-          className="bg-white shadow-md shadow-gray-300 p-4 text-center flex flex-col items-center justify-between 
-          hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
-        >
-          <div className="flex items-center justify-center h-56 w-full">
-            <img src={product.image} alt={product.name} className="h-full object-contain" />
+    <div className="px-10 my-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12 mt-6">
+        {sanPhamHienTai.map((product, index) => (
+          <div
+            key={index}
+            className="bg-white shadow-md rounded-lg p-4 text-center
+                hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
+          >
+            <div
+              className={`p-2 flex items-center justify-center brightness-100 `}
+            >
+              <img src={product.image} alt={product.title} className="h-70" />
+            </div>
+            <p className="font-semibold mt-2">{product.name}</p>
+            <p className="text-sm text-gray-500 whitespace-pre-line">
+              {product.price + ".000đ"}
+            </p>
           </div>
-          <p className="text-lg font-semibold mt-4 uppercase">GLYTONE</p>
-          <p className="text-md text-gray-700 mt-1 h-12 flex items-center justify-center">{product.name}</p>
-          <p className="text-lg font-bold mt-2">{product.price.toLocaleString()}đ</p>
-        </div>
-      ))}
+        ))}
+      </div>
+
+      <div className="flex justify-center items-center space-x-4 mt-6">
+        <button
+          onClick={() => setTrang((p) => Math.max(p - 1, 1))}
+          disabled={trang === 1}
+          className="px-4 py-2 bg-gray-300 rounded-md disabled:opacity-50"
+        >
+          &larr; Trước
+        </button>
+        <span>
+          {trang} / {tongTrang}
+        </span>
+        <button
+          onClick={() => setTrang((p) => Math.min(p + 1, tongTrang))}
+          disabled={trang === tongTrang}
+          className="px-4 py-2 bg-gray-300 rounded-md disabled:opacity-50"
+        >
+          Sau &rarr;
+        </button>
+      </div>
     </div>
   );
 }
