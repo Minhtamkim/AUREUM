@@ -25,6 +25,8 @@ import ProductsPage from "./pages/product/product_category";
 import ManageCategory from "./pages/admin/manage-category";
 import ManageIngredient from "./pages/admin/manage-ingredient";
 import ManageBrand from "./pages/admin/manage-brand";
+import QuizDetail from "./pages/Quiz/QuizDetail";
+import QuizResult from "./pages/Quiz/QuizResult";
 
 function App() {
   const router = createBrowserRouter([
@@ -92,7 +94,14 @@ function App() {
           path: "quiz",
           element: <QuizPage />,
         },
-
+        {
+          path: "quizDetail",
+          element: <QuizDetail />,
+        },
+        {
+          path: "quizResult",
+          element: <QuizResult />,
+        },
         {
           path: "products/:category_id",
           element: <ProductsPage />,
