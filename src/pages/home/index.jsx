@@ -9,9 +9,11 @@ import { useState } from "react";
 import { useEffect } from "react";
 
 import api from "../../config/axios";
+import { useNavigate } from "react-router-dom";
 
 function Home() {
   const [products, setProducts] = useState([]);
+  const navigate = useNavigate(); // Dùng để điều hướng
 
   useEffect(() => {
     const fetchData = async () => {
@@ -142,6 +144,7 @@ function Home() {
                   key={index}
                   className="bg-white shadow-md rounded-lg p-4 text-center
                 hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
+                  onClick={() => navigate(`/products/details/${product.id}`)} // Điều hướng khi bấm vào sản phẩm
                 >
                   <div className={`p-2 flex items-center justify-center brightness-100 }`}>
                     <img src={product.image} alt={product.title} className="h-70" />
