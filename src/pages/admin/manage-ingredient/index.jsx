@@ -8,10 +8,13 @@ function ManageIngredient() {
   const [ingredients, setIngredients] = useState([]);
   const [open, setOpen] = useState(false);
   const [form] = useForm();
+  const [searchText, setSearchText] = useState(""); // Lưu giá trị tìm kiếm
+  const [filteredData, setFilteredData] = useState([]); // Lưu danh sách sau khi lọc
 
   const fetchIngredients = async () => {
     const data = await getIngredient();
     setIngredients(data);
+    setFilteredData(data); // Sao chép danh sách gốc để lọc
   };
 
   useEffect(() => {
@@ -47,7 +50,7 @@ function ManageIngredient() {
                   // lưu vào trường categoryID. Nếu không có categories, nó sẽ gán
                   // một mảng rỗng ([]). Việc sử dụng optional chaining giúp tránh
                   // lỗi khi record.categories không tồn tại.
-                  IngredientID: record?.ingredients ? record?.ingredients?.map((item) => item.id) : [],
+                  // IngredientID: record?.ingredients ? record?.ingredients?.map((item) => item.id) : [],
                 });
               }}
             >
@@ -68,6 +71,14 @@ function ManageIngredient() {
       },
     },
   ];
+
+  const handleSearch = (value) => {
+    setSearchText(value);
+    const filtered = ingredients.filter(
+      (item) => item.name.toLowerCase().includes(value.toLowerCase()) // Tìm kiếm không phân biệt hoa/thường
+    );
+    setFilteredData(filtered);
+  };
 
   const handleDelete = async (id) => {
     // Gọi API xóa sản phẩm
@@ -107,7 +118,17 @@ function ManageIngredient() {
       >
         Create New Ingredient
       </Button>
-      <Table dataSource={ingredients.filter((ingredient) => !ingredient.deleted)} columns={columns} />
+
+      <Input
+        placeholder="Tìm kiếm thành phần..."
+        allowClear
+        onChange={(e) => handleSearch(e.target.value)}
+        style={{ marginBottom: 16, width: 250, marginLeft: 12}}
+      />
+
+      <Table dataSource={filteredData.filter((ingredient) => !ingredient.deleted)} columns={columns} rowKey="id" />
+
+      {/* <Table dataSource={ingredients.filter((ingredient) => !ingredient.deleted)} columns={columns} /> */}
       <Modal title="Create New Ingredient" open={open} onCancel={() => setOpen(false)} onOk={() => form.submit()}>
         <Form labelCol={{ span: 24 }} form={form} onFinish={handleSubmit}>
           <Form.Item label="Id" name="id" hidden>
@@ -127,7 +148,7 @@ function ManageIngredient() {
               },
             ]}
           >
-            <Input />
+            <Input placeholder="Nhập tên thành phần" />
           </Form.Item>
         </Form>
       </Modal>
