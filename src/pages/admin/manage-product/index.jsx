@@ -10,6 +10,8 @@ import { getBrand } from "../../../services/api.brand";
 import { getIngredient } from "../../../services/api.ingredient";
 
 function ManageProduct() {
+  const [searchText, setSearchText] = useState(""); // Lưu từ khóa tìm kiếm
+  const [filteredProducts, setFilteredProducts] = useState([]); // Lưu danh sách sản phẩm sau khi lọc
   const [products, setProducts] = useState([]);
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
@@ -59,6 +61,7 @@ function ManageProduct() {
   const fetchProduct = async () => {
     const data = await getProduct();
     setProducts(data);
+    setFilteredProducts(data); // Cập nhật danh sách hiển thị ban đầu
   };
 
   const fetchCategories = async () => {
@@ -148,7 +151,6 @@ function ManageProduct() {
       dataIndex: "code",
       key: "code",
     },
-
     {
       title: "Action",
       dataIndex: "id",
@@ -167,13 +169,28 @@ function ManageProduct() {
                   // lưu vào trường categoryID. Nếu không có categories, nó sẽ gán
                   // một mảng rỗng ([]). Việc sử dụng optional chaining giúp tránh
                   // lỗi khi record.categories không tồn tại.
-                  categoryID: record?.categories ? record?.categories?.map((item) => item.id) : [],
+                  categoryId: record?.category?.id, // Lấy ID category
+                  ingredientId: record?.ingredient?.map((item) => item.id), // Lấy ID ingredient
+                  brandId: record?.brand?.id, // Lấy ID brand
                 });
+                if (record?.image) {
+                  // Kiểm tra xem có ảnh không
+                  setFileList([
+                    // Nếu có ảnh, thêm vào fileList
+                    {
+                      uid: "-1", // ID duy nhất
+                      name: "Uploaded Image",
+                      status: "done", // Đánh dấu là upload thành công
+                      url: record.image, // URL ảnh từ Firebase
+                    },
+                  ]);
+                } else {
+                  setFileList([]); // Nếu không có ảnh, đặt lại fileList rỗng
+                }
               }}
             >
               Edit
             </Button>
-
             <Popconfirm
               title="Delete the product"
               description="Are you sure want to delete the product ?"
@@ -189,6 +206,17 @@ function ManageProduct() {
     },
   ];
 
+  const handleSearch = (value) => {
+    setSearchText(value); // Cập nhật từ khóa tìm kiếm
+    const filtered = products.filter( // Lọc danh sách sản phẩm theo từ khóa tìm kiếm
+      (product) => 
+        product.name.toLowerCase().includes(value.toLowerCase()) || // Tìm theo tên sản phẩm (không phân biệt hoa thường)
+        product.code.toLowerCase().includes(value.toLowerCase()) || // Tìm theo mã sản phẩm
+        product.brand?.name.toLowerCase().includes(value.toLowerCase()) // Tìm theo thương hiệu
+    );
+    setFilteredProducts(filtered); // Cập nhật danh sách sản phẩm sau khi lọc
+  };
+
   const handleDeleteProduct = async (id) => {
     const response = await deleteProduct(id);
 
@@ -198,27 +226,41 @@ function ManageProduct() {
   };
 
   const handleSubmit = async (formValues) => {
-    if (formValues.image) {
-      const url = await uploadFile(formValues.image.file.originFileObj);
-      formValues.image = url;
+    // if (formValues.image) {
+    //   // nếu có image thì upload lên server
+    //   const url = await uploadFile(formValues.image.file.originFileObj); // upload file
+    //   formValues.image = url; //  gán url vào formValues.image
+    // }
+
+    if (fileList.length > 0) {
+      // kiểm tra xem có file mới không
+      if (fileList[0].originFileObj) {
+        // Nếu có file mới, upload lên Firebase
+        const url = await uploadFile(fileList[0].originFileObj); // upload file
+        formValues.image = url; // gán url vào formValues.image
+      } else {
+        // Nếu không có file mới, giữ nguyên URL cũ
+        formValues.image = fileList[0].url; // gán url vào formValues.image
+      }
     }
 
     if (formValues.id) {
-      const response = await updateProduct({ id: formValues.id, product: formValues });
-      console.log(response);
-      toast.success("Successfully update product!");
+      // nếu có id thì là update
+      const response = await updateProduct({ id: formValues.id, product: formValues }); // goi api update
+      console.log(response); // log response
+      toast.success("Successfully update product!"); // thong bao thanh cong
     }
 
     // khong co id thi la create
     else {
-      const response = await createProduct(formValues);
-      console.log(response);
-      toast.success("Successfully create new product!");
+      const response = await createProduct(formValues); // goi api create
+      console.log(response); // log response
+      toast.success("Successfully create new product!"); // thong bao thanh cong
     }
 
-    setOpen(false);
-    form.resetFields();
-    fetchProduct();
+    setOpen(false); // dong modal
+    form.resetFields(); // reset form
+    fetchProduct(); // cập nhật lại danh sách product
   };
 
   return (
@@ -227,11 +269,21 @@ function ManageProduct() {
         type="primary"
         onClick={() => {
           setOpen(true);
+          form.resetFields();
+          setFileList([]); // Reset danh sách ảnh
         }}
       >
         Create New Product
       </Button>
-      <Table dataSource={products.filter((product) => !product.deleted)} columns={columns} />
+      <Input
+        placeholder="Tìm kiếm sản phẩm..."
+        allowClear
+        onChange={(e) => handleSearch(e.target.value)}
+        style={{ marginBottom: 16, width: 250, marginLeft: 12 }}
+      />
+
+      <Table dataSource={filteredProducts.filter((product) => !product.deleted)} columns={columns} rowKey="id" />
+      {/* <Table dataSource={products.filter((product) => !product.deleted)} columns={columns} rowKey="id" /> */}
 
       <Modal title="Create New Product" open={open} onCancel={() => setOpen(false)} onOk={() => form.submit()}>
         <Form
@@ -258,7 +310,7 @@ function ManageProduct() {
               },
             ]}
           >
-            <Input />
+            <Input placeholder="Nhập tên sản phẩm" />
           </Form.Item>
           <Form.Item
             label="Brand"
@@ -266,11 +318,16 @@ function ManageProduct() {
             rules={[
               {
                 required: true,
-                message: "One category must be selected!",
+                message: "One brand must be selected!",
               },
             ]}
           >
-            <Select>
+            <Select
+              placeholder="Chọn thương hiệu"
+              showSearch // Cho phép tìm kiếm
+              optionFilterProp="children" // Lọc theo nội dung hiển thị
+              filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())} // Hàm lọc danh sách theo input
+            >
               {brands?.map((brand) => (
                 <Select.Option value={brand.id} key={brand.id}>
                   {brand.name}
@@ -284,7 +341,7 @@ function ManageProduct() {
             rules={[
               {
                 required: true,
-                message: "Description name can not be empty!",
+                message: "Description can not be empty!",
               },
               {
                 min: 5,
@@ -292,7 +349,7 @@ function ManageProduct() {
               },
             ]}
           >
-            <Input.TextArea />
+            <Input.TextArea placeholder="Nhập miêu tả sản phẩm" />
           </Form.Item>
           <Form.Item
             label="Quantity"
@@ -300,11 +357,11 @@ function ManageProduct() {
             rules={[
               {
                 required: true,
-                message: "Quantity name can not be empty!",
+                message: "Quantity can not be empty!",
               },
             ]}
           >
-            <Input />
+            <Input placeholder="Nhập số lượng" />
           </Form.Item>
           <Form.Item
             label="Price"
@@ -312,11 +369,11 @@ function ManageProduct() {
             rules={[
               {
                 required: true,
-                message: "Price name can not be empty!",
+                message: "Price can not be empty!",
               },
             ]}
           >
-            <Input />
+            <Input placeholder="Nhập giá" />
           </Form.Item>
           <Form.Item
             label="Category"
@@ -328,7 +385,12 @@ function ManageProduct() {
               },
             ]}
           >
-            <Select>
+            <Select
+              placeholder="Chọn danh mục"
+              showSearch // Cho phép tìm kiếm
+              optionFilterProp="children" // Lọc theo nội dung hiển thị
+              filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())} // Hàm lọc danh sách theo input
+            >
               {categories?.map((category) => (
                 <Select.Option value={category.id} key={category.id}>
                   {category.name}
@@ -341,7 +403,13 @@ function ManageProduct() {
             name="ingredientId"
             rules={[{ required: true, message: "At least one ingredient must be selected!" }]}
           >
-            <Select mode="multiple">
+            <Select
+              mode="multiple"
+              placeholder="Chọn thành phần"
+              showSearch // Cho phép tìm kiếm
+              optionFilterProp="children" // Lọc theo nội dung hiển thị
+              filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())} // Hàm lọc danh sách theo input
+            >
               {ingredients?.map((ingredient) => (
                 <Select.Option value={ingredient.id} key={ingredient.id}>
                   {ingredient.name}
@@ -355,11 +423,11 @@ function ManageProduct() {
             rules={[
               {
                 required: true,
-                message: "Code name can not be empty!",
+                message: "Code can not be empty!",
               },
             ]}
           >
-            <Input />
+            <Input placeholder="Nhập mã sản phẩm" />
           </Form.Item>
           <Form.Item label="Image" name="image">
             <Upload
@@ -369,7 +437,7 @@ function ManageProduct() {
               onPreview={handlePreview}
               onChange={handleChange}
             >
-              {fileList.length >= 8 ? null : uploadButton}
+              {fileList.length >= 1 ? null : uploadButton}
             </Upload>
           </Form.Item>
         </Form>
