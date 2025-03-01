@@ -1,6 +1,6 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import api from "../../../config/axios";
 
 const ProductsBrandPage = () => {
@@ -9,6 +9,7 @@ const ProductsBrandPage = () => {
   const [brands, setBrands] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const navigate = useNavigate(); // Dùng để điều hướng
 
   useEffect(() => {
     const fetchData = async () => {
@@ -57,6 +58,7 @@ const ProductsBrandPage = () => {
             key={product.id}
             className="bg-white shadow-md rounded-lg p-4 text-center
                 hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
+            onClick={() => navigate(`/products/details/${product.id}`)} // Điều hướng khi bấm vào sản phẩm
           >
             <div className="p-2 flex items-center justify-center">
               <img src={product.image} alt={product.name} className="h-70" />
