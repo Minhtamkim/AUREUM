@@ -5,6 +5,8 @@ import { toast } from "react-toastify";
 import { createBrand, deleteBrand, getBrand, updateBrand } from "../../../services/api.brand";
 
 function ManageBrand() {
+  const [searchText, setSearchText] = useState(""); // Lưu từ khóa tìm kiếm
+  const [filteredBrands, setFilteredBrands] = useState([]); // Lưu danh sách danh mục sau khi lọc
   const [brands, setBrands] = useState([]);
   const [open, setOpen] = useState(false);
   const [form] = useForm();
@@ -12,6 +14,7 @@ function ManageBrand() {
   const fetchBrands = async () => {
     const data = await getBrand();
     setBrands(data);
+    setFilteredBrands(data); // Sao chép danh sách gốc để lọc
   };
 
   useEffect(() => {
@@ -47,7 +50,7 @@ function ManageBrand() {
                   // lưu vào trường categoryID. Nếu không có categories, nó sẽ gán
                   // một mảng rỗng ([]). Việc sử dụng optional chaining giúp tránh
                   // lỗi khi record.categories không tồn tại.
-                  BrandID: record?.brands ? record?.brands?.map((item) => item.id) : [],
+                  // BrandID: record?.brands ? record?.brands?.map((item) => item.id) : [],
                 });
               }}
             >
@@ -68,6 +71,12 @@ function ManageBrand() {
       },
     },
   ];
+
+  const handleSearch = (value) => {
+    setSearchText(value);
+    const filtered = brands.filter((brand) => brand.name.toLowerCase().includes(value.toLowerCase()));
+    setFilteredBrands(filtered);
+  };
 
   const handleDelete = async (id) => {
     // Gọi API xóa sản phẩm
@@ -107,7 +116,14 @@ function ManageBrand() {
       >
         Create New Brand
       </Button>
-      <Table dataSource={brands.filter((brand) => !brand.deleted)} columns={columns} />
+      <Input
+        placeholder="Tìm kiếm thương hiệu..."
+        allowClear
+        onChange={(e) => handleSearch(e.target.value)}
+        style={{ marginBottom: 16, width: 250, marginLeft: 12 }}
+      />
+
+      <Table dataSource={filteredBrands.filter((brand) => !brand.deleted)} columns={columns} rowKey="id" />
       <Modal title="Create New Brand" open={open} onCancel={() => setOpen(false)} onOk={() => form.submit()}>
         <Form labelCol={{ span: 24 }} form={form} onFinish={handleSubmit}>
           <Form.Item label="Id" name="id" hidden>
@@ -127,7 +143,7 @@ function ManageBrand() {
               },
             ]}
           >
-            <Input />
+            <Input placeholder="Nhập tên thương hiệu" />
           </Form.Item>
         </Form>
       </Modal>

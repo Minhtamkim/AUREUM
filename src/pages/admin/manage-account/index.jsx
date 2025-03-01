@@ -1,4 +1,3 @@
-import DashboardTemplates from "../../../components/manageDashboard";
 import { Space, Tag } from "antd";
 
 const columns = [
@@ -53,7 +52,8 @@ const columns = [
 function ManageAccount() {
   return (
     <div>
-      <DashboardTemplates title={"Account"} columns={columns} uri={"account"} />
+      {/* <DashboardTemplates title={"Account"} columns={columns} uri={"account"} /> */}
+      <h1>Manage Accounts</h1>
     </div>
   );
 }
