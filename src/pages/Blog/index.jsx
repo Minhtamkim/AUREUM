@@ -1,230 +1,194 @@
 /* eslint-disable react/no-unescaped-entities */
-export default function BlogPost() {
-    const posts = [
-      {
-        id: 1,
-        title: "Cùng Cocoon sống xanh mỗi ngày: Điểm Xanh Online",
-        description: "Tiếp tục lan tỏa các 'thông điệp xanh' hướng đến Mẹ Trái Đất...",
-        image: "https://image.cocoonvietnam.com/uploads/Website_Posts_1_44672a4847.jpg",
-      },
-      {
-        id: 2,
-        title: "Cocoon x AAF: Chung tay bảo vệ loài gấu cùng Tổ chức Động vật Châu Á",
-        description: "Mỗi phiên bản giới hạn được bán ra Cocoon sẽ đóng góp 10.000đ...",
-        image: "https://image.cocoonvietnam.com/uploads/Website_Posts_2_01c6db287a.jpg",
-      },
-      {
-        id: 3,
-        title: "Cocoon x Suboi: 'Queen' Chất – 'luôn có một nữ hoàng hiện diện trong bản thân bạn'",
-        description: "Cocoon tin rằng, dù bạn là ai, bạn đến từ đâu...",
-        image: "https://image.cocoonvietnam.com/uploads/HAU_05224_Vuong_Website_b76c8e6bda.png",
-      },
-    ];
-    return (
-      <div className="bg-[#FAF5EF] py-10 px-5">
-        <div className="max-w-6xl mx-auto grid md:grid-cols-3 gap-6">
-          {/* Phần nội dung bên trái */}
-          <div className="col-span-1">
-            <p className="text-sm text-gray-500 font-semibold">
-              <span className="">
-                {" "}
-                <strong>AUREUM</strong>
-              </span>{" "}
-              | 01.01.70 | 24 PHÚT
-            </p>
-            <h1 className="text-4xl font-semibold italic mt-2 leading-snug">
-              Chương trình <span className="">"Ứng hồng Không ứng đỏ"</span> - chung tay chăm sóc trẻ em vùng cao
-            </h1>
-            <p className="text-gray-600 italic mt-3">
-              By <span className="font-semibold text-gray-900">Hồng Hoa</span>
-            </p>
-  
-            <div className="max-w-lg mx-auto mt-20">
-              <h2 className="text-2xl font-extrabold	 text-gray-900 mb-4">Bài viết phổ biến</h2>
-  
-              <div className="space-y-6">
-                {posts.map((post) => (
-                  <div key={post.id} className="flex space-x-4">
-                    <img src={post.image} alt={post.title} className="w-20 h-20 object-cover rounded-lg" />
-                    <div>
-                      <h3 className="font-semibold text-gray-900">{post.title}</h3>
-                      <p className="text-gray-600 text-sm">{post.description}</p>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
+import { GoArrowRight } from "react-icons/go";
+import { useNavigate } from "react-router-dom";
+
+const BlogPost = () => {
+  const navigate = useNavigate();
+  const posts = [
+    {
+      id: 1,
+      title:
+        "QUẦNG THÂM MẮT VÀ CÁCH KHẮC PHỤC HIỆU QUẢ VỚI GIẢI PHÁP TIÊM/THERMAGE",
+      date: "15.03.24",
+      category: "Làm đẹp",
+      description:
+        "Quầng thâm mắt là câu chuyện được quan tâm nhiều ngày nay. Bên cạnh thói quen sinh hoạt và chống nắng đầy đủ, viêc duy trì bôi thoa là cần thiết để cải thiện quầng thâm mắt. Tuy nhiên với...",
+      image:
+        "https://file.hstatic.net/1000231140/article/quang_tham_mat_va_cach_khac_phuc_4e383291947546cdb94f69a4042a6f1f_large.png",
+      path: "/blogs/quang-tham-mat-va-cach-khac-phuc-hieu-qua",
+    },
+    {
+      id: 2,
+      title: "3 LIỆU PHÁP TỐI ƯU HIỆU QUẢ ĐIỀU TRỊ THÂM, SẠM, NÁM",
+      date: "11.11.24",
+      category: "Làm đẹp",
+      description:
+        "Khai phá sức mạnh của các công nghệ laser hiệu quả và peel da hoá học để giải quyết các vấn đề về da như tăng sắc tố, da xỉn màu, thâm, sạm, nám hay kể cả lỗ chân lông....",
+      image:
+        "https://file.hstatic.net/1000231140/article/thumbnail_b487853f76334b799c24f49f16649d95_large.png",
+      path: "/blogs/3-lieu-phap-toi-uu-hieu-qua-dieu-tri-tham-sam-nam",
+    },
+    {
+      id: 3,
+      title: "TẤT TẦN TẬT VỀ TẨY TẾ BÀO CHẾT HOÁ HỌC",
+      date: "27.12.24",
+      category: "Làm đẹp",
+      description:
+        "Tại sao lại cần tẩy tế bào chết? Chắc hẳn hầu hết các bạn đọc của Láng đều không còn xa lạ gì với tầm quan trọng của việc tẩy da chết nhỉ, đặc biệt là các làn da dày...",
+      image:
+        "https://file.hstatic.net/1000231140/article/thumbnail-tay_te_bao_chet_753483fbc47547368d2a601eb9e6341a_large.png",
+      path: "/blogs/tat-tan-tat-ve-tay-te-bao-chet-hoa-hoc",
+    },
+    {
+      id: 4,
+      title:
+        "Chương trình 'Ửng hồng Không ửng đỏ' - chung tay chăm sóc trẻ em vùng cao",
+      date: "27.12.24",
+      category: "Cocoon",
+      description:
+        "Chương trình 'Ửng Hồng Không Ửng Đỏ' được Cocoon và UNESCO-CEP triển khai nhằm hướng đến một mục tiêu thiết thực là xây dựng sân chơi an toàn, sạch sẽ cho trẻ em vùng cao, góp phần nâng cao điều kiện học tập và mang lại niềm vui cho trẻ em vùng cao.",
+      image:
+        "https://image.cocoonvietnam.com/uploads/Hinh_1_Social_Ung_Hong_29d3981238.jpg",
+      path: "/blogs/chuong-trinh-ung-hong-khong-cu-do-chung-tay-cham-soc-tre-em-vung-cao",
+    },
+    {
+      id: 5,
+      title: "Chương trình Cùng Cocoon Sống Xanh Mỗi Ngày năm 2024",
+      date: "27.12.24",
+      category: "Cocoon",
+      description:
+        "Từ tháng 9/2024, Cocoon mang lại 115 điểm thu hồi vỏ chai trực tiếp, được triển khai tại 25 tỉnh thành trên khắp Việt Nam để khách hàng dễ dàng tham gia vào việc thu hồi vỏ chai cũ.",
+      image:
+        "https://image.cocoonvietnam.com/uploads/CSR_Ra_mat_thu_doi_vo_chai_cu_2024_240909_Hinh_con_2_fe4cd256d2.jpg",
+    },
+    {
+      id: 6,
+      title:
+        "Cocoon x AAF: Chung tay cứu trợ chó mèo lang thang cùng Tổ chức Động vật Châu Á",
+      date: "27.12.24",
+      category: "Cocoon",
+      description:
+        " Với mỗi sản phẩm giới hạn được được bán ra, Cocoon sẽ trích 10.000đ để ủng hộ vào quỹ của AAF nhằm san sẻ những khó khăn về lương thực, y tế với các trạm cứu hộ chó mèo tại Việt Nam và triển khai chương trình tiêm vắc xin phòng bệnh dại cho chó mèo trong cộng đồng.",
+      image:
+        "https://image.cocoonvietnam.com/uploads/415085052_386885407032234_3443578595605445153_n_bc7e14f94f.jpg",
+    },
+  ];
+  return (
+    <div className="bg-[#FAF0E8] text-black py-12 px-6 md:px-20">
+      <section className="  max-w-6xl mx-auto grid md:grid-cols-2 gap-8 items-center">
+        {/* Nội dung văn bản */}
+        <div>
+          <p className="text-xl font-bold tracking-widest uppercase">
+            Bài viết
+          </p>
+          <p className="text-4xl  font-bold leading-tight mt-4">
+            Cốt lõi của việc "Chống Lão Hóa" nằm ở đâu?
+          </p>
+          <p className="text-gray-600 mt-4">
+            Một trong các công cuộc níu kéo thanh xuân này nằm cốt lõi ở việc
+            phục hồi và tăng cường củng cố chức năng của MA TRẬN NGOẠI BÀO (ECM
+            hay MTNB) mà trong bài viết này Láng muốn mọi...
+          </p>
+          <button
+            className="mt-6 px-6 py-3 border border-black flex items-center gap-2 hover:bg-[#C4B7A6] hover:text-black transition uppercase"
+            onClick={() =>
+              navigate("/blogs/cot-loi-cua-viec-chong-lao-hoa-nam-o-dau")
+            }
+          >
+            Đọc Bài Viết
+            <GoArrowRight />
+          </button>
+        </div>
+
+        {/* Hình ảnh */}
+        <div className="relative">
+          <img
+            src="https://file.hstatic.net/1000231140/article/thumbnail_bced3ac550684f14bc2d29972f8da588_large.png"
+            alt="Chống lão hóa"
+          />
+          <div className="absolute bottom-4 right-4"></div>
+        </div>
+      </section>
+
+      <section className="bg-cream py-12">
+        <div>
+          <div className="flex items-center justify-between py-5">
+            <p className="text-3xl italic font-serif mb-6">Làm đẹp</p>
+            <button className="px-6 py-3 border border-black flex items-center gap-2 hover:bg-[#C4B7A6] hover:text-black transition uppercase">
+              Tất cả bài viết
+              <GoArrowRight />
+            </button>
           </div>
-  
-          {/* Phần nội dung bên phải */}
-          <div className="col-span-2">
-            <div className="flex items-center gap-3">
-              <span className="text-gray-600 font-semibold">Chia sẻ</span>
-              <a href="#" className="text-black hover:text-main">
-                <i className="fab fa-facebook"></i>
-              </a>
-              <a href="#" className="text-black hover:text-main">
-                <i className="fab fa-twitter"></i>
-              </a>
-            </div>
-            <p className="mt-4 text-gray-700 leading-relaxed">
-              Aureum và Trung tâm UNESCO Hợp tác Giáo dục và Văn hóa Việt Nam (UNESCO-CEP) hân hạnh thông báo về sự hợp
-              tác trong chương trình mang tên <strong>“Ứng Hồng Không Ứng Đỏ”</strong>. Hành trình này được khởi tạo để
-              hướng đến các mục tiêu nhân văn – nơi yêu thương được sẻ chia, điều kiện sống và học tập của trẻ em vùng cao
-              được cải thiện, và những giá trị bền vững được lan tỏa qua những hành động:
-            </p>
-  
-            {/* Hình ảnh */}
-            <div className="mt-6">
-              <img
-                src="https://image.cocoonvietnam.com/uploads/Cover_Social_Ung_Hong_8d8cb722d4.jpg"
-                alt="Ứng hồng Không ứng đỏ"
-                className="w-full rounded-lg shadow-md"
-              />
-            </div>
-  
-            <div className="space-y-6 pt-4">
-              <div>
-                <h3 className="font-semibold text-lg">• Chăm sóc sức khỏe làn da</h3>
-                <p className="text-gray-700">
-                  Gió buốt lạnh mà còn khiến làn da trẻ thơ phải chịu nhiều tổn thương. Trong khuôn khổ chương trình,
-                  Aureum sẽ gửi tặng 5000 sản phẩm dưỡng ẩm, như một lớp áo mềm mại, bảo vệ làn da các em khỏi cái lạnh
-                  khắc nghiệt, để đôi má nhỏ vẫn ửng hồng rạng rỡ trong những ngày đông giá rét.
-                </p>
-              </div>
-  
-              <div>
-                <h3 className="font-semibold text-lg">• Hỗ trợ nhu yếu phẩm</h3>
-                <p className="text-gray-700">
-                  Chúng tôi thực hiện trao tặng áo ấm cho toàn bộ học sinh tại điểm trường Bản Nghè (Bắc Mê - Hà Giang)
-                  cùng các nhu yếu phẩm khác như: gạo, đồ chơi, sách vở... những điều bé nhỏ nhưng chứa đựng yêu thương,
-                  như lời nhắn gửi rằng các em không cô đơn trên hành trình lớn khôn.
-                </p>
-              </div>
-  
-              <div>
-                <h3 className="font-semibold text-lg">• Cải tạo cơ sở vật chất</h3>
-                <p className="text-gray-700">
-                  Tại điểm trường xã Bản Nghè, huyện Bắc Mê, tỉnh Hà Giang, chương trình sẽ cải tạo và xây dựng môi trường
-                  giáo dục an toàn, lành mạnh. Đó không chỉ là nơi các em có thể vui đùa, mà còn là không gian để những
-                  ước mơ được nuôi dưỡng và bay cao.
-                </p>
-              </div>
-  
-              <div>
-                <h3 className="font-semibold text-lg">• Lan tỏa giá trị nhân văn</h3>
-                <p className="text-gray-700">
-                  Hành trình này không chỉ dừng lại ở những món quà vật chất, mà còn mang theo niềm hy vọng và những góc
-                  nhìn tươi sáng hơn về cuộc sống của trẻ em vùng cao. Chúng tôi tin rằng, chăm sóc sức khỏe, chăm lo giáo
-                  dục, sẻ chia yêu thương chính là cách để góp phần vun đắp cho một thế hệ mầm non vững vàng, đầy khát
-                  vọng.
-                </p>
-              </div>
-            </div>
-            <div className="mt-6">
-              <img
-                src="https://image.cocoonvietnam.com/uploads/Hinh_1_Social_Ung_Hong_29d3981238.jpg"
-                alt="Ứng hồng Không ứng đỏ"
-                className="w-full rounded-lg shadow-md"
-              />
-            </div>
-            <div className="mt-6 mb-6">
-              <img
-                src="https://image.cocoonvietnam.com/uploads/Hinh_3_Social_Ung_Hong_0fdf61b67a.jpg"
-                alt="Ứng hồng Không ứng đỏ"
-                className="w-full rounded-lg shadow-md"
-              />
-            </div>
-            <div>
-              <p className="text-gray-700">
-                Điểm đặc biệt của chương trình là sự ra đời của phiên bản giới hạn Sáp Dưỡng Ẩm Đa Năng Sen Hậu Giang. Hy
-                vọng đây sẽ là chiếc cầu nối giữa những trái tim ấm áp và những giấc mơ chưa trọn vẹn của trẻ em vùng cao.
-                Trên bao bì ấy, những nét vẽ ngây thơ từ dự án Em’s của UNESCO-CEP khẽ kể câu chuyện về sự sáng tạo, về
-                những tâm hồn nhỏ đang khao khát một thế giới rực rỡ hơn. Chương trình dự kiến sẽ đóng góp 300 triệu đồng
-                để xây dựng sân chơi cho các em học sinh tại điểm trường xã Bản Nghè, huyện Bắc Mê, tỉnh Hà Giang. Đây là
-                nỗ lực chung của chúng tôi nhằm cải thiện không gian vui học cho trẻ em vùng cao, mang lại cho các em cơ
-                hội phát triển cả về thể chất lẫn tinh thần.
-              </p>
-            </div>
-            <div className="mt-6 mb-6 text-center ">
-              <img
-                src="https://image.cocoonvietnam.com/uploads/Promotion_Mo_ban_Sap_Duong_Am_Da_Nang_Sen_Hau_Giang_241202_Main_Post_07_2e9b3ae6d2.jpg"
-                alt="Ứng hồng Không ứng đỏ"
-                className="w-full rounded-lg shadow-md"
-              />
-              <p className="text-xs text-gray-500 italic mt-2">
-                Phiên bản giới hạn của sản phẩm Sáp Dưỡng Đa Năng Sen Hậu Giang trong chương trình{" "}
-                <span className="font-semibold">"Ứng Hồng Không Ứng Đỏ"</span>
-              </p>
-            </div>
-            <div className="text-gray-800 space-y-4">
-              <p>
-                Đây là sản phẩm sáp dưỡng đa công dụng (hay còn gọi là sáp nẻ) với độ dưỡng ẩm rất cao, được thiết kế
-                chuyên biệt cho những vùng da rất khô và nhạy cảm, cấp ẩm chuyên sâu, làm dịu tình trạng mẩn đỏ, ngứa do
-                khô da. Thành phần từ nguồn sợi chiết xuất Sen Hậu Giang tinh khiết kết hợp các hoạt chất dưỡng chuyên sâu
-                gồm Madecassoside, Vitamin B5, B12, dầu dưỡng chất phân tử Passionline và Soline. Sáp Dưỡng Đa Năng Sen
-                Hậu Giang là giải pháp cấp bách cho tình trạng khô ráp trên nhiều vùng da dễ mất bảo hàng gặp phải nhất:
-                môi, khuỷu tay, đầu gối, gót chân… Phù hợp với mọi loại da, kể cả em bé từ 6 tháng tuổi và phụ nữ mang
-                thai.
-              </p>
-  
-              <h3 className="font-semibold">• Dịu nhẹ, an toàn và lành tính:</h3>
-              <p>
-                Sản phẩm với công thức nghiên cứu bởi chuyên gia da liễu, không chứa cồn, hương liệu, không dầu khoáng hay
-                paraben, phù hợp với mọi loại da, đặc biệt là da nhạy cảm, phù hợp với trẻ em từ 6 tháng tuổi và phụ nữ
-                mang thai.
-              </p>
-  
-              <h3 className="font-semibold">• Dưỡng ẩm chuyên sâu và phục hồi da:</h3>
-              <p>
-                Với sự kết hợp của Madecassoside và Vitamin B5, sản phẩm hỗ trợ làm dịu nhanh các vết mẩn đỏ, da khô ráp
-                hoặc nứt nẻ do thời tiết. Bên cạnh đó, dầu tự nhiên từ Soline giúp khóa ẩm và tăng hàng rào bảo vệ tự
-                nhiên của da.
-              </p>
-  
-              <h3 className="font-semibold">• Đa năng và tiện lợi:</h3>
-              <p>
-                Có thể dùng cho mọi vùng da trên cơ thể, từ mặt, môi, đầu gối, khuỷu tay, gót chân, bàn chân… đến các vết
-                thương da bị khô, nứt nẻ hoặc tróc.
-              </p>
-  
-              <h3 className="font-semibold">• Hướng dẫn sử dụng:</h3>
-              <p>
-                Dưỡng ẩm chuyên sâu, cấp bách khi thời tiết hanh khô, làm dịu da trong môi trường máy lạnh, phục hồi da
-                sau khi tiếp xúc ánh nắng hoặc sau tổn thương da nhẹ.
-              </p>
-  
-              <hr className="border-gray-300 my-4" />
-  
-              <p className="text-gray-700">
-                Thoa lên mặt, môi, cơ thể hoặc các vùng da khô, thô ráp, nứt nẻ, dễ bị nhạy cảm, kích ứng và mẩn đỏ. Dùng
-                được cho trẻ em từ 6 tháng tuổi.
-              </p>
-            </div>
-            <div className="mt-6">
-              <img
-                src="https://image.cocoonvietnam.com/uploads/z6088896503577_93f0b27cf89abedd9f5d8e89a48b5e5e_dc01f0f176.jpg"
-                alt="Ứng hồng Không ứng đỏ"
-                className="w-full rounded-lg shadow-md"
-              />
-            </div>
-            <div className="mt-6">
-              <p className="text-gray-700">
-                Aureum x UNESCO-CEP và dự án Em's sẽ cần rất nhiều sự sẻ chia của các bạn để chương trình
-                <i className="text-gray-500">"Ứng Hồng Không Ứng Đỏ"</i> lan tỏa rộng rãi đến với mọi người. Hãy chung tay
-                cùng chúng tôi vì một tương lai tốt đẹp hơn cho trẻ em vùng cao nói riêng và trẻ em Việt Nam nói chung.
-              </p>
-            </div>
-            <div className="mt-6">
-              <img
-                src="https://image.cocoonvietnam.com/uploads/z6088896511583_2ed524525e611a90ef11690edf3db603_071fa46032.jpg"
-                alt="Ứng hồng Không ứng đỏ"
-                className="w-full rounded-lg shadow-md"
-              />
-            </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {posts
+              .filter((post) => [1, 2, 3].includes(post.id)) // Lọc ra những bài viết có id là 1, 2, 3
+              .map((post) => (
+                <a
+                  key={post.id}
+                  onClick={() => navigate(post.path)}
+                  className="block group"
+                >
+                  <div className="rounded-lg overflow-hidden">
+                    <img
+                      src={post.image}
+                      alt={post.title}
+                      className="w-full h-60 object-cover group-hover:opacity-80 transition"
+                    />
+                  </div>
+                  <p className="text-sm text-gray-500 mt-3">
+                    {post.category} | {post.date}
+                  </p>
+                  <h3 className="text-lg font-semibold mt-2 group-hover:underline">
+                    {post.title}
+                  </h3>
+                  <p className="text-gray-600 mt-2">{post.description}</p>
+                </a>
+              ))}
           </div>
         </div>
-      </div>
-    );
-  }
-  
+      </section>
+
+      <section className="bg-cream py-12">
+        <div>
+          <div className="flex items-center justify-between py-5">
+            <p className="text-3xl italic font-serif mb-6">Cocoon</p>
+            <button className="px-6 py-3 border border-black flex items-center gap-2 hover:bg-[#C4B7A6] hover:text-black transition uppercase">
+              Tất cả bài viết
+              <GoArrowRight />
+            </button>
+          </div>
+
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+            {posts
+              .filter((post) => [4, 5, 6].includes(post.id))
+              .map((post) => (
+                <a
+                  key={post.id}
+                  onClick={() => navigate(post.path)}
+                  className="block group"
+                >
+                  <div className="rounded-lg overflow-hidden">
+                    <img
+                      src={post.image}
+                      alt={post.title}
+                      className="w-full h-60 object-cover group-hover:opacity-80 transition"
+                    />
+                  </div>
+                  <p className="text-sm text-gray-500 mt-3">
+                    {post.category} | {post.date}
+                  </p>
+                  <h3 className="text-lg font-semibold mt-2 group-hover:underline">
+                    {post.title}
+                  </h3>
+                  <p className="text-gray-600 mt-2">{post.description}</p>
+                </a>
+              ))}
+          </div>
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default BlogPost;

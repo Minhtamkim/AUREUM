@@ -29,6 +29,11 @@ import QuizDetail from "./pages/Quiz/QuizDetail";
 import QuizResult from "./pages/Quiz/QuizResult";
 import ProductsBrandPage from "./pages/product/product_brand";
 import ProductDetailPage from "./pages/product/product_details";
+import BlogPost04 from "./pages/Blog/blog-details-4";
+import BlogPost0 from "./pages/Blog/blog-details-0";
+import BlogPost1 from "./pages/Blog/blog-details-1";
+import BlogPost2 from "./pages/Blog/blog-details-2";
+import BlogPost3 from "./pages/Blog/blog-details-3";
 
 function App() {
   const router = createBrowserRouter([
@@ -79,6 +84,26 @@ function App() {
         {
           path: "blog",
           element: <BlogPost />,
+        },
+        {
+          path: "blogs/cot-loi-cua-viec-chong-lao-hoa-nam-o-dau",
+          element: <BlogPost0 />,
+        },
+        {
+          path: "blogs/quang-tham-mat-va-cach-khac-phuc-hieu-qua",
+          element: <BlogPost1 />,
+        },
+        {
+          path: "blogs/3-lieu-phap-toi-uu-hieu-qua-dieu-tri-tham-sam-nam",
+          element: <BlogPost2 />,
+        },
+        {
+          path: "blogs/tat-tan-tat-ve-tay-te-bao-chet-hoa-hoc",
+          element: <BlogPost3 />,
+        },
+        {
+          path: "blogs/chuong-trinh-ung-hong-khong-cu-do-chung-tay-cham-soc-tre-em-vung-cao",
+          element: <BlogPost04 />,
         },
         {
           path: "cart",
