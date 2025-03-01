@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { PieChartOutlined, ProductFilled, ProductOutlined, UserOutlined } from "@ant-design/icons";
+import { PieChartOutlined, ProductOutlined, UserOutlined } from "@ant-design/icons";
 import { Breadcrumb, Layout, Menu, theme } from "antd";
 import { Link, Outlet } from "react-router-dom";
 
@@ -38,8 +38,8 @@ const Dashboard = () => {
         <Header style={{ padding: 0, background: colorBgContainer }} />
         <Content style={{ margin: "0 16px" }}>
           <Breadcrumb style={{ margin: "16px 0" }}>
-            <Breadcrumb.Item>User</Breadcrumb.Item>
-            <Breadcrumb.Item>Bill</Breadcrumb.Item>
+            <Breadcrumb.Item>Admin</Breadcrumb.Item>
+            <Breadcrumb.Item>Manage</Breadcrumb.Item>
           </Breadcrumb>
           <div
             style={{
