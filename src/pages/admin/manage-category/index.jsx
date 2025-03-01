@@ -5,6 +5,9 @@ import { useForm } from "antd/es/form/Form";
 import { toast } from "react-toastify";
 
 function ManageCategory() {
+  const [searchText, setSearchText] = useState(""); // Lưu từ khóa tìm kiếm
+  const [filteredCategories, setFilteredCategories] = useState([]); // Lưu danh sách danh mục sau khi lọc
+
   const [categories, setCategories] = useState([]);
   const [open, setOpen] = useState(false);
   const [form] = useForm();
@@ -12,6 +15,7 @@ function ManageCategory() {
   const fetchCategories = async () => {
     const data = await getCategory();
     setCategories(data);
+    setFilteredCategories(data); // Sao chép danh sách gốc để lọc
   };
 
   useEffect(() => {
@@ -47,7 +51,7 @@ function ManageCategory() {
                   // lưu vào trường categoryID. Nếu không có categories, nó sẽ gán
                   // một mảng rỗng ([]). Việc sử dụng optional chaining giúp tránh
                   // lỗi khi record.categories không tồn tại.
-                  categoryID: record?.categories ? record?.categories?.map((item) => item.id) : [],
+                  // categoryID: record?.categories ? record?.categories?.map((item) => item.id) : [],
                 });
               }}
             >
@@ -68,6 +72,14 @@ function ManageCategory() {
       },
     },
   ];
+
+  const handleSearch = (value) => {
+    setSearchText(value);
+    const filtered = categories.filter(
+      (category) => category.name.toLowerCase().includes(value.toLowerCase()) // Tìm kiếm không phân biệt hoa/thường
+    );
+    setFilteredCategories(filtered);
+  };
 
   const handleDelete = async (id) => {
     const response = await deleteCategory(id);
@@ -107,7 +119,15 @@ function ManageCategory() {
       >
         Create New Category
       </Button>
-      <Table columns={columns} dataSource={categories.filter((category) => !category.deleted)} />
+      <Input
+        placeholder="Tìm kiếm danh mục..."
+        allowClear
+        onChange={(e) => handleSearch(e.target.value)}
+        style={{ marginBottom: 16, width: 250, marginLeft: 12 }}
+      />
+
+      <Table columns={columns} dataSource={filteredCategories.filter((category) => !category.deleted)} rowKey="id" />
+      {/* <Table columns={columns} dataSource={categories.filter((category) => !category.deleted)} /> */}
 
       <Modal title="Create New Category" open={open} onCancel={() => setOpen(false)} onOk={() => form.submit()}>
         <Form labelCol={{ span: 24 }} form={form} onFinish={handleSubmit}>
@@ -128,7 +148,7 @@ function ManageCategory() {
               },
             ]}
           >
-            <Input />
+            <Input placeholder="Nhập tên danh mục" />
           </Form.Item>
         </Form>
       </Modal>
