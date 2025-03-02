@@ -34,6 +34,9 @@ import BlogPost0 from "./pages/Blog/blog-details-0";
 import BlogPost1 from "./pages/Blog/blog-details-1";
 import BlogPost2 from "./pages/Blog/blog-details-2";
 import BlogPost3 from "./pages/Blog/blog-details-3";
+import BlogPost05 from "./pages/Blog/blog-details-5";
+import BlogPost06 from "./pages/Blog/blog-details-6";
+import BlogPostAll from "./pages/Blog/blog-details-all";
 
 function App() {
   const router = createBrowserRouter([
@@ -104,6 +107,18 @@ function App() {
         {
           path: "blogs/chuong-trinh-ung-hong-khong-cu-do-chung-tay-cham-soc-tre-em-vung-cao",
           element: <BlogPost04 />,
+        },
+        {
+          path: "/blogs/chuong-trinh-cung-aureum-song-xanh-moi-ngay",
+          element: <BlogPost05 />,
+        },
+        {
+          path: "/blogs/chung-tay-cuu-tro-cho-meo-lang-thang",
+          element: <BlogPost06 />,
+        },
+        {
+          path: "/blogs/tat-ca-bai-viet",
+          element: <BlogPostAll />,
         },
         {
           path: "cart",
