@@ -46,6 +46,14 @@ function App() {
       element: <Layout />,
       children: [
         {
+          path: "login",
+          element: <LoginPage />,
+        },
+        {
+          path: "register",
+          element: <RegisterPage />,
+        },
+        {
           path: "/",
           element: <Home />,
         },
@@ -162,15 +170,6 @@ function App() {
           element: <ProductDetailPage />,
         },
       ],
-    },
-
-    {
-      path: "login",
-      element: <LoginPage />,
-    },
-    {
-      path: "register",
-      element: <RegisterPage />,
     },
 
     {
