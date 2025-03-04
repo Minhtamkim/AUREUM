@@ -10,7 +10,6 @@ import { useEffect } from "react";
 
 import api from "../../config/axios";
 import { useNavigate } from "react-router-dom";
-import { useSelector } from "react-redux";
 
 function Home() {
   const [products, setProducts] = useState([]);

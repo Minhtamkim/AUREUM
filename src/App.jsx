@@ -62,7 +62,7 @@ function App() {
           element: <PoliciesShipping />,
         },
         {
-          path: "account",
+          path: "accountPolicy",
           element: <AccountPage />,
         },
         {
