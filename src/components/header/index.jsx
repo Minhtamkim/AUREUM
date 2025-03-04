@@ -74,7 +74,7 @@ const Header = () => {
         <Link to="/profile">Thông tin tài khoản</Link>
       </Menu.Item>
       <Menu.Item key="history" icon={<ShoppingOutlined />}>
-        <Link to="/profile">Lịch sử mua hàng</Link>
+        <Link to="/historyOrders">Lịch sử mua hàng</Link>
       </Menu.Item>
       <Divider className="my-2" /> {/* Đường kẻ phân cách */}
       <Menu.Item key="logout" icon={<LogoutOutlined />} danger onClick={handleLogout}>
