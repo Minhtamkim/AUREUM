@@ -1,11 +1,16 @@
-import { useState, useEffect, useRef } from "react";
+/* eslint-disable no-unused-vars */
+import { useState, useEffect, useRef, use } from "react";
 import { FiSearch, FiShoppingCart, FiMenu, FiX } from "react-icons/fi";
-import { Link, useNavigate } from "react-router-dom";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import api from "../../config/axios";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/features/userSlice";
 import { Avatar, Divider, Dropdown, Menu } from "antd";
-import { LogoutOutlined, ShoppingOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  LogoutOutlined,
+  ShoppingOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -17,7 +22,30 @@ const Header = () => {
   const [brand, setBrand] = useState([]);
   const [ingredient, setIngredient] = useState([]);
   const timeoutRef = useRef(null);
+  const [searchTerm, setSearchTerm] = useState("");
+  const [showDropdown, setShowDropdown] = useState(false);
+  const [query, setQuery] = useState("");
+  const [products, setProducts] = useState([]);
+  const [filteredProducts, setFilteredProducts] = useState([]);
   const navigate = useNavigate();
+  const location = useLocation();
+
+  useEffect(() => {
+    setSearchTerm("");
+    setFilteredProducts([]);
+    setShowDropdown(false);
+  }, [location]); // Reset mỗi khi route thay đổi
+
+  const handleProductClick = (product) => {
+    setSearchTerm(""); // Xóa nội dung ô input
+    setFilteredProducts([]); // Xóa danh sách gợi ý
+    setShowDropdown(false); // Ẩn dropdown
+    navigate(`/products/details/${product.id}`); // Chuyển sang trang chi tiết sản phẩm
+
+    setTimeout(() => {
+      navigate(`/products/details/${product.id}`); // Điều hướng sau khi cập nhật state
+    }, 100); // Đợi một chút để React cập nhật state
+  };
 
   const handleMouseEnter = (id) => {
     if (timeoutRef.current) {
@@ -30,6 +58,26 @@ const Header = () => {
       setOpenDropdown(null);
     }, 100);
   };
+
+  useEffect(() => {
+    api
+      .get("product") // Thay bằng API thực tế
+      .then((response) => setProducts(response.data))
+      .catch((error) => console.error("Error fetching products:", error));
+  }, []);
+
+  useEffect(() => {
+    if (searchTerm.trim() === "") {
+      setFilteredProducts([]);
+    } else {
+      setFilteredProducts(
+        products.filter((product) =>
+          product.name.toLowerCase().includes(searchTerm.toLowerCase())
+        )
+      );
+    }
+  }, [searchTerm, products]);
+
   const menuItems = [
     { id: 1, name: "Trang Chủ", path: "/" },
     { id: 2, name: "Sản Phẩm", path: "/products", hasDropdown: true },
@@ -77,7 +125,12 @@ const Header = () => {
         <Link to="/historyOrders">Lịch sử mua hàng</Link>
       </Menu.Item>
       <Divider className="my-2" /> {/* Đường kẻ phân cách */}
-      <Menu.Item key="logout" icon={<LogoutOutlined />} danger onClick={handleLogout}>
+      <Menu.Item
+        key="logout"
+        icon={<LogoutOutlined />}
+        danger
+        onClick={handleLogout}
+      >
         Logout
       </Menu.Item>
     </Menu>
@@ -87,7 +140,11 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-center py-2 ">
           <a href="/">
-            <img src="/images/logoAureum.png" alt="Logo" className="h-20 w-auto" />
+            <img
+              src="/images/logoAureum.png"
+              alt="Logo"
+              className="h-20 w-auto"
+            />
           </a>
         </div>
         <div className="flex items-center py-4">
@@ -101,7 +158,9 @@ const Header = () => {
               <div
                 key={item.id}
                 className="relative group"
-                onMouseEnter={() => item.hasDropdown && handleMouseEnter(item.id)}
+                onMouseEnter={() =>
+                  item.hasDropdown && handleMouseEnter(item.id)
+                }
                 onMouseLeave={(e) => item.hasDropdown && handleMouseLeave(e)}
               >
                 <a
@@ -115,7 +174,9 @@ const Header = () => {
                 {openDropdown === item.id && (
                   <div className="absolute left-[-100px]  top-full mt-2 bg-black/20 backdrop-blur-md p-4  shadow-lg grid grid-cols-[1fr_1fr_1fr] gap-3 min-w-[800px] z-50">
                     <div>
-                      <h3 className="text-white font-bold text-lg uppercase tracking-wide">Sản Phẩm</h3>
+                      <h3 className="text-white font-bold text-lg uppercase tracking-wide">
+                        Sản Phẩm
+                      </h3>
                       {categories.map((category) => (
                         <a
                           key={category.id}
@@ -134,12 +195,16 @@ const Header = () => {
                     </div>
                     <div>
                       <div className="border-l border-gray-300 -500/50 pl-4">
-                        <h3 className="text-white font-bold text-lg uppercase tracking-wide">Thương Hiệu</h3>
+                        <h3 className="text-white font-bold text-lg uppercase tracking-wide">
+                          Thương Hiệu
+                        </h3>
                         {brand.map((brand) => (
                           <a
                             key={brand.id}
                             className="block text-gray-100 hover:text-white mt-1 text-sm"
-                            onClick={() => navigate(`/products/brand/${brand.id}`)}
+                            onClick={() =>
+                              navigate(`/products/brand/${brand.id}`)
+                            }
                           >
                             {brand.name}
                           </a>
@@ -148,12 +213,16 @@ const Header = () => {
                     </div>
                     <div>
                       <div className="border-l border-gray-300 -500/50 pl-4">
-                        <h3 className="text-white font-bold text-lg uppercase tracking-wide">Thành phần</h3>
+                        <h3 className="text-white font-bold text-lg uppercase tracking-wide">
+                          Thành phần
+                        </h3>
                         {ingredient.slice(0, 15).map((ingredient) => (
                           <a
                             key={ingredient.id}
                             className="block text-gray-100 hover:text-white mt-1 text-sm"
-                            onClick={() => navigate(`/products/${ingredient.id}`)}
+                            onClick={() =>
+                              navigate(`/products/${ingredient.id}`)
+                            }
                           >
                             {ingredient.name}
                           </a>
@@ -214,7 +283,11 @@ const Header = () => {
               className="md:hidden text-white hover:text-blue-400 transition-colors duration-200"
               aria-label="Menu"
             >
-              {isMenuOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
+              {isMenuOpen ? (
+                <FiX className="w-6 h-6" />
+              ) : (
+                <FiMenu className="w-6 h-6" />
+              )}
             </button>
           </div>
         </div>
@@ -237,15 +310,38 @@ const Header = () => {
 
         {/* Search Modal */}
         {isSearchOpen && (
-          <div className="py-4 px-2">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search..."
-                className="w-full px-4 py-2 rounded-lg border focus:outline-none focus:border-blue-500 bg-gray-50 dark:bg-gray-800"
-              />
-              <FiSearch className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-400" />
-            </div>
+          <div className="relative w-full py-3">
+            <input
+              type="text"
+              placeholder="Tìm kiếm sản phẩm..."
+              className="w-full px-4 py-2 rounded-lg border focus:outline-none focus:border-blue-500 bg-gray-50 dark:bg-gray-800"
+              value={searchTerm}
+              onChange={(e) => setSearchTerm(e.target.value)}
+            />
+
+            {searchTerm && filteredProducts.length > 0 && (
+              <div className="absolute mt-1 w-full bg-white border rounded-md shadow-lg z-50">
+                {filteredProducts.map((product) => (
+                  <div
+                    key={product.id}
+                    className="flex items-center p-2 border-b hover:bg-gray-100 cursor-pointer"
+                    onClick={() => handleProductClick(product)}
+                  >
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="w-12 h-12 object-cover rounded-md"
+                    />
+                    <div className="ml-3">
+                      <p className="text-sm font-semibold">{product.name}</p>
+                      <p className="text-xs text-gray-500">
+                        {product.brand.name} - {product.price}K
+                      </p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            )}
           </div>
         )}
 
@@ -255,7 +351,10 @@ const Header = () => {
             <div className="bg-white p-6 rounded-lg w-full max-w-md mx-4">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold">Account</h2>
-                <button onClick={() => setIsUserModalOpen(false)} className="text-gray-600 hover:text-blue-600">
+                <button
+                  onClick={() => setIsUserModalOpen(false)}
+                  className="text-gray-600 hover:text-blue-600"
+                >
                   <FiX className="w-6 h-6" />
                 </button>
               </div>
