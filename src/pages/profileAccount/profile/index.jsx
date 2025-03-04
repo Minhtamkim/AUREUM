@@ -4,19 +4,91 @@ import { useNavigate } from "react-router-dom";
 
 export default function AccountInfo() {
   const [activeTab, setActiveTab] = useState("account");
-  const [customer, setCustomer] = useState({});
-  const [originalCustomer] = useState({});
+  const [customer, setCustomer] = useState({
+    email: "",
+    password: "",
+    name: "",
+    birthDate: "",
+    phone: "",
+    gender: "Nam",
+  });
+  const [originalCustomer] = useState({ ...customer });
+  const [errors, setErrors] = useState({});
   const navigate = useNavigate();
 
   // Hàm xử lý thay đổi input
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCustomer({ ...customer, [name]: value });
+    // Kiểm tra lỗi ngay khi nhập
+    validateField(name, value);
   };
 
   // Hàm đặt lại dữ liệu về trạng thái ban đầu
   const handleReset = () => {
     setCustomer(originalCustomer);
+    setErrors({});
+  };
+
+  // Hàm kiểm tra lỗi của từng field
+  const validateField = (name, value) => {
+    let errorMsg = "";
+    switch (name) {
+      case "email":
+        if (!value.trim()) {
+          errorMsg = "Email không được để trống.";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          errorMsg = "Email không hợp lệ.";
+        }
+        break;
+      case "password":
+        if (!value.trim()) {
+          errorMsg = "Mật khẩu không được để trống.";
+        } else if (value.length < 8) {
+          errorMsg = "Mật khẩu phải có ít nhất 8 ký tự.";
+        }
+        break;
+      case "name":
+        if (!value.trim()) {
+          errorMsg = "Họ và tên không được để trống.";
+        }
+        break;
+      case "phone":
+        if (!value.trim()) {
+          errorMsg = "Số điện thoại không được để trống.";
+        } else if (!/^\d{10,11}$/.test(value)) {
+          errorMsg = "Số điện thoại không hợp lệ.";
+        }
+        break;
+      case "birthDate":
+        if (!value) {
+          errorMsg = "Vui lòng chọn ngày sinh.";
+        }
+        break;
+      default:
+        break;
+    }
+
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMsg }));
+  };
+  // Hàm kiểm tra toàn bộ form
+  const validateForm = () => {
+    const newErrors = {};
+    Object.keys(customer).forEach((key) => {
+      validateField(key, customer[key]);
+      if (errors[key]) newErrors[key] = errors[key];
+    });
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Hàm xử lý khi nhấn "Lưu thông tin mới"
+  const handleSubmit = () => {
+    if (validateForm()) {
+      alert("Thông tin đã được lưu thành công!");
+      // Thêm logic để lưu dữ liệu nếu cần
+    }
   };
 
   return (
@@ -61,6 +133,7 @@ export default function AccountInfo() {
               className="bg-transparent border-b border-gray-400 focus:outline-none focus:border-black w-80 p-1"
               placeholder="Nhập email"
             />
+            {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
           </div>
 
           {/* Mật khẩu */}
@@ -74,6 +147,7 @@ export default function AccountInfo() {
               className="bg-transparent border-b border-gray-400 focus:outline-none focus:border-black w-80 p-1"
               placeholder="Nhập mật khẩu"
             />
+            {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
           </div>
 
           {/* Nút đổi mật khẩu */}
@@ -96,6 +170,7 @@ export default function AccountInfo() {
                 className="bg-transparent border-b border-gray-400 focus:outline-none focus:border-black w-80 p-1"
                 placeholder="Nhập họ và tên"
               />
+              {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
             </div>
 
             {/* Ngày sinh */}
@@ -121,6 +196,7 @@ export default function AccountInfo() {
                 className="bg-transparent border-b border-gray-400 focus:outline-none focus:border-black w-80 p-1"
                 placeholder="Nhập số điện thoại"
               />
+              {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
             </div>
 
             {/* Giới tính */}
@@ -147,7 +223,9 @@ export default function AccountInfo() {
             >
               HỦY BỎ
             </button>
-            <button className="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800">LƯU THÔNG TIN MỚI</button>
+            <button onClick={handleSubmit} className="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800">
+              LƯU THÔNG TIN MỚI
+            </button>
           </div>
         </div>
       )}
