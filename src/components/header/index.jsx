@@ -1,7 +1,11 @@
 import { useState, useEffect, useRef } from "react";
 import { FiUser, FiSearch, FiShoppingCart, FiMenu, FiX } from "react-icons/fi";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import api from "../../config/axios";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../redux/features/userSlice";
+import { Avatar, Button, Divider, Dropdown, Menu } from "antd";
+import { LoginOutlined, LogoutOutlined, ShoppingOutlined, UserAddOutlined, UserOutlined } from "@ant-design/icons";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -57,16 +61,33 @@ const Header = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user); // Lấy user từ Redux
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
+  const userMenu = (
+    <Menu className="w-48 shadow-2xs rounded-4xl">
+      <Menu.Item key="profile" icon={<UserOutlined />}>
+        <Link to="/profile">Thông tin tài khoản</Link>
+      </Menu.Item>
+      <Menu.Item key="history" icon={<ShoppingOutlined />}>
+        <Link to="/profile">Lịch sử mua hàng</Link>
+      </Menu.Item>
+      <Divider className="my-2" /> {/* Đường kẻ phân cách */}
+      <Menu.Item key="logout" icon={<LogoutOutlined />} danger onClick={handleLogout}>
+        Logout
+      </Menu.Item>
+    </Menu>
+  );
   return (
     <header className="w-full bg-[#2d2d2b] shadow-md h-4-">
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-center py-2 ">
           <a href="/">
-            <img
-              src="/images/logoAureum.png"
-              alt="Logo"
-              className="h-20 w-auto"
-            />
+            <img src="/images/logoAureum.png" alt="Logo" className="h-20 w-auto" />
           </a>
         </div>
         <div className="flex items-center py-4">
@@ -80,9 +101,7 @@ const Header = () => {
               <div
                 key={item.id}
                 className="relative group"
-                onMouseEnter={() =>
-                  item.hasDropdown && handleMouseEnter(item.id)
-                }
+                onMouseEnter={() => item.hasDropdown && handleMouseEnter(item.id)}
                 onMouseLeave={(e) => item.hasDropdown && handleMouseLeave(e)}
               >
                 <a
@@ -96,9 +115,7 @@ const Header = () => {
                 {openDropdown === item.id && (
                   <div className="absolute left-[-100px]  top-full mt-2 bg-black/20 backdrop-blur-md p-4  shadow-lg grid grid-cols-[1fr_1fr_1fr] gap-3 min-w-[800px] z-50">
                     <div>
-                      <h3 className="text-white font-bold text-lg uppercase tracking-wide">
-                        Sản Phẩm
-                      </h3>
+                      <h3 className="text-white font-bold text-lg uppercase tracking-wide">Sản Phẩm</h3>
                       {categories.map((category) => (
                         <a
                           key={category.id}
@@ -117,16 +134,12 @@ const Header = () => {
                     </div>
                     <div>
                       <div className="border-l border-gray-300 -500/50 pl-4">
-                        <h3 className="text-white font-bold text-lg uppercase tracking-wide">
-                          Thương Hiệu
-                        </h3>
+                        <h3 className="text-white font-bold text-lg uppercase tracking-wide">Thương Hiệu</h3>
                         {brand.map((brand) => (
                           <a
                             key={brand.id}
                             className="block text-gray-100 hover:text-white mt-1 text-sm"
-                            onClick={() =>
-                              navigate(`/products/brand/${brand.id}`)
-                            }
+                            onClick={() => navigate(`/products/brand/${brand.id}`)}
                           >
                             {brand.name}
                           </a>
@@ -135,16 +148,12 @@ const Header = () => {
                     </div>
                     <div>
                       <div className="border-l border-gray-300 -500/50 pl-4">
-                        <h3 className="text-white font-bold text-lg uppercase tracking-wide">
-                          Thành phần
-                        </h3>
+                        <h3 className="text-white font-bold text-lg uppercase tracking-wide">Thành phần</h3>
                         {ingredient.slice(0, 15).map((ingredient) => (
                           <a
                             key={ingredient.id}
                             className="block text-gray-100 hover:text-white mt-1 text-sm"
-                            onClick={() =>
-                              navigate(`/products/${ingredient.id}`)
-                            }
+                            onClick={() => navigate(`/products/${ingredient.id}`)}
                           >
                             {ingredient.name}
                           </a>
@@ -160,7 +169,7 @@ const Header = () => {
           {/* H-D}
 
           {/* Right Icons */}
-          <div className="flex items-center space-x-6 ">
+          <div className="flex items-center space-x-2 ">
             <button
               onClick={() => setIsSearchOpen(!isSearchOpen)}
               className="text-white hover:text-blue-400 transition-colors duration-200"
@@ -168,15 +177,6 @@ const Header = () => {
             >
               <FiSearch className="w-6 h-6" />
             </button>
-
-            <button
-              onClick={() => navigate("/login")}
-              className="text-white hover:text-blue-400 transition-colors duration-200"
-              aria-label="User account"
-            >
-              <FiUser className="w-6 h-6" />
-            </button>
-
             <div className="relative">
               <button
                 className="text-white hover:text-blue-400 transition-colors duration-200"
@@ -190,6 +190,23 @@ const Header = () => {
                 )}
               </button>
             </div>
+            {user ? (
+              <Dropdown overlay={userMenu} trigger={["click"]}>
+                <div className="flex items-center cursor-pointer text-white">
+                  <Avatar icon={<UserOutlined />} className="mr-2" />
+                  <span>{user.fullName || "User"}</span>
+                </div>
+              </Dropdown>
+            ) : (
+              <div className="pl-3">
+                <span
+                  className="text-white underline cursor-pointer transition-all duration-200 hover:text-gray-300 hover:underline-offset-4"
+                  onClick={() => navigate("/login")}
+                >
+                  Đăng nhập
+                </span>
+              </div>
+            )}
 
             {/* Mobile Menu Button */}
             <button
@@ -197,11 +214,7 @@ const Header = () => {
               className="md:hidden text-white hover:text-blue-400 transition-colors duration-200"
               aria-label="Menu"
             >
-              {isMenuOpen ? (
-                <FiX className="w-6 h-6" />
-              ) : (
-                <FiMenu className="w-6 h-6" />
-              )}
+              {isMenuOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
             </button>
           </div>
         </div>
@@ -242,10 +255,7 @@ const Header = () => {
             <div className="bg-white p-6 rounded-lg w-full max-w-md mx-4">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold">Account</h2>
-                <button
-                  onClick={() => setIsUserModalOpen(false)}
-                  className="text-gray-600 hover:text-blue-600"
-                >
+                <button onClick={() => setIsUserModalOpen(false)} className="text-gray-600 hover:text-blue-600">
                   <FiX className="w-6 h-6" />
                 </button>
               </div>

@@ -5,6 +5,8 @@ import { SiFacebook } from "react-icons/si";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import api from "../../config/axios";
+import { useDispatch } from "react-redux";
+import { login } from "../../redux/features/userSlice";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -42,6 +44,7 @@ const LoginPage = () => {
       [name]: type === "checkbox" ? checked : value,
     }));
   };
+  const dispatch = useDispatch();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -55,6 +58,7 @@ const LoginPage = () => {
         console.log(roleEnum);
         localStorage.setItem("token", token);
         toast.success("Successfully login!");
+        dispatch(login(response.data));
         if (roleEnum === "ADMIN") {
           navigate("/dashboard");
         } else if (roleEnum === "CUSTOMER") {
