@@ -37,6 +37,7 @@ import BlogPost3 from "./pages/Blog/blog-details-3";
 import BlogPost05 from "./pages/Blog/blog-details-5";
 import BlogPost06 from "./pages/Blog/blog-details-6";
 import BlogPostAll from "./pages/Blog/blog-details-all";
+import HistoryOrders from "./pages/profileAccount/historyOrders";
 
 function App() {
   const router = createBrowserRouter([
@@ -44,6 +45,14 @@ function App() {
       path: "",
       element: <Layout />,
       children: [
+        {
+          path: "login",
+          element: <LoginPage />,
+        },
+        {
+          path: "register",
+          element: <RegisterPage />,
+        },
         {
           path: "/",
           element: <Home />,
@@ -53,11 +62,15 @@ function App() {
           element: <ProfileAccount />,
         },
         {
+          path: "historyOrders",
+          element: <HistoryOrders />,
+        },
+        {
           path: "policiesShipping",
           element: <PoliciesShipping />,
         },
         {
-          path: "account",
+          path: "accountPolicy",
           element: <AccountPage />,
         },
         {
@@ -157,15 +170,6 @@ function App() {
           element: <ProductDetailPage />,
         },
       ],
-    },
-
-    {
-      path: "login",
-      element: <LoginPage />,
-    },
-    {
-      path: "register",
-      element: <RegisterPage />,
     },
 
     {

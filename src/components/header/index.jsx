@@ -1,8 +1,16 @@
 /* eslint-disable no-unused-vars */
 import { useState, useEffect, useRef, use } from "react";
-import { FiUser, FiSearch, FiShoppingCart, FiMenu, FiX } from "react-icons/fi";
-import { useLocation, useNavigate } from "react-router-dom";
+import { FiSearch, FiShoppingCart, FiMenu, FiX } from "react-icons/fi";
+import { useLocation, Link, useNavigate } from "react-router-dom";
 import api from "../../config/axios";
+import { useDispatch, useSelector } from "react-redux";
+import { logout } from "../../redux/features/userSlice";
+import { Avatar, Divider, Dropdown, Menu } from "antd";
+import {
+  LogoutOutlined,
+  ShoppingOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -101,6 +109,32 @@ const Header = () => {
     return () => window.removeEventListener("resize", handleResize);
   }, []);
 
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user); // Lấy user từ Redux
+
+  const handleLogout = () => {
+    dispatch(logout());
+  };
+
+  const userMenu = (
+    <Menu className="w-48 shadow-2xs rounded-4xl">
+      <Menu.Item key="profile" icon={<UserOutlined />}>
+        <Link to="/profile">Thông tin tài khoản</Link>
+      </Menu.Item>
+      <Menu.Item key="history" icon={<ShoppingOutlined />}>
+        <Link to="/historyOrders">Lịch sử mua hàng</Link>
+      </Menu.Item>
+      <Divider className="my-2" /> {/* Đường kẻ phân cách */}
+      <Menu.Item
+        key="logout"
+        icon={<LogoutOutlined />}
+        danger
+        onClick={handleLogout}
+      >
+        Logout
+      </Menu.Item>
+    </Menu>
+  );
   return (
     <header className="w-full bg-[#2d2d2b] shadow-md h-4-">
       <div className="container mx-auto px-4">
@@ -204,7 +238,7 @@ const Header = () => {
           {/* H-D}
 
           {/* Right Icons */}
-          <div className="flex items-center space-x-6 ">
+          <div className="flex items-center space-x-2 ">
             <button
               onClick={() => setIsSearchOpen(!isSearchOpen)}
               className="text-white hover:text-blue-400 transition-colors duration-200"
@@ -212,15 +246,6 @@ const Header = () => {
             >
               <FiSearch className="w-6 h-6" />
             </button>
-
-            <button
-              onClick={() => navigate("/login")}
-              className="text-white hover:text-blue-400 transition-colors duration-200"
-              aria-label="User account"
-            >
-              <FiUser className="w-6 h-6" />
-            </button>
-
             <div className="relative">
               <button
                 className="text-white hover:text-blue-400 transition-colors duration-200"
@@ -234,6 +259,23 @@ const Header = () => {
                 )}
               </button>
             </div>
+            {user ? (
+              <Dropdown overlay={userMenu} trigger={["click"]}>
+                <div className="flex items-center cursor-pointer text-white">
+                  <Avatar icon={<UserOutlined />} className="mr-2" />
+                  <span>{user.fullName || "User"}</span>
+                </div>
+              </Dropdown>
+            ) : (
+              <div className="pl-3">
+                <span
+                  className="text-white underline cursor-pointer transition-all duration-200 hover:text-gray-300 hover:underline-offset-4"
+                  onClick={() => navigate("/login")}
+                >
+                  Đăng nhập
+                </span>
+              </div>
+            )}
 
             {/* Mobile Menu Button */}
             <button

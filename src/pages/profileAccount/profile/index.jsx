@@ -1,39 +1,94 @@
 import { useState } from "react";
-import { FaEnvelope, FaLock, FaUser, FaPhone, FaCalendar, FaEdit, FaSave, FaMapMarkerAlt } from "react-icons/fa";
+import { FaEnvelope, FaLock, FaUser, FaPhone, FaCalendar, FaEdit } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 export default function AccountInfo() {
   const [activeTab, setActiveTab] = useState("account");
-  const [customer, setCustomer] = useState({});
-  const [originalCustomer, setOriginalCustomer] = useState({});
-
-  const [orderHistory, setOrderHistory] = useState([
-    {
-      orderId: "12345",
-      orderDate: "2025-02-20",
-      address: "Hà Nội, Việt Nam",
-      totalAmount: "500,000 VND",
-      status: "Đang giao",
-      trackingCode: "VN123456789",
-    },
-    {
-      orderId: "67890",
-      orderDate: "2025-02-18",
-      address: "Hồ Chí Minh, Việt Nam",
-      totalAmount: "300,000 VND",
-      status: "Đã giao",
-      trackingCode: "VN987654321",
-    },
-  ]);
+  const [customer, setCustomer] = useState({
+    email: "",
+    password: "",
+    name: "",
+    birthDate: "",
+    phone: "",
+    gender: "Nam",
+  });
+  const [originalCustomer] = useState({ ...customer });
+  const [errors, setErrors] = useState({});
+  const navigate = useNavigate();
 
   // Hàm xử lý thay đổi input
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCustomer({ ...customer, [name]: value });
+    // Kiểm tra lỗi ngay khi nhập
+    validateField(name, value);
   };
 
   // Hàm đặt lại dữ liệu về trạng thái ban đầu
   const handleReset = () => {
     setCustomer(originalCustomer);
+    setErrors({});
+  };
+
+  // Hàm kiểm tra lỗi của từng field
+  const validateField = (name, value) => {
+    let errorMsg = "";
+    switch (name) {
+      case "email":
+        if (!value.trim()) {
+          errorMsg = "Email không được để trống.";
+        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
+          errorMsg = "Email không hợp lệ.";
+        }
+        break;
+      case "password":
+        if (!value.trim()) {
+          errorMsg = "Mật khẩu không được để trống.";
+        } else if (value.length < 8) {
+          errorMsg = "Mật khẩu phải có ít nhất 8 ký tự.";
+        }
+        break;
+      case "name":
+        if (!value.trim()) {
+          errorMsg = "Họ và tên không được để trống.";
+        }
+        break;
+      case "phone":
+        if (!value.trim()) {
+          errorMsg = "Số điện thoại không được để trống.";
+        } else if (!/^\d{10,11}$/.test(value)) {
+          errorMsg = "Số điện thoại không hợp lệ.";
+        }
+        break;
+      case "birthDate":
+        if (!value) {
+          errorMsg = "Vui lòng chọn ngày sinh.";
+        }
+        break;
+      default:
+        break;
+    }
+
+    setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMsg }));
+  };
+  // Hàm kiểm tra toàn bộ form
+  const validateForm = () => {
+    const newErrors = {};
+    Object.keys(customer).forEach((key) => {
+      validateField(key, customer[key]);
+      if (errors[key]) newErrors[key] = errors[key];
+    });
+
+    setErrors(newErrors);
+    return Object.keys(newErrors).length === 0;
+  };
+
+  // Hàm xử lý khi nhấn "Lưu thông tin mới"
+  const handleSubmit = () => {
+    if (validateForm()) {
+      alert("Thông tin đã được lưu thành công!");
+      // Thêm logic để lưu dữ liệu nếu cần
+    }
   };
 
   return (
@@ -56,43 +111,11 @@ export default function AccountInfo() {
           className={`py-3 px-6 ${
             activeTab === "history" ? "bg-[#F7F0E4] font-semibold" : "text-gray-500"
           } rounded-t-lg`}
-          onClick={() => setActiveTab("history")}
+          onClick={() => navigate(`/historyOrders`)}
         >
           ⏳ Lịch sử mua hàng
         </button>
       </div>
-
-      {/* Nội dung tab Lịch sử mua hàng */}
-      {activeTab === "history" && (
-        <div className="bg-[#F7F0E4] p-6 rounded-b-lg text-gray-800">
-          <h2 className="text-lg py-3 font-semibold mb-4">Lịch sử mua hàng</h2>
-
-          <table className="w-full table-auto border-collapse">
-            <thead>
-              <tr>
-                <th className="border-b py-2 px-4">Mã đơn hàng</th>
-                <th className="border-b py-2 px-4">Ngày đặt hàng</th>
-                <th className="border-b py-2 px-4">Địa chỉ</th>
-                <th className="border-b py-2 px-4">Tổng tiền</th>
-                <th className="border-b py-2 px-4">Trạng thái</th>
-                <th className="border-b py-2 px-4">Mã vận chuyển</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orderHistory.map((order) => (
-                <tr key={order.orderId}>
-                  <td className="border-b py-2 px-4">{order.orderId}</td>
-                  <td className="border-b py-2 px-4">{order.orderDate}</td>
-                  <td className="border-b py-2 px-4">{order.address}</td>
-                  <td className="border-b py-2 px-4">{order.totalAmount}</td>
-                  <td className="border-b py-2 px-4">{order.status}</td>
-                  <td className="border-b py-2 px-4">{order.trackingCode}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
 
       {/* Nội dung tab Thông tin tài khoản */}
       {activeTab === "account" && (
@@ -110,6 +133,7 @@ export default function AccountInfo() {
               className="bg-transparent border-b border-gray-400 focus:outline-none focus:border-black w-80 p-1"
               placeholder="Nhập email"
             />
+            {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
           </div>
 
           {/* Mật khẩu */}
@@ -123,6 +147,7 @@ export default function AccountInfo() {
               className="bg-transparent border-b border-gray-400 focus:outline-none focus:border-black w-80 p-1"
               placeholder="Nhập mật khẩu"
             />
+            {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
           </div>
 
           {/* Nút đổi mật khẩu */}
@@ -145,6 +170,7 @@ export default function AccountInfo() {
                 className="bg-transparent border-b border-gray-400 focus:outline-none focus:border-black w-80 p-1"
                 placeholder="Nhập họ và tên"
               />
+              {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
             </div>
 
             {/* Ngày sinh */}
@@ -170,6 +196,7 @@ export default function AccountInfo() {
                 className="bg-transparent border-b border-gray-400 focus:outline-none focus:border-black w-80 p-1"
                 placeholder="Nhập số điện thoại"
               />
+              {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
             </div>
 
             {/* Giới tính */}
@@ -196,7 +223,9 @@ export default function AccountInfo() {
             >
               HỦY BỎ
             </button>
-            <button className="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800">LƯU THÔNG TIN MỚI</button>
+            <button onClick={handleSubmit} className="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800">
+              LƯU THÔNG TIN MỚI
+            </button>
           </div>
         </div>
       )}
