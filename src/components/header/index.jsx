@@ -1,11 +1,11 @@
 import { useState, useEffect, useRef } from "react";
-import { FiUser, FiSearch, FiShoppingCart, FiMenu, FiX } from "react-icons/fi";
+import { FiSearch, FiShoppingCart, FiMenu, FiX } from "react-icons/fi";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../../config/axios";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/features/userSlice";
-import { Avatar, Button, Divider, Dropdown, Menu } from "antd";
-import { LoginOutlined, LogoutOutlined, ShoppingOutlined, UserAddOutlined, UserOutlined } from "@ant-design/icons";
+import { Avatar, Divider, Dropdown, Menu } from "antd";
+import { LogoutOutlined, ShoppingOutlined, UserOutlined } from "@ant-design/icons";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);

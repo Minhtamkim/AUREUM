@@ -1,11 +1,11 @@
 import { useState } from "react";
-import { FaEnvelope, FaLock, FaUser, FaPhone, FaCalendar, FaEdit, FaSave, FaMapMarkerAlt } from "react-icons/fa";
+import { FaEnvelope, FaLock, FaUser, FaPhone, FaCalendar, FaEdit } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
 export default function AccountInfo() {
   const [activeTab, setActiveTab] = useState("account");
   const [customer, setCustomer] = useState({});
-  const [originalCustomer, setOriginalCustomer] = useState({});
+  const [originalCustomer] = useState({});
   const navigate = useNavigate();
 
   // Hàm xử lý thay đổi input
