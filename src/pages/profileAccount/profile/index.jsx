@@ -1,29 +1,12 @@
 import { useState } from "react";
 import { FaEnvelope, FaLock, FaUser, FaPhone, FaCalendar, FaEdit, FaSave, FaMapMarkerAlt } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 export default function AccountInfo() {
   const [activeTab, setActiveTab] = useState("account");
   const [customer, setCustomer] = useState({});
   const [originalCustomer, setOriginalCustomer] = useState({});
-
-  const [orderHistory, setOrderHistory] = useState([
-    {
-      orderId: "12345",
-      orderDate: "2025-02-20",
-      address: "Hà Nội, Việt Nam",
-      totalAmount: "500,000 VND",
-      status: "Đang giao",
-      trackingCode: "VN123456789",
-    },
-    {
-      orderId: "67890",
-      orderDate: "2025-02-18",
-      address: "Hồ Chí Minh, Việt Nam",
-      totalAmount: "300,000 VND",
-      status: "Đã giao",
-      trackingCode: "VN987654321",
-    },
-  ]);
+  const navigate = useNavigate();
 
   // Hàm xử lý thay đổi input
   const handleChange = (e) => {
@@ -56,43 +39,11 @@ export default function AccountInfo() {
           className={`py-3 px-6 ${
             activeTab === "history" ? "bg-[#F7F0E4] font-semibold" : "text-gray-500"
           } rounded-t-lg`}
-          onClick={() => setActiveTab("history")}
+          onClick={() => navigate(`/historyOrders`)}
         >
           ⏳ Lịch sử mua hàng
         </button>
       </div>
-
-      {/* Nội dung tab Lịch sử mua hàng */}
-      {activeTab === "history" && (
-        <div className="bg-[#F7F0E4] p-6 rounded-b-lg text-gray-800">
-          <h2 className="text-lg py-3 font-semibold mb-4">Lịch sử mua hàng</h2>
-
-          <table className="w-full table-auto border-collapse">
-            <thead>
-              <tr>
-                <th className="border-b py-2 px-4">Mã đơn hàng</th>
-                <th className="border-b py-2 px-4">Ngày đặt hàng</th>
-                <th className="border-b py-2 px-4">Địa chỉ</th>
-                <th className="border-b py-2 px-4">Tổng tiền</th>
-                <th className="border-b py-2 px-4">Trạng thái</th>
-                <th className="border-b py-2 px-4">Mã vận chuyển</th>
-              </tr>
-            </thead>
-            <tbody>
-              {orderHistory.map((order) => (
-                <tr key={order.orderId}>
-                  <td className="border-b py-2 px-4">{order.orderId}</td>
-                  <td className="border-b py-2 px-4">{order.orderDate}</td>
-                  <td className="border-b py-2 px-4">{order.address}</td>
-                  <td className="border-b py-2 px-4">{order.totalAmount}</td>
-                  <td className="border-b py-2 px-4">{order.status}</td>
-                  <td className="border-b py-2 px-4">{order.trackingCode}</td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-      )}
 
       {/* Nội dung tab Thông tin tài khoản */}
       {activeTab === "account" && (

@@ -37,6 +37,7 @@ import BlogPost3 from "./pages/Blog/blog-details-3";
 import BlogPost05 from "./pages/Blog/blog-details-5";
 import BlogPost06 from "./pages/Blog/blog-details-6";
 import BlogPostAll from "./pages/Blog/blog-details-all";
+import HistoryOrders from "./pages/profileAccount/historyOrders";
 
 function App() {
   const router = createBrowserRouter([
@@ -51,6 +52,10 @@ function App() {
         {
           path: "profile",
           element: <ProfileAccount />,
+        },
+        {
+          path: "historyOrders",
+          element: <HistoryOrders />,
         },
         {
           path: "policiesShipping",
