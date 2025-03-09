@@ -4,8 +4,8 @@ import { useNavigate } from "react-router-dom";
 
 export default function ProductDetail() {
   const [products, setProducts] = useState([]);
-  const [trang, setTrang] = useState(1);
-  const spMoiTrang = 20;
+  const [page, setPage] = useState(1);
+  const currentPage = 20;
   const navigate = useNavigate(); // Dùng để điều hướng
 
   useEffect(() => {
@@ -16,13 +16,13 @@ export default function ProductDetail() {
     fetchData();
   }, []);
 
-  const tongTrang = Math.ceil(products.length / spMoiTrang);
-  const sanPhamHienTai = products.slice((trang - 1) * spMoiTrang, trang * spMoiTrang);
+  const totalPage = Math.ceil(products.length / currentPage);
+  const currentProduct = products.slice((page - 1) * currentPage, page * currentPage);
 
   return (
     <div className="px-10 my-6">
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12 mt-6">
-        {sanPhamHienTai.map((product, index) => (
+        {currentProduct.map((product, index) => (
           <div
             key={index}
             className="bg-white shadow-md rounded-lg p-4 text-center
@@ -40,18 +40,18 @@ export default function ProductDetail() {
 
       <div className="flex justify-center items-center space-x-4 mt-6">
         <button
-          onClick={() => setTrang((p) => Math.max(p - 1, 1))}
-          disabled={trang === 1}
+          onClick={() => setPage((p) => Math.max(p - 1, 1))}
+          disabled={page === 1}
           className="px-4 py-2 bg-gray-300 rounded-md disabled:opacity-50"
         >
           &larr; Trước
         </button>
         <span>
-          {trang} / {tongTrang}
+          {page} / {totalPage}
         </span>
         <button
-          onClick={() => setTrang((p) => Math.min(p + 1, tongTrang))}
-          disabled={trang === tongTrang}
+          onClick={() => setPage((p) => Math.min(p + 1, totalPage))}
+          disabled={page === totalPage}
           className="px-4 py-2 bg-gray-300 rounded-md disabled:opacity-50"
         >
           Sau &rarr;
