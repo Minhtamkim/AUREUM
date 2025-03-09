@@ -1,6 +1,8 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { FaHeart } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { useRef } from "react";
+import React from "react";
 
 const questions = [
   {
@@ -451,101 +453,324 @@ const questions = [
   // Note: Add remaining 39 questions following the same structure
 ];
 
+// const QuizDetail = () => {
+//   const navigate = useNavigate();
+//   const [currentQuestion, setCurrentQuestion] = useState(0);
+//   const [answers, setAnswers] = useState(new Array(40).fill(null));
+//   const [isComplete, setIsComplete] = useState(false);
+
+//   const handleAnswer = (selectedOption) => {
+//     const newAnswers = [...answers];
+//     newAnswers[currentQuestion] = selectedOption;
+//     setAnswers(newAnswers);
+//   };
+
+//   const handleNext = () => {
+//     if (currentQuestion < 39) {
+//       setCurrentQuestion((curr) => curr + 1);
+//     }
+//   };
+
+//   const handlePrevious = () => {
+//     if (currentQuestion > 0) {
+//       setCurrentQuestion((curr) => curr - 1);
+//     }
+//   };
+
+//   const handleSubmit = () => {
+//     if (answers.every((answer) => answer !== null)) {
+//       setIsComplete(true);
+//       navigate("/quizResult", { state: { answers } });
+//       // Calculate results here
+//     } else {
+//       alert("Vui lòng trả lời tất cả câu hỏi trước khi nộp bài!");
+//     }
+//   };
+
+//   return (
+//     <div className="max-w-full w-screen h-screen flex flex-col items-center justify-center bg-[#FAF0E8] text-center">
+//       <div className="max-w-3xl w-full bg-white/80 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-xl">
+//         <div className="flex items-center justify-center gap-3 mb-8">
+//           <FaHeart className="text-pink-400 text-2xl md:text-3xl animate-pulse" />
+//           <h1 className="text-3xl md:text-4xl font-bold text-gray-800 text-center">Bài kiểm tra xác định loại da</h1>
+//         </div>
+
+//         {!isComplete ? (
+//           <div className="space-y-6">
+//             <div className="bg-gray-50 p-6 rounded-xl">
+//               <h2 className="text-xl font-semibold mb-4">{questions[currentQuestion].question}</h2>
+//               <div className="space-y-3">
+//                 {questions[currentQuestion].options.map((option, index) => (
+//                   <button
+//                     key={option.value}
+//                     onClick={() => handleAnswer(option)}
+//                     className={`w-full text-left p-4 rounded-lg transition-colors ${
+//                       answers[currentQuestion]?.value === option.value
+//                         ? "bg-purple-100 border-2 border-purple-400"
+//                         : "bg-white hover:bg-gray-100 border-2 border-gray-200"
+//                     }`}
+//                   >
+//                     {option.value}. {option.text}
+//                   </button>
+//                 ))}
+//               </div>
+//             </div>
+
+//             <div className="flex justify-between mt-8">
+//               <button
+//                 onClick={handlePrevious}
+//                 disabled={currentQuestion === 0}
+//                 className="px-6 py-3 bg-gray-200 text-gray-700 rounded-full font-semibold disabled:opacity-50"
+//               >
+//                 Câu trước đó
+//               </button>
+//               {currentQuestion === 39 ? (
+//                 <button
+//                   onClick={handleSubmit}
+//                   className="px-8 py-3 bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-full font-semibold"
+//                 >
+//                   Hoàn thành
+//                 </button>
+//               ) : (
+//                 <button
+//                   onClick={handleNext}
+//                   className="px-6 py-3 bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-full font-semibold"
+//                 >
+//                   Câu tiếp theo
+//                 </button>
+//               )}
+//             </div>
+
+//             <div className="mt-4 text-center text-gray-500">Câu {currentQuestion + 1}/40</div>
+//           </div>
+//         ) : (
+//           <div className="text-center">
+//             <h2 className="text-2xl font-bold text-green-600 mb-4">Bạn đã hoàn thành bài kiểm tra!</h2>
+//           </div>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+
 const QuizDetail = () => {
   const navigate = useNavigate();
-  const [currentQuestion, setCurrentQuestion] = useState(0);
+  const [currentPage, setCurrentPage] = useState(0);
   const [answers, setAnswers] = useState(new Array(40).fill(null));
-  const [isComplete, setIsComplete] = useState(false);
+  const [error, setError] = useState(null);
+  const questionsPerPage = 10;
+  const totalPages = Math.ceil(questions.length / questionsPerPage);
 
-  const handleAnswer = (selectedOption) => {
-    const newAnswers = [...answers];
-    newAnswers[currentQuestion] = selectedOption;
-    setAnswers(newAnswers);
+  // const handleAnswer = (questionIndex, option) => {
+  //   setAnswers({ ...answers, [questionIndex]: option });
+  //   setError(null); // Xóa lỗi khi người dùng chọn câu trả lời
+  // };
+
+  // const handleAnswer = (questionIndex, option) => {
+  //   setAnswers((prevAnswers) => {
+  //     // Nếu người dùng nhấn vào đáp án đã chọn => Xóa nó (hủy chọn)
+  //     if (prevAnswers[questionIndex]?.value === option.value) {
+  //       const updatedAnswers = { ...prevAnswers };
+  //       delete updatedAnswers[questionIndex]; // Xóa đáp án đã chọn
+  //       return updatedAnswers;
+  //     }
+  //     // Nếu chọn đáp án mới => Cập nhật bình thường
+  //     return { ...prevAnswers, [questionIndex]: option };
+  //   });
+  //   setError(null); // Xóa lỗi khi chọn lại đáp án
+  // };
+
+  const questionRefs = useRef(questions.map(() => React.createRef()));
+
+  const handleAnswer = (questionIndex, option) => {
+    setAnswers((prevAnswers) => {
+      const updatedAnswers = [...prevAnswers];
+      updatedAnswers[questionIndex] = prevAnswers[questionIndex]?.value === option.value ? null : option;
+      return updatedAnswers;
+    });
+    setError(null);
   };
 
-  const handleNext = () => {
-    if (currentQuestion < 39) {
-      setCurrentQuestion((curr) => curr + 1);
-    }
-  };
 
-  const handlePrevious = () => {
-    if (currentQuestion > 0) {
-      setCurrentQuestion((curr) => curr - 1);
-    }
-  };
+
+  // const handlePreviousPage = () => {
+  //   setError(null); // Xóa lỗi khi chuyển trang
+  //   if (currentPage > 0) {
+  //     setCurrentPage(currentPage - 1);
+  //   }
+  // };
+
+  // const handleSubmit = () => {
+  //   const unansweredIndex = questions.findIndex((_, index) => !answers[index]);
+
+  //   if (unansweredIndex !== -1) {
+  //     // Nếu có câu chưa trả lời, điều hướng đến trang chứa câu đó
+  //     const newPage = Math.floor(unansweredIndex / questionsPerPage);
+  //     setCurrentPage(newPage);
+  //     setError(`Bạn chưa trả lời hết câu hỏi! Vui lòng hoàn thành tất cả trước khi nộp bài.`);
+  //   } else {
+  //     alert("Bạn đã hoàn thành bài kiểm tra!");
+  //   }
+  // };
 
   const handleSubmit = () => {
-    if (answers.every((answer) => answer !== null)) {
-      setIsComplete(true);
-      navigate("/quizResult", { state: { answers } });
-      // Calculate results here
-    } else {
-      alert("Vui lòng trả lời tất cả câu hỏi trước khi nộp bài!");
+    const unansweredIndex = questions.findIndex((_, index) => !answers[index]);
+
+    if (unansweredIndex !== -1) {
+      const newPage = Math.floor(unansweredIndex / questionsPerPage);
+      setCurrentPage(newPage);
+      setError("Bạn chưa trả lời hết câu hỏi! Vui lòng hoàn thành tất cả trước khi nộp bài.");
+
+      // Chờ cập nhật trang rồi cuộn đến câu hỏi
+      setTimeout(() => {
+        questionRefs.current[unansweredIndex]?.current?.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }, 100);
+      return;
     }
+
+    // Chuyển đến trang kết quả với dữ liệu câu trả lời
+    navigate("/quizResult", { state: { answers } });
   };
+  const startIndex = currentPage * questionsPerPage;
+  const currentQuestions = questions.slice(startIndex, startIndex + questionsPerPage);
+
+  // return (
+  //   <div className="min-h-screen w-screen flex flex-col items-center justify-center bg-[#FAF0E8] text-center">
+  //     <div className="max-w-2xl w-full mx-auto bg-white/80 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-xl">
+  //       <div className="flex items-center justify-center gap-3 mb-8">
+  //         <FaHeart className="text-pink-400 text-2xl md:text-3xl animate-pulse" />
+  //         <h1 className="text-3xl md:text-4xl font-bold text-gray-800 text-center">Bài kiểm tra xác định loại da</h1>
+  //       </div>
+
+  //       {error && <div className="text-red-500 mb-4 font-semibold">{error}</div>}
+
+  //       <div className="space-y-6">
+  //         {currentQuestions.map((question, index) => {
+  //           const globalIndex = startIndex + index;
+  //           return (
+  //             <div key={globalIndex} className="bg-gray-50 p-6 rounded-xl">
+  //               <h2 className="text-xl font-semibold mb-4">{question.question}</h2>
+  //               <div className="space-y-3">
+  //                 {question.options.map((option) => (
+  //                   <button
+  //                     key={option.value}
+  //                     onClick={() => handleAnswer(globalIndex, option)}
+  //                     className={`w-full text-left p-4 rounded-lg transition-colors ${
+  //                       answers[globalIndex]?.value === option.value
+  //                         ? "bg-purple-100 border-2 border-purple-400"
+  //                         : "bg-white hover:bg-gray-100 border-2 border-gray-200"
+  //                     }`}
+  //                   >
+  //                     {option.value}. {option.text}
+  //                   </button>
+  //                 ))}
+  //               </div>
+  //             </div>
+  //           );
+  //         })}
+
+  //         <div className="flex justify-between mt-8">
+  //           <button
+  //             onClick={handlePreviousPage}
+  //             disabled={currentPage === 0}
+  //             className="px-6 py-3 bg-gray-200 text-gray-700 rounded-full font-semibold disabled:opacity-50"
+  //           >
+  //             Trang trước
+  //           </button>
+
+  //           {currentPage === totalPages - 1 ? (
+  //             <button
+  //               onClick={handleSubmit}
+  //               className="px-8 py-3 bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-full font-semibold"
+  //             >
+  //               Hoàn thành
+  //             </button>
+  //           ) : (
+  //             <button
+  //               onClick={handleNextPage}
+  //               className="px-6 py-3 bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-full font-semibold"
+  //             >
+  //               Trang tiếp theo
+  //             </button>
+  //           )}
+  //         </div>
+
+  //         <div className="mt-4 text-center text-gray-500">
+  //           Trang {currentPage + 1}/{totalPages}
+  //         </div>
+  //       </div>
+  //     </div>
+  //   </div>
+  // );
 
   return (
-    <div className="max-w-full w-screen h-screen flex flex-col items-center justify-center bg-[#FAF0E8] text-center">
-      <div className="max-w-3xl w-full bg-white/80 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-xl">
+    <div className="min-h-screen w-screen flex flex-col items-center justify-center bg-[#FAF0E8] text-center">
+      <div className="max-w-2xl w-full mx-auto bg-white/80 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-xl">
         <div className="flex items-center justify-center gap-3 mb-8">
           <FaHeart className="text-pink-400 text-2xl md:text-3xl animate-pulse" />
           <h1 className="text-3xl md:text-4xl font-bold text-gray-800 text-center">Bài kiểm tra xác định loại da</h1>
         </div>
 
-        {!isComplete ? (
-          <div className="space-y-6">
-            <div className="bg-gray-50 p-6 rounded-xl">
-              <h2 className="text-xl font-semibold mb-4">{questions[currentQuestion].question}</h2>
-              <div className="space-y-3">
-                {questions[currentQuestion].options.map((option, index) => (
-                  <button
-                    key={option.value}
-                    onClick={() => handleAnswer(option)}
-                    className={`w-full text-left p-4 rounded-lg transition-colors ${
-                      answers[currentQuestion]?.value === option.value
-                        ? "bg-purple-100 border-2 border-purple-400"
-                        : "bg-white hover:bg-gray-100 border-2 border-gray-200"
-                    }`}
-                  >
-                    {option.value}. {option.text}
-                  </button>
-                ))}
+        {error && <div className="text-red-500 mb-4 font-semibold">{error}</div>}
+
+        <div className="space-y-6">
+          {currentQuestions.map((question, index) => {
+            const globalIndex = startIndex + index;
+            return (
+              <div key={globalIndex} ref={questionRefs.current[globalIndex]} className="bg-gray-50 p-6 rounded-xl">
+                <h2 className="text-xl font-semibold mb-4">{question.question}</h2>
+                <div className="space-y-3">
+                  {question.options.map((option) => (
+                    <button
+                      key={option.value}
+                      onClick={() => handleAnswer(globalIndex, option)}
+                      className={`w-full text-left p-4 rounded-lg transition-colors ${
+                        answers[globalIndex]?.value === option.value
+                          ? "bg-purple-100 border-2 border-purple-400"
+                          : "bg-white hover:bg-gray-100 border-2 border-gray-200"
+                      }`}
+                    >
+                      {option.value}. {option.text}
+                    </button>
+                  ))}
+                </div>
               </div>
-            </div>
+            );
+          })}
 
-            <div className="flex justify-between mt-8">
+          <div className="flex justify-between mt-8">
+            <button
+              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
+              disabled={currentPage === 0}
+              className="px-6 py-3 bg-gray-200 text-gray-700 rounded-full font-semibold disabled:opacity-50"
+            >
+              Trang trước
+            </button>
+
+            {currentPage === totalPages - 1 ? (
               <button
-                onClick={handlePrevious}
-                disabled={currentQuestion === 0}
-                className="px-6 py-3 bg-gray-200 text-gray-700 rounded-full font-semibold disabled:opacity-50"
+                onClick={handleSubmit}
+                className="px-8 py-3 bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-full font-semibold"
               >
-                Câu trước đó
+                Hoàn thành
               </button>
-              {currentQuestion === 39 ? (
-                <button
-                  onClick={handleSubmit}
-                  className="px-8 py-3 bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-full font-semibold"
-                >
-                  Hoàn thành
-                </button>
-              ) : (
-                <button
-                  onClick={handleNext}
-                  className="px-6 py-3 bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-full font-semibold"
-                >
-                  Câu tiếp theo
-                </button>
-              )}
-            </div>
+            ) : (
+              <button
+                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1))}
+                className="px-6 py-3 bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-full font-semibold"
+              >
+                Trang tiếp theo
+              </button>
+            )}
+          </div>
 
-            <div className="mt-4 text-center text-gray-500">Câu {currentQuestion + 1}/40</div>
+          <div className="mt-4 text-center text-gray-500">
+            Trang {currentPage + 1}/{totalPages}
           </div>
-        ) : (
-          <div className="text-center">
-            <h2 className="text-2xl font-bold text-green-600 mb-4">Bạn đã hoàn thành bài kiểm tra!</h2>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );
