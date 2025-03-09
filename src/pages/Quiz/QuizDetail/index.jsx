@@ -591,12 +591,7 @@ const QuizDetail = () => {
     setError(null);
   };
 
-  // const handleNextPage = () => {
-  //   setError(null); // Xóa lỗi khi chuyển trang
-  //   if (currentPage < totalPages - 1) {
-  //     setCurrentPage(currentPage + 1);
-  //   }
-  // };
+
 
   // const handlePreviousPage = () => {
   //   setError(null); // Xóa lỗi khi chuyển trang
