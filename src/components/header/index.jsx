@@ -78,7 +78,8 @@ const Header = () => {
     { id: 2, name: "Sản Phẩm", path: "/products", hasDropdown: true },
     { id: 3, name: "Bài Viết", path: "/blog" },
     { id: 4, name: "Về Chúng Tôi", path: "/aboutUs" },
-    { id: 5, name: "Xác Định Loại Da", path: "#" },
+    { id: 5, name: "Xác Định Loại Da", path: "/quiz" },
+    { id: 6, name: "So Sánh Sản Phẩm", path: "/productComparison" },
   ];
 
   useEffect(() => {
