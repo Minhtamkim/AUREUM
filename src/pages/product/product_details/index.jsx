@@ -2,6 +2,8 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../../../config/axios";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { addToCart } from "../../../redux/features/cartSlice";
 
 const ProductDetailPage = () => {
   const { product_id } = useParams(); // Lấy product_id từ URL
@@ -13,6 +15,8 @@ const ProductDetailPage = () => {
   const navigate = useNavigate(); // Dùng để điều hướng
   const [startIndex, setStartIndex] = useState(0);
   const itemsPerRow = 4;
+  const [cart, setCart] = useState([]);
+  const dispatch = useDispatch();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -65,6 +69,12 @@ const ProductDetailPage = () => {
     }
   };
 
+  const handleAddToCart = (product) => {
+    setCart((prev) => [...prev, { ...product, quantity: 1 }]);
+    dispatch(addToCart(product));
+    console.log("Adding to cart:", product); // Kiểm tra dữ liệu
+  };
+
   return (
     <div className="my-6">
       <div className="max-w-6xl mx-auto p-8 bg-white">
@@ -105,7 +115,10 @@ const ProductDetailPage = () => {
             </div>
 
             {/* Nút thêm vào giỏ */}
-            <button className="mt-6 bg-[#835229] text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-gray-800 transition">
+            <button
+              onClick={() => handleAddToCart(product)}
+              className="mt-6 bg-[#835229] text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-gray-800 transition"
+            >
               Thêm vào giỏ - {product.price * quantity}.000đ
             </button>
           </div>
