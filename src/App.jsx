@@ -38,6 +38,7 @@ import BlogPost05 from "./pages/Blog/blog-details-5";
 import BlogPost06 from "./pages/Blog/blog-details-6";
 import BlogPostAll from "./pages/Blog/blog-details-all";
 import HistoryOrders from "./pages/profileAccount/historyOrders";
+import ProductComparison from "./pages/productComparison/indev";
 
 function App() {
   const router = createBrowserRouter([
@@ -168,6 +169,10 @@ function App() {
         {
           path: "products/details/:product_id",
           element: <ProductDetailPage />,
+        },
+        {
+          path: "productComparison",
+          element: <ProductComparison />,
         },
       ],
     },

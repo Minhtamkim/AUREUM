@@ -119,7 +119,7 @@ const ProductDetailPage = () => {
               onClick={() => handleAddToCart(product)}
               className="mt-6 bg-[#835229] text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-gray-800 transition"
             >
-              Thêm vào giỏ - {product.price * quantity}.000đ
+              Thêm vào giỏ - {`${(product.price * quantity).toLocaleString("vi-VN")}`}.000VND
             </button>
           </div>
         </div>
