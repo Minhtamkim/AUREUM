@@ -18,12 +18,17 @@ const questions = [
   },
   {
     id: 2,
-    question: "Câu hỏi 2: Bạn có cảm thấy da mặt bóng dầu vào giữa ngày không ?",
+    question:
+      "Câu hỏi 2: Bạn có cảm thấy da mặt bóng dầu vào giữa ngày không ?",
     options: [
       { text: "Không bao giờ", value: "A", points: 5 },
       { text: "Chỉ vùng chữ T", value: "B", points: 10 },
       { text: "Khá nhiều dầu, nhất là vào buổi chiều", value: "C", points: 15 },
-      { text: "Rất nhiều dầu, phải dùng giấy thấm dầu", value: "D", points: 20 },
+      {
+        text: "Rất nhiều dầu, phải dùng giấy thấm dầu",
+        value: "D",
+        points: 20,
+      },
       { text: "Chỉ khi trời nóng", value: "E", points: 12.5 },
     ],
   },
@@ -51,7 +56,8 @@ const questions = [
   },
   {
     id: 5,
-    question: "Câu hỏi 5: Bạn có thường xuyên bị mụn đầu đen hoặc mụn ẩn không ?",
+    question:
+      "Câu hỏi 5: Bạn có thường xuyên bị mụn đầu đen hoặc mụn ẩn không ?",
     options: [
       { text: "Không có", value: "A", points: 5 },
       { text: "Chỉ có ở vùng mũi", value: "B", points: 10 },
@@ -84,7 +90,8 @@ const questions = [
   },
   {
     id: 8,
-    question: "Câu hỏi 8: Khi bạn thức dậy vào buổi sáng, da bạn có bóng dầu không ?",
+    question:
+      "Câu hỏi 8: Khi bạn thức dậy vào buổi sáng, da bạn có bóng dầu không ?",
     options: [
       { text: "Không, da bình thường", value: "A", points: 5 },
       { text: "Chỉ vùng mũi và trán", value: "B", points: 10 },
@@ -95,7 +102,8 @@ const questions = [
   },
   {
     id: 9,
-    question: "Câu hỏi 9: Bạn có cảm thấy da thiếu nước nhưng vẫn có dầu không ?",
+    question:
+      "Câu hỏi 9: Bạn có cảm thấy da thiếu nước nhưng vẫn có dầu không ?",
     options: [
       { text: "Không, da cân bằng", value: "A", points: 5 },
       { text: "Đôi khi", value: "B", points: 10 },
@@ -106,7 +114,8 @@ const questions = [
   },
   {
     id: 10,
-    question: "Câu hỏi 10: Bạn có cần dùng kem dưỡng ẩm dày để tránh da bị khô không ?",
+    question:
+      "Câu hỏi 10: Bạn có cần dùng kem dưỡng ẩm dày để tránh da bị khô không ?",
     options: [
       { text: "Không, dùng loại nhẹ là đủ", value: "A", points: 5 },
       { text: "Chỉ dùng vào mùa đông", value: "B", points: 10 },
@@ -117,24 +126,42 @@ const questions = [
   },
   {
     id: 11,
-    question: "Câu hỏi 11: Sau khi rửa mặt bằng sữa rửa mặt, da bạn có cảm giác như thế nào ?",
+    question:
+      "Câu hỏi 11: Sau khi rửa mặt bằng sữa rửa mặt, da bạn có cảm giác như thế nào ?",
     options: [
       { text: "Khô căng, châm chích", value: "A", points: 5 },
       { text: "Hơi khô nhưng không khó chịu lắm", value: "B", points: 10 },
-      { text: "Bình thường, không có cảm giác đặc biệt", value: "C", points: 15 },
+      {
+        text: "Bình thường, không có cảm giác đặc biệt",
+        value: "C",
+        points: 15,
+      },
       { text: "Mềm mịn, sảng khoái", value: "D", points: 20 },
       { text: "Hơi khô nhẹ nhưng nhanh phục hồi", value: "E", points: 12.5 },
     ],
   },
   {
     id: 12,
-    question: "Câu hỏi 12: Da bạn có dễ bị đỏ hoặc kích ứng khi thay đổi sản phẩm chăm sóc da không ?",
+    question:
+      "Câu hỏi 12: Da bạn có dễ bị đỏ hoặc kích ứng khi thay đổi sản phẩm chăm sóc da không ?",
     options: [
-      { text: "Rất dễ, chỉ cần đổi sản phẩm là da phản ứng ngay", value: "A", points: 5 },
-      { text: "Đôi khi có kích ứng nhẹ nhưng không thường xuyên", value: "B", points: 10 },
+      {
+        text: "Rất dễ, chỉ cần đổi sản phẩm là da phản ứng ngay",
+        value: "A",
+        points: 5,
+      },
+      {
+        text: "Đôi khi có kích ứng nhẹ nhưng không thường xuyên",
+        value: "B",
+        points: 10,
+      },
       { text: "Hiếm khi bị kích ứng", value: "C", points: 15 },
       { text: "Không bao giờ bị kích ứng", value: "D", points: 20 },
-      { text: "Chỉ có phản ứng nhẹ trong vài lần đầu sử dụng sản phẩm mới", value: "E", points: 12.5 },
+      {
+        text: "Chỉ có phản ứng nhẹ trong vài lần đầu sử dụng sản phẩm mới",
+        value: "E",
+        points: 12.5,
+      },
     ],
   },
   {
@@ -142,29 +169,55 @@ const questions = [
     question:
       "Câu hỏi 13: Bạn có cảm thấy da bị nóng rát khi tiếp xúc với môi trường ô nhiễm, nắng gắt hoặc nước máy không ?",
     options: [
-      { text: "Rất thường xuyên, da đỏ rát ngay lập tức", value: "A", points: 5 },
+      {
+        text: "Rất thường xuyên, da đỏ rát ngay lập tức",
+        value: "A",
+        points: 5,
+      },
       { text: "Đôi khi bị kích ứng nhẹ", value: "B", points: 10 },
       { text: "Hiếm khi có phản ứng này", value: "C", points: 15 },
       { text: "Không bao giờ bị", value: "D", points: 20 },
-      { text: "Chỉ bị khi tiếp xúc quá lâu hoặc thời tiết quá khắc nghiệt", value: "E", points: 12.5 },
+      {
+        text: "Chỉ bị khi tiếp xúc quá lâu hoặc thời tiết quá khắc nghiệt",
+        value: "E",
+        points: 12.5,
+      },
     ],
   },
   {
     id: 14,
-    question: "Câu hỏi 14: Bạn có dễ bị dị ứng mỹ phẩm hoặc một số thành phần nhất định trong mỹ phẩm không ?",
+    question:
+      "Câu hỏi 14: Bạn có dễ bị dị ứng mỹ phẩm hoặc một số thành phần nhất định trong mỹ phẩm không ?",
     options: [
-      { text: "Hầu hết các loại mỹ phẩm đều gây kích ứng", value: "A", points: 5 },
-      { text: "Một số sản phẩm nhất định gây kích ứng", value: "B", points: 10 },
+      {
+        text: "Hầu hết các loại mỹ phẩm đều gây kích ứng",
+        value: "A",
+        points: 5,
+      },
+      {
+        text: "Một số sản phẩm nhất định gây kích ứng",
+        value: "B",
+        points: 10,
+      },
       { text: "Hiếm khi gặp vấn đề với mỹ phẩm", value: "C", points: 15 },
       { text: "Không có vấn đề gì với mỹ phẩm", value: "D", points: 20 },
-      { text: "Thỉnh thoảng có phản ứng nhưng không đáng kể", value: "E", points: 12.5 },
+      {
+        text: "Thỉnh thoảng có phản ứng nhưng không đáng kể",
+        value: "E",
+        points: 12.5,
+      },
     ],
   },
   {
     id: 15,
-    question: "Câu hỏi 15: Da bạn có dễ bị khô, bong tróc hoặc đỏ khi thời tiết thay đổi không ?",
+    question:
+      "Câu hỏi 15: Da bạn có dễ bị khô, bong tróc hoặc đỏ khi thời tiết thay đổi không ?",
     options: [
-      { text: "Rất dễ, da bong tróc hoặc đỏ ngay khi trời thay đổi ", value: "A", points: 5 },
+      {
+        text: "Rất dễ, da bong tróc hoặc đỏ ngay khi trời thay đổi ",
+        value: "A",
+        points: 5,
+      },
       { text: "Đôi khi bị nhưng không nghiêm trọng", value: "B", points: 10 },
       { text: "Hiếm khi bị ảnh hưởng", value: "C", points: 15 },
       { text: "Không bao giờ bị", value: "D", points: 20 },
@@ -173,24 +226,34 @@ const questions = [
   },
   {
     id: 16,
-    question: "Câu hỏi 16: Bạn có thường xuyên bị mẩn đỏ ở má hoặc vùng chữ T không ?",
+    question:
+      "Câu hỏi 16: Bạn có thường xuyên bị mẩn đỏ ở má hoặc vùng chữ T không ?",
     options: [
       { text: "Rất thường xuyên, vùng má đỏ nhiều", value: "A", points: 5 },
       { text: "Đôi khi bị đỏ nhẹ nhưng hết nhanh", value: "B", points: 10 },
-      { text: "Chỉ bị khi tiếp xúc với nhiệt độ cao hoặc căng thẳng", value: "C", points: 15 },
+      {
+        text: "Chỉ bị khi tiếp xúc với nhiệt độ cao hoặc căng thẳng",
+        value: "C",
+        points: 15,
+      },
       { text: "Không bị đỏ da bao giờ", value: "D", points: 20 },
       { text: "Đỏ nhẹ nhưng không kéo dài lâu", value: "E", points: 12.5 },
     ],
   },
   {
     id: 17,
-    question: "Câu hỏi 17: Khi rửa mặt bằng nước lạnh, da bạn phản ứng thế nào ?",
+    question:
+      "Câu hỏi 17: Khi rửa mặt bằng nước lạnh, da bạn phản ứng thế nào ?",
     options: [
       { text: "Đỏ lên ngay lập tức và cảm giác rát", value: "A", points: 5 },
       { text: "Hơi căng nhẹ nhưng không đau rát", value: "B", points: 10 },
       { text: "Bình thường, không có phản ứng gì", value: "C", points: 15 },
       { text: "Da cảm thấy sảng khoái, dễ chịu", value: "D", points: 20 },
-      { text: "Hơi kích ứng nhưng giảm nhanh sau vài phút", value: "E", points: 12.5 },
+      {
+        text: "Hơi kích ứng nhưng giảm nhanh sau vài phút",
+        value: "E",
+        points: 12.5,
+      },
     ],
   },
   {
@@ -202,7 +265,11 @@ const questions = [
       { text: "Đôi khi bị nhưng không thường xuyên ", value: "B", points: 10 },
       { text: "Hiếm khi bị ảnh hưởng", value: "C", points: 15 },
       { text: "Không bao giờ bị", value: "D", points: 20 },
-      { text: "Chỉ bị khi tiếp xúc trong thời gian dài", value: "E", points: 12.5 },
+      {
+        text: "Chỉ bị khi tiếp xúc trong thời gian dài",
+        value: "E",
+        points: 12.5,
+      },
     ],
   },
   {
@@ -210,11 +277,23 @@ const questions = [
     question:
       "Câu hỏi 19: Bạn có thường cảm thấy da mình yếu, dễ tổn thương khi tiếp xúc với mỹ phẩm, khí hậu hoặc nước không ?",
     options: [
-      { text: "Luôn luôn cảm thấy da yếu, dễ tổn thương", value: "A", points: 5 },
-      { text: "Thỉnh thoảng, nhưng không quá nghiêm trọng", value: "B", points: 10 },
+      {
+        text: "Luôn luôn cảm thấy da yếu, dễ tổn thương",
+        value: "A",
+        points: 5,
+      },
+      {
+        text: "Thỉnh thoảng, nhưng không quá nghiêm trọng",
+        value: "B",
+        points: 10,
+      },
       { text: "Hiếm khi có vấn đề", value: "C", points: 15 },
       { text: "Không bao giờ cảm thấy da yếu", value: "D", points: 20 },
-      { text: "Có đôi lúc nhạy cảm nhưng hồi phục nhanh", value: "E", points: 12.5 },
+      {
+        text: "Có đôi lúc nhạy cảm nhưng hồi phục nhanh",
+        value: "E",
+        points: 12.5,
+      },
     ],
   },
   {
@@ -223,8 +302,16 @@ const questions = [
       "Câu hỏi 20: Bạn có bị đỏ hoặc kích ứng khi uống rượu bia, ăn đồ cay hoặc khi thời tiết thay đổi đột ngột không ?",
     options: [
       { text: "Rất dễ bị đỏ và nóng rát", value: "A", points: 5 },
-      { text: "Đôi khi bị nhưng không quá nghiêm trọng", value: "B", points: 10 },
-      { text: "Chỉ bị khi uống rượu hoặc ăn cay nhiều", value: "C", points: 15 },
+      {
+        text: "Đôi khi bị nhưng không quá nghiêm trọng",
+        value: "B",
+        points: 10,
+      },
+      {
+        text: "Chỉ bị khi uống rượu hoặc ăn cay nhiều",
+        value: "C",
+        points: 15,
+      },
       { text: "Không bị đỏ hay kích ứng bao giờ ", value: "D", points: 20 },
       { text: "Bị đỏ nhẹ nhưng nhanh hết", value: "E", points: 12.5 },
     ],
@@ -362,10 +449,19 @@ const QuizDetail = () => {
 
   const questionRefs = useRef(questions.map(() => React.createRef()));
 
+  const handleNextPage = () => {
+    setCurrentPage((prev) => {
+      const nextPage = Math.min(prev + 1, totalPages - 1);
+      window.scrollTo({ top: 0, behavior: "smooth" }); // Cuộn lên đầu trang mượt mà
+      return nextPage;
+    });
+  };
+
   const handleAnswer = (questionIndex, option) => {
     setAnswers((prevAnswers) => {
       const updatedAnswers = [...prevAnswers];
-      updatedAnswers[questionIndex] = prevAnswers[questionIndex]?.value === option.value ? null : option;
+      updatedAnswers[questionIndex] =
+        prevAnswers[questionIndex]?.value === option.value ? null : option;
       return updatedAnswers;
     });
     setError(null);
@@ -397,7 +493,9 @@ const QuizDetail = () => {
     if (unansweredIndex !== -1) {
       const newPage = Math.floor(unansweredIndex / questionsPerPage);
       setCurrentPage(newPage);
-      setError("Bạn chưa trả lời hết câu hỏi! Vui lòng hoàn thành tất cả trước khi nộp bài.");
+      setError(
+        "Bạn chưa trả lời hết câu hỏi! Vui lòng hoàn thành tất cả trước khi nộp bài."
+      );
 
       // Chờ cập nhật trang rồi cuộn đến câu hỏi
       setTimeout(() => {
@@ -413,7 +511,10 @@ const QuizDetail = () => {
     navigate("/quizResult", { state: { answers } });
   };
   const startIndex = currentPage * questionsPerPage;
-  const currentQuestions = questions.slice(startIndex, startIndex + questionsPerPage);
+  const currentQuestions = questions.slice(
+    startIndex,
+    startIndex + questionsPerPage
+  );
 
   // return (
   //   <div className="min-h-screen w-screen flex flex-col items-center justify-center bg-[#FAF0E8] text-center">
@@ -489,17 +590,27 @@ const QuizDetail = () => {
       <div className="max-w-2xl w-full mx-auto bg-white/80 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-xl">
         <div className="flex items-center justify-center gap-3 mb-8">
           <FaHeart className="text-pink-400 text-2xl md:text-3xl animate-pulse" />
-          <h1 className="text-3xl md:text-4xl font-bold text-gray-800 text-center">Bài kiểm tra xác định loại da</h1>
+          <h1 className="text-3xl md:text-4xl font-bold text-gray-800 text-center">
+            Bài kiểm tra xác định loại da
+          </h1>
         </div>
 
-        {error && <div className="text-red-500 mb-4 font-semibold">{error}</div>}
+        {error && (
+          <div className="text-red-500 mb-4 font-semibold">{error}</div>
+        )}
 
         <div className="space-y-6">
           {currentQuestions.map((question, index) => {
             const globalIndex = startIndex + index;
             return (
-              <div key={globalIndex} ref={questionRefs.current[globalIndex]} className="bg-gray-50 p-6 rounded-xl">
-                <h2 className="text-xl font-semibold mb-4">{question.question}</h2>
+              <div
+                key={globalIndex}
+                ref={questionRefs.current[globalIndex]}
+                className="bg-gray-50 p-6 rounded-xl"
+              >
+                <h2 className="text-xl font-semibold mb-4">
+                  {question.question}
+                </h2>
                 <div className="space-y-3">
                   {question.options.map((option) => (
                     <button
@@ -537,7 +648,7 @@ const QuizDetail = () => {
               </button>
             ) : (
               <button
-                onClick={() => setCurrentPage((prev) => Math.min(prev + 1, totalPages - 1))}
+                onClick={handleNextPage}
                 className="px-6 py-3 bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-full font-semibold"
               >
                 Trang tiếp theo

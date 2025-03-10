@@ -17,10 +17,16 @@ export default function ProductDetail() {
   }, []);
 
   const totalPage = Math.ceil(products.length / currentPage);
-  const currentProduct = products.slice((page - 1) * currentPage, page * currentPage);
+  const currentProduct = products.slice(
+    (page - 1) * currentPage,
+    page * currentPage
+  );
 
   return (
-    <div className="px-10 my-6">
+    <div className="px-10 my-6 min-h-screen">
+      <div>
+        <h2 className=" font-semibold  mt-6">Sản Phẩm/Tất Cả Sản Phẩm</h2>
+      </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12 mt-6">
         {currentProduct.map((product, index) => (
           <div
@@ -29,11 +35,15 @@ export default function ProductDetail() {
                 hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
             onClick={() => navigate(`/products/details/${product.id}`)} // Điều hướng khi bấm vào sản phẩm
           >
-            <div className={`p-2 flex items-center justify-center brightness-100 `}>
+            <div
+              className={`p-2 flex items-center justify-center brightness-100 `}
+            >
               <img src={product.image} alt={product.title} className="h-70" />
             </div>
             <p className="font-semibold mt-2">{product.name}</p>
-            <p className="text-sm text-gray-500 whitespace-pre-line">{product.price + ".000đ"}</p>
+            <p className="text-sm text-gray-500 whitespace-pre-line">
+              {product.price + ".000đ"}
+            </p>
           </div>
         ))}
       </div>
