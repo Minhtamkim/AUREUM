@@ -6,15 +6,13 @@ import api from "../../config/axios";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/features/userSlice";
 import { Avatar, Divider, Dropdown, Menu } from "antd";
-import {
-  LogoutOutlined,
-  ShoppingOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { LogoutOutlined, ShoppingOutlined, UserOutlined } from "@ant-design/icons";
+import { addToCart } from "../../redux/features/cartSlice";
+import { FaShoppingCart } from "react-icons/fa";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
-  const [cartCount] = useState(3);
+  // const [cart, setCart] = useState([]);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
   const [isUserModalOpen, setIsUserModalOpen] = useState(false);
   const [openDropdown, setOpenDropdown] = useState(null);
@@ -29,6 +27,7 @@ const Header = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
+  const totalQuantity = useSelector((state) => state.cart.totalQuantity);
 
   useEffect(() => {
     setSearchTerm("");
@@ -70,11 +69,7 @@ const Header = () => {
     if (searchTerm.trim() === "") {
       setFilteredProducts([]);
     } else {
-      setFilteredProducts(
-        products.filter((product) =>
-          product.name.toLowerCase().includes(searchTerm.toLowerCase())
-        )
-      );
+      setFilteredProducts(products.filter((product) => product.name.toLowerCase().includes(searchTerm.toLowerCase())));
     }
   }, [searchTerm, products]);
 
@@ -125,12 +120,7 @@ const Header = () => {
         <Link to="/historyOrders">Lịch sử mua hàng</Link>
       </Menu.Item>
       <Divider className="my-2" /> {/* Đường kẻ phân cách */}
-      <Menu.Item
-        key="logout"
-        icon={<LogoutOutlined />}
-        danger
-        onClick={handleLogout}
-      >
+      <Menu.Item key="logout" icon={<LogoutOutlined />} danger onClick={handleLogout}>
         Logout
       </Menu.Item>
     </Menu>
@@ -140,11 +130,7 @@ const Header = () => {
       <div className="container mx-auto px-4">
         <div className="flex items-center justify-center py-2 ">
           <a href="/">
-            <img
-              src="/images/logoAureum.png"
-              alt="Logo"
-              className="h-20 w-auto"
-            />
+            <img src="/images/logoAureum.png" alt="Logo" className="h-20 w-auto" />
           </a>
         </div>
         <div className="flex items-center py-4">
@@ -158,9 +144,7 @@ const Header = () => {
               <div
                 key={item.id}
                 className="relative group"
-                onMouseEnter={() =>
-                  item.hasDropdown && handleMouseEnter(item.id)
-                }
+                onMouseEnter={() => item.hasDropdown && handleMouseEnter(item.id)}
                 onMouseLeave={(e) => item.hasDropdown && handleMouseLeave(e)}
               >
                 <a
@@ -174,9 +158,7 @@ const Header = () => {
                 {openDropdown === item.id && (
                   <div className="absolute left-[-100px]  top-full mt-2 bg-black/20 backdrop-blur-md p-4  shadow-lg grid grid-cols-[1fr_1fr_1fr] gap-3 min-w-[800px] z-50">
                     <div>
-                      <h3 className="text-white font-bold text-lg uppercase tracking-wide">
-                        Sản Phẩm
-                      </h3>
+                      <h3 className="text-white font-bold text-lg uppercase tracking-wide">Sản Phẩm</h3>
                       {categories.map((category) => (
                         <a
                           key={category.id}
@@ -195,16 +177,12 @@ const Header = () => {
                     </div>
                     <div>
                       <div className="border-l border-gray-300 -500/50 pl-4">
-                        <h3 className="text-white font-bold text-lg uppercase tracking-wide">
-                          Thương Hiệu
-                        </h3>
+                        <h3 className="text-white font-bold text-lg uppercase tracking-wide">Thương Hiệu</h3>
                         {brand.map((brand) => (
                           <a
                             key={brand.id}
                             className="block text-gray-100 hover:text-white mt-1 text-sm"
-                            onClick={() =>
-                              navigate(`/products/brand/${brand.id}`)
-                            }
+                            onClick={() => navigate(`/products/brand/${brand.id}`)}
                           >
                             {brand.name}
                           </a>
@@ -213,16 +191,12 @@ const Header = () => {
                     </div>
                     <div>
                       <div className="border-l border-gray-300 -500/50 pl-4">
-                        <h3 className="text-white font-bold text-lg uppercase tracking-wide">
-                          Thành phần
-                        </h3>
+                        <h3 className="text-white font-bold text-lg uppercase tracking-wide">Thành phần</h3>
                         {ingredient.slice(0, 15).map((ingredient) => (
                           <a
                             key={ingredient.id}
                             className="block text-gray-100 hover:text-white mt-1 text-sm"
-                            onClick={() =>
-                              navigate(`/products/${ingredient.id}`)
-                            }
+                            onClick={() => navigate(`/products/${ingredient.id}`)}
                           >
                             {ingredient.name}
                           </a>
@@ -246,19 +220,28 @@ const Header = () => {
             >
               <FiSearch className="w-6 h-6" />
             </button>
+            {/* <div className="relative">
+              <button onClick={() => navigate("/cart")} className="relative p-2 text-gray-600 hover:text-gray-800">
+                <FaShoppingCart className="w-6 h-6" />
+                {cart.length > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                    {cart.length}
+                  </span>
+                )}
+              </button>
+            </div> */}
+
             <div className="relative">
-              <button
-                className="text-white hover:text-blue-400 transition-colors duration-200"
-                aria-label="Shopping cart"
-              >
+              <button onClick={() => navigate("/cart")} className="relative p-2 text-white hover:text-blue-400">
                 <FiShoppingCart className="w-6 h-6" />
-                {cartCount > 0 && (
-                  <span className="absolute -top-2 -right-2 bg-blue-400 text-white text-xs rounded-full w-5 h-5 flex items-center justify-center">
-                    {cartCount}
+                {totalQuantity > 0 && (
+                  <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 flex items-center justify-center text-xs">
+                    {totalQuantity}
                   </span>
                 )}
               </button>
             </div>
+
             {user ? (
               <Dropdown overlay={userMenu} trigger={["click"]}>
                 <div className="flex items-center cursor-pointer text-white">
@@ -283,11 +266,7 @@ const Header = () => {
               className="md:hidden text-white hover:text-blue-400 transition-colors duration-200"
               aria-label="Menu"
             >
-              {isMenuOpen ? (
-                <FiX className="w-6 h-6" />
-              ) : (
-                <FiMenu className="w-6 h-6" />
-              )}
+              {isMenuOpen ? <FiX className="w-6 h-6" /> : <FiMenu className="w-6 h-6" />}
             </button>
           </div>
         </div>
@@ -327,11 +306,7 @@ const Header = () => {
                     className="flex items-center p-2 border-b hover:bg-gray-100 cursor-pointer"
                     onClick={() => handleProductClick(product)}
                   >
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="w-12 h-12 object-cover rounded-md"
-                    />
+                    <img src={product.image} alt={product.name} className="w-12 h-12 object-cover rounded-md" />
                     <div className="ml-3">
                       <p className="text-sm font-semibold">{product.name}</p>
                       <p className="text-xs text-gray-500">
@@ -351,10 +326,7 @@ const Header = () => {
             <div className="bg-white p-6 rounded-lg w-full max-w-md mx-4">
               <div className="flex items-center justify-between mb-4">
                 <h2 className="text-xl font-bold">Account</h2>
-                <button
-                  onClick={() => setIsUserModalOpen(false)}
-                  className="text-gray-600 hover:text-blue-600"
-                >
+                <button onClick={() => setIsUserModalOpen(false)} className="text-gray-600 hover:text-blue-600">
                   <FiX className="w-6 h-6" />
                 </button>
               </div>
