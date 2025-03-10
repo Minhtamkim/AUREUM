@@ -1,11 +1,13 @@
-import { useState } from "react";
+import { Button } from "antd";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { clearCart, decreaseQuantity, increaseQuantity, removeFromCart } from "../../redux/features/cartSlice";
+import { MdDelete } from "react-icons/md";
 
 export default function Cart() {
-  const [cart, setCart] = useState([]); // Bắt đầu với giỏ hàng trống
+  const cart = useSelector((state) => state.cart);
 
-  const handleRemove = (id) => {
-    setCart(cart.filter((item) => item.id !== id));
-  };
+  const dispatch = useDispatch();
 
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white">
@@ -35,42 +37,70 @@ export default function Cart() {
         </div>
       ) : (
         // Hiển thị nếu có sản phẩm
+
         <div className="grid grid-cols-3 gap-4">
-          <div className="col-span-2 bg-gray-100 p-4 rounded-lg">
-            {cart.map((item) => (
-              <div key={item.id} className="flex items-center justify-between p-4 border-b">
-                <img src={item.image} alt={item.name} className="w-24 h-24 object-cover rounded-lg" />
+          <div className="col-span-2  bg-gray-100 p-4 rounded-lg">
+            {cart.cart?.map((item) => (
+              <div key={item?.id} className="flex items-center justify-between p-4 border-b">
+                <img src={item?.image} alt={item?.name} className="w-24 h-24 object-cover rounded-lg" />
                 <div className="flex-1 ml-4">
-                  <h3 className="text-lg font-semibold">{item.name}</h3>
-                  <p className="text-gray-500 line-through">{item.price.toLocaleString()} đ</p>
-                  <p className="text-orange-600 font-bold">{item.discountPrice.toLocaleString()} đ</p>
+                  <h3 className="text-lg font-semibold">{item?.name}</h3>
+
+                  <div className="flex gap-[100px] items-center">
+                    <p className="text-gray-500">{item.price.toLocaleString("vi-VN")}.000đ</p>
+                    {/* Số lượng sản phẩm */}
+                    <div className="flex items-center border rounded-md px-2">
+                      <button
+                        onClick={() => dispatch(decreaseQuantity(item.id))}
+                        className="px-2 py-1 text-gray-700 hover:bg-gray-200 rounded-md"
+                      >
+                        ➖
+                      </button>
+                      <input
+                        type="number"
+                        value={item.quantity}
+                        min="1"
+                        className="w-12 text-center border-none outline-none bg-transparent"
+                        readOnly
+                      />
+                      <button
+                        onClick={() => dispatch(increaseQuantity(item.id))}
+                        className="px-2 py-1 text-gray-700 hover:bg-gray-200 rounded-md"
+                      >
+                        ➕
+                      </button>
+                    </div>
+                    <button
+                      onClick={() => dispatch(removeFromCart(item?.id))}
+                      className=" 
+                        flex gap-1.5 items-center text-red-500"
+                    >
+                      <MdDelete />
+                      <h3>Xóa Sản Phẩm</h3>
+                    </button>
+                  </div>
                 </div>
-                <button onClick={() => handleRemove(item.id)} className="text-red-500">
-                  ❌ Xóa
-                </button>
               </div>
             ))}
           </div>
 
-          <div className="bg-gray-100 p-4 rounded-lg">
+          <div className="bg-gray-100 p-4 rounded-lg h-[200px]">
             <h3 className="text-xl font-semibold">🧾 Hóa đơn của bạn</h3>
-            <p className="flex justify-between text-lg mt-4">
-              <span>Tạm tính:</span>
-              <span>{cart.reduce((total, item) => total + item.discountPrice, 0).toLocaleString()} đ</span>
-            </p>
-            <p className="flex justify-between text-gray-500">
-              <span>Giảm giá:</span>
-              <span>-0 đ</span>
-            </p>
-            <hr className="my-2" />
-            <p className="flex justify-between text-xl font-bold">
-              <span>Tổng cộng:</span>
-              <span className="text-orange-600">
-                {cart.reduce((total, item) => total + item.discountPrice, 0).toLocaleString()} đ
-              </span>
-            </p>
-            <button className="w-full bg-orange-500 text-white py-2 mt-4 rounded-lg font-semibold hover:bg-orange-600">
-              Tiến hành đặt hàng
+
+            <span>Tổng cộng:</span>
+            <span className="text-orange-600">{"  " + cart?.totalPrice.toLocaleString("vi-VN")}.000đ</span>
+            {/* </p> */}
+            <button className="w-full bg-[#494946] text-white py-2 mt-4 rounded-lg font-semibold hover:bg-[#333331]">
+              Thanh Toán
+            </button>
+            <button
+              onClick={() => {
+                dispatch(clearCart());
+              }}
+              type="primary"
+              className="w-full bg-[#494946] text-white py-2 mt-4 rounded-lg font-semibold hover:bg-[#333331]"
+            >
+              Xóa Giỏ Hàng
             </button>
           </div>
         </div>
