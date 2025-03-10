@@ -1,7 +1,12 @@
 import { Button } from "antd";
 import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
-import { clearCart, decreaseQuantity, increaseQuantity, removeFromCart } from "../../redux/features/cartSlice";
+import {
+  clearCart,
+  decreaseQuantity,
+  increaseQuantity,
+  removeFromCart,
+} from "../../redux/features/cartSlice";
 import { MdDelete } from "react-icons/md";
 
 export default function Cart() {
@@ -10,8 +15,10 @@ export default function Cart() {
   const dispatch = useDispatch();
 
   return (
-    <div className="max-w-6xl mx-auto p-6 bg-white">
-      <h2 className="text-2xl font-bold mb-4">🛒 Giỏ hàng ({cart.length} sản phẩm)</h2>
+    <div className="max-w-6xl mx-auto p-6 bg-white min-h-screen">
+      <h2 className="text-2xl font-bold mb-4">
+        🛒 Giỏ hàng ({cart.length} sản phẩm)
+      </h2>
 
       {cart.length === 0 ? (
         // Hiển thị nếu giỏ hàng trống
@@ -31,7 +38,10 @@ export default function Cart() {
             ></path>
           </svg>
           <p className="text-gray-500 mt-4">Bạn chưa chọn sản phẩm.</p>
-          <a href="/" className="mt-4 px-6 py-2 bg-[#caa485] text-white rounded-lg hover:bg-[#cea861]">
+          <a
+            href="/"
+            className="mt-4 px-6 py-2 bg-[#caa485] text-white rounded-lg hover:bg-[#cea861]"
+          >
             Tiếp tục mua sắm
           </a>
         </div>
@@ -41,13 +51,22 @@ export default function Cart() {
         <div className="grid grid-cols-3 gap-4">
           <div className="col-span-2  bg-gray-100 p-4 rounded-lg">
             {cart.cart?.map((item) => (
-              <div key={item?.id} className="flex items-center justify-between p-4 border-b">
-                <img src={item?.image} alt={item?.name} className="w-24 h-24 object-cover rounded-lg" />
+              <div
+                key={item?.id}
+                className="flex items-center justify-between p-4 border-b"
+              >
+                <img
+                  src={item?.image}
+                  alt={item?.name}
+                  className="w-24 h-24 object-cover rounded-lg"
+                />
                 <div className="flex-1 ml-4">
                   <h3 className="text-lg font-semibold">{item?.name}</h3>
 
                   <div className="flex gap-[100px] items-center">
-                    <p className="text-gray-500">{item.price.toLocaleString("vi-VN")}.000đ</p>
+                    <p className="text-gray-500">
+                      {item.price.toLocaleString("vi-VN")}.000đ
+                    </p>
                     {/* Số lượng sản phẩm */}
                     <div className="flex items-center border rounded-md px-2">
                       <button
@@ -88,7 +107,9 @@ export default function Cart() {
             <h3 className="text-xl font-semibold">🧾 Hóa đơn của bạn</h3>
 
             <span>Tổng cộng:</span>
-            <span className="text-orange-600">{"  " + cart?.totalPrice.toLocaleString("vi-VN")}.000đ</span>
+            <span className="text-orange-600">
+              {"  " + cart?.totalPrice.toLocaleString("vi-VN")}.000đ
+            </span>
             {/* </p> */}
             <button className="w-full bg-[#494946] text-white py-2 mt-4 rounded-lg font-semibold hover:bg-[#333331]">
               Thanh Toán

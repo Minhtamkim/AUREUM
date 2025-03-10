@@ -24,18 +24,25 @@ const ProductsBrandPage = () => {
         console.log("Dữ liệu sản phẩm:", productRes.data);
 
         // Tìm thương hiệu có id tương ứng
-        const selectedBrand = brandRes.data.find((brand) => brand.id === Number(brand_id));
+        const selectedBrand = brandRes.data.find(
+          (brand) => brand.id === Number(brand_id)
+        );
         if (!selectedBrand) {
           setError("Thương hiệu không tồn tại!");
           return;
         }
 
         // Lọc sản phẩm theo brand_id
-        const filteredProducts = productRes.data.filter((product) => product.brand?.id === Number(selectedBrand.id));
+        const filteredProducts = productRes.data.filter(
+          (product) => product.brand?.id === Number(selectedBrand.id)
+        );
 
         setProducts(filteredProducts);
       } catch (err) {
-        console.error("Lỗi API:", err.response ? err.response.data : err.message);
+        console.error(
+          "Lỗi API:",
+          err.response ? err.response.data : err.message
+        );
         setError("Không thể tải sản phẩm. Vui lòng thử lại!");
       } finally {
         setLoading(false);
@@ -47,10 +54,11 @@ const ProductsBrandPage = () => {
 
   if (loading) return <p>Đang tải sản phẩm...</p>;
   if (error) return <p>{error}</p>;
-  if (!products.length) return <p>Không có sản phẩm nào thuộc thương hiệu này.</p>;
+  if (!products.length)
+    return <p>Không có sản phẩm nào thuộc thương hiệu này.</p>;
 
   return (
-    <div className="container mx-auto p-6">
+    <div className="container mx-auto p-6 min-h-screen">
       <h1 className="text-2xl font-bold mb-4">Sản Phẩm</h1>
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.map((product) => (
