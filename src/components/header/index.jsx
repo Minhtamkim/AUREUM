@@ -7,7 +7,7 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/features/userSlice";
 import { Avatar, Divider, Dropdown, Menu } from "antd";
 import { LogoutOutlined, ShoppingOutlined, UserOutlined } from "@ant-design/icons";
-import { addToCart } from "../../redux/features/cartSlice";
+import { addToCart, clearCart } from "../../redux/features/cartSlice";
 import { FaShoppingCart } from "react-icons/fa";
 
 const Header = () => {
@@ -27,7 +27,7 @@ const Header = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const navigate = useNavigate();
   const location = useLocation();
-  const totalQuantity = useSelector((state) => state.cart.totalQuantity);
+  const totalQuantity = useSelector((state) => state.cart?.totalQuantity || 0);
 
   useEffect(() => {
     setSearchTerm("");
@@ -110,8 +110,8 @@ const Header = () => {
 
   const handleLogout = () => {
     dispatch(logout());
+    dispatch(clearCart());
   };
-
   const userMenu = (
     <Menu className="w-48 shadow-2xs rounded-4xl">
       <Menu.Item className="font-bold">

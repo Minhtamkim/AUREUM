@@ -1,103 +1,86 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../../../config/axios";
+import { FaShoppingCart } from "react-icons/fa";
+import { motion } from "framer-motion";
 
 export default function HistoryOrders() {
   const navigate = useNavigate();
+  const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const fetchOrders = async () => {
+    try {
+      const response = await api.get("order/user");
+      console.log(response.data);
+      setOrders(response.data);
+    } catch (error) {
+      console.error("Lỗi khi lấy lịch sử đơn hàng:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
 
-  const [activeTab, setActiveTab] = useState("history");
-  const [orderHistory] = useState([
-    {
-      orderId: "12345",
-      orderDate: "2025-02-20",
-      address: "Hà Nội, Việt Nam",
-      totalAmount: "500,000 VND",
-      status: "Đang giao",
-      trackingCode: "VN123456789",
-    },
-    {
-      orderId: "67890",
-      orderDate: "2025-02-18",
-      address: "Hồ Chí Minh, Việt Nam",
-      totalAmount: "300,000 VND",
-      status: "Đã giao",
-      trackingCode: "VN987654321",
-    },
-  ]);
+  const handleShopNow = () => {
+    navigate("/");
+  };
+
+  useEffect(() => {
+    fetchOrders();
+  }, []);
 
   return (
-    <div className="min-h-screen bg-[#FEFBF4] px-25 py-10">
-      {/* Tiêu đề */}
-      <h1 className="text-2xl font-bold text-gray-900 mb-4 pb-10">TÀI KHOẢN</h1>
+    <div>
+      {loading ? (
+        <p>Đang tải...</p>
+      ) : orders.length > 0 ? (
+        <ul className="max-w-2xl mx-auto space-y-6">
+          {orders.map((order) => (
+            <li
+              key={order.id}
+              className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-2 flex flex-col space-y-2"
+            >
+              <p className="text-xl font-semibold text-blue-600">🛒 Đơn hàng #{order.id}</p>
+              <p className="text-gray-600 text-lg">📅 Ngày đặt: {new Date(order.createAt).toLocaleDateString()}</p>
+              <p className="text-green-600 text-lg font-bold">💰 Tổng tiền: {order.total.toLocaleString()} VNĐ</p>
+            </li>
+          ))}
+        </ul>
+      ) : (
+        <div className="min-h-screen w-full flex items-center justify-center bg-gray-50 p-4">
+          <motion.div
+            initial={{ opacity: 0, y: 20 }}
+            animate={{ opacity: 1, y: 0 }}
+            transition={{ duration: 0.6 }}
+            className="text-center max-w-md mx-auto"
+          >
+            <motion.div
+              animate={{
+                scale: [1, 1.1, 1],
+                rotate: [0, 5, -5, 0],
+              }}
+              transition={{
+                duration: 2,
+                repeat: Infinity,
+                repeatType: "reverse",
+              }}
+              className="mb-8 flex justify-center"
+            >
+              <FaShoppingCart className="w-24 h-24 text-gray-300" />
+            </motion.div>
 
-      {/* Tabs */}
-      <div className="flex space-x-6">
-        <button
-          className={`py-4 px-6 ${
-            activeTab === "account" ? "bg-[#F7F0E4] font-semibold" : "text-gray-500"
-          } rounded-t-lg`}
-          onClick={() => navigate(`/profile`)}
-        >
-          👤 Thông tin tài khoản
-        </button>
+            <h1 className="text-3xl font-bold text-gray-800 mb-4">Chưa có đơn hàng nào</h1>
 
-        <button
-          className={`py-4 px-6 ${
-            activeTab === "history" ? "bg-[#F7F0E4] font-semibold" : "text-gray-500"
-          } rounded-t-lg`}
-          onClick={() => setActiveTab("history")}
-        >
-          ⏳ Lịch sử mua hàng
-        </button>
-      </div>
+            <p className="text-gray-600 mb-8 text-lg">Hãy khám phá và bắt đầu mua sắm ngay!</p>
 
-      {/* Nội dung tab Lịch sử mua hàng */}
-      {activeTab === "history" && (
-        <div className="bg-[#F7F0E4] p-6 rounded-b-lg text-gray-800">
-          <h2 className="text-lg py-3 font-semibold mb-4">Lịch sử mua hàng</h2>
-
-          {orderHistory.length === 0 ? (
-            <p className="text-gray-600">Bạn chưa có đơn hàng nào.</p>
-          ) : (
-            <div className="space-y-6">
-              {orderHistory.map((order) => (
-                <div key={order.orderId} className="p-4 bg-white shadow-md rounded-lg">
-                  {/* Mã đơn hàng và trạng thái */}
-                  <div className="flex justify-between items-center mb-2">
-                    <span className="text-lg font-semibold text-gray-900">Mã đơn: {order.orderId}</span>
-                    <span
-                      className={`px-3 py-1 rounded-full text-sm font-medium ${
-                        order.status === "Đã giao" ? "bg-green-100 text-green-600" : "bg-blue-100 text-blue-600"
-                      }`}
-                    >
-                      {order.status}
-                    </span>
-                  </div>
-
-                  {/* Ngày đặt và mã vận chuyển */}
-                  <div className="flex items-center space-x-2 text-gray-600 text-sm">
-                    <span>📅 Ngày đặt hàng:</span>
-                    <span>{order.orderDate}</span>
-                  </div>
-
-                  <div className="flex items-center space-x-2 text-gray-600 text-sm">
-                    <span>📦 Mã vận chuyển:</span>
-                    <span>{order.trackingCode}</span>
-                  </div>
-
-                  {/* Địa chỉ */}
-                  <div className="flex items-center space-x-2 text-gray-700 mt-2">
-                    <span>
-                      📍 <strong>Địa chỉ:</strong>
-                    </span>
-                    <span>{order.address}</span>
-                  </div>
-
-                  {/* Tổng tiền */}
-                  <div className="text-lg font-semibold text-red-500 mt-2">💰 Tổng tiền: {order.totalAmount}</div>
-                </div>
-              ))}
-            </div>
-          )}
+            <motion.button
+              whileHover={{ scale: 1.05 }}
+              whileTap={{ scale: 0.95 }}
+              onClick={handleShopNow}
+              className="cursor-pointer bg-[#454542] hover:bg-[#2d2d2b] text-white font-semibold py-3 px-8 rounded-lg shadow-lg transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            >
+              Bắt Đầu Mua Sắm Ngay
+            </motion.button>
+          </motion.div>
         </div>
       )}
     </div>
