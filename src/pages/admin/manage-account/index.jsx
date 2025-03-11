@@ -1,9 +1,10 @@
-import { Button, DatePicker, Form, Input, Modal, Popconfirm, Radio, Table, Tag } from "antd";
+import { Button, DatePicker, Form, Input, Modal, Popconfirm, Radio, Select, Table, Tag } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { useEffect, useState } from "react";
-import { getUser, toggleUserActive, updateUser } from "../../../services/api.user";
+import { getUser, toggleUserActive, updateRole, updateSkinType, updateUser } from "../../../services/api.user";
 import { toast } from "react-toastify";
 import viVN from "antd/es/date-picker/locale/vi_VN";
+import dayjs from "dayjs";
 
 function ManageAccount() {
   const [searchText, setSearchText] = useState(""); // Lưu từ khóa tìm kiếm
@@ -15,7 +16,6 @@ function ManageAccount() {
   const fetchUsers = async () => {
     // Call API here
     const data = await getUser();
-    console.log("Fetched Users:", data);
     setUsers(data);
     setFilteredUsers(data); // Sao chép danh sách gốc để lọc
   };
@@ -35,7 +35,6 @@ function ManageAccount() {
       title: "Full Name",
       dataIndex: "fullName",
       key: "fullName",
-      // render: (text) => <a>{text}</a>,
     },
     {
       title: "Email",
@@ -63,6 +62,16 @@ function ManageAccount() {
       key: "address",
     },
     {
+      title: "SkinType",
+      dataIndex: "skinTypeEnum",
+      key: "skinTypeEnum",
+    },
+    {
+      title: "Role",
+      dataIndex: "roleEnum",
+      key: "roleEnum",
+    },
+    {
       title: "Active",
       dataIndex: "active",
       key: "active",
@@ -81,6 +90,7 @@ function ManageAccount() {
                 setOpen(true);
                 form.setFieldsValue({
                   ...record,
+                  dateOfBirth: record.dateOfBirth ? dayjs(record.dateOfBirth) : null, // Chuyển đổi thành dayjs
                 });
               }}
             >
@@ -124,9 +134,14 @@ function ManageAccount() {
   };
 
   const handleSubmit = async (formValues) => {
+    const formattedValues = {
+      ...formValues,
+      dateOfBirth: formValues.dateOfBirth ? formValues.dateOfBirth.format("YYYY-MM-DD") : null,
+    };
+
     if (formValues.id) {
       // nếu có id thì là update
-      const response = await updateUser({ id: formValues.id, user: formValues }); // goi api update
+      const response = await updateUser({ id: formValues.id, user: formattedValues }); // goi api update
       console.log(response); // log response
       toast.success("Successfully update user!"); // thong bao thanh cong
     }
