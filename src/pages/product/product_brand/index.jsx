@@ -1,15 +1,23 @@
 /* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import api from "../../../config/axios";
 
 const ProductsBrandPage = () => {
   const { brand_id } = useParams(); // Lấy brand_id từ URL
   const [products, setProducts] = useState([]);
   const [brands, setBrands] = useState([]);
+  const [page, setPage] = useState(1);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-  const navigate = useNavigate(); // Dùng để điều hướng
+  const navigate = useNavigate();
+
+  const currentPage = 8;
+  const totalPage = Math.ceil(products.length / currentPage);
+  const currentProduct = products.slice(
+    (page - 1) * currentPage,
+    page * currentPage
+  );
 
   useEffect(() => {
     const fetchData = async () => {
@@ -59,7 +67,11 @@ const ProductsBrandPage = () => {
 
   return (
     <div className="container mx-auto p-6 min-h-screen">
-      <h1 className="text-2xl font-bold mb-4">Sản Phẩm</h1>
+      <div className="flex items-center">
+        <h1 className="font-semibold mt-6 mb-8">
+          <Link to={"/products"}>Sản Phẩm &gt;</Link> Cocoon
+        </h1>
+      </div>
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
         {products.map((product) => (
           <div
@@ -71,10 +83,35 @@ const ProductsBrandPage = () => {
             <div className="p-2 flex items-center justify-center">
               <img src={product.image} alt={product.name} className="h-70" />
             </div>
-            <p className="font-semibold mt-2">{product.name}</p>
-            <p className="text-sm text-gray-500">{product.price}.000đ</p>
+            <p className="font-semibold items-center justify-center mt-2 min-h-[52px]">
+              {product.name}
+            </p>
+            <p className="text-sm font-bold whitespace-pre-line mt-1">
+              {" "}
+              {`${product.price.toLocaleString("vi-VN")}`}VND
+            </p>
           </div>
         ))}
+      </div>
+
+      <div className="flex justify-center items-center space-x-4 mt-6">
+        <button
+          onClick={() => setPage((p) => Math.max(p - 1, 1))}
+          disabled={page === 1}
+          className="px-4 py-2 bg-gray-300 rounded-md disabled:opacity-50"
+        >
+          &larr; Trước
+        </button>
+        <span>
+          {page} / {totalPage}
+        </span>
+        <button
+          onClick={() => setPage((p) => Math.min(p + 1, totalPage))}
+          disabled={page === totalPage}
+          className="px-4 py-2 bg-gray-300 rounded-md disabled:opacity-50"
+        >
+          Sau &rarr;
+        </button>
       </div>
     </div>
   );
