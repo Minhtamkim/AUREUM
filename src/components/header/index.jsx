@@ -6,7 +6,7 @@ import api from "../../config/axios";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/features/userSlice";
 import { Avatar, Divider, Dropdown, Menu } from "antd";
-import { LogoutOutlined, ShoppingOutlined, UserOutlined } from "@ant-design/icons";
+import { DashboardOutlined, LogoutOutlined, ShoppingOutlined, UserOutlined } from "@ant-design/icons";
 import { addToCart, clearCart } from "../../redux/features/cartSlice";
 import { FaShoppingCart } from "react-icons/fa";
 
@@ -107,6 +107,7 @@ const Header = () => {
 
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user); // Lấy user từ Redux
+  const userRole = user?.roleEnum; // Lấy role của user
 
   const handleLogout = () => {
     dispatch(logout());
@@ -123,6 +124,11 @@ const Header = () => {
       <Menu.Item key="history" icon={<ShoppingOutlined />}>
         <Link to="/historyOrders">Lịch sử mua hàng</Link>
       </Menu.Item>
+      {(userRole === "ADMIN" || userRole === "MANAGER" || userRole === "STAFF") && (
+        <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
+          <Link to="/dashboard">Manage Dashboard</Link>
+        </Menu.Item>
+      )}
       <Divider className="my-2" />
       <Menu.Item key="logout" icon={<LogoutOutlined />} danger onClick={handleLogout}>
         Logout
