@@ -25,7 +25,9 @@ export default function ProductDetail() {
   return (
     <div className="px-10 my-6 min-h-screen">
       <div>
-        <h2 className=" font-semibold  mt-6">Sản Phẩm &gt; Tất Cả Sản Phẩm</h2>
+        <h2 className="font-semibold mt-10 mb-8">
+          Sản Phẩm &gt; Tất Cả Sản Phẩm
+        </h2>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12 mt-6">
         {products.map((product, index) => (
