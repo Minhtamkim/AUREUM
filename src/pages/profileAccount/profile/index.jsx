@@ -1,26 +1,53 @@
-import { useState } from "react";
-import { FaEnvelope, FaLock, FaUser, FaPhone, FaCalendar, FaEdit } from "react-icons/fa";
-import { useNavigate } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { FaEnvelope, FaLock, FaUser, FaPhone, FaCalendar } from "react-icons/fa";
+import { data, useNavigate } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { getUserById, updateUser } from "../../../services/api.user";
+import { MdFace4 } from "react-icons/md";
 
-export default function AccountInfo() {
+function AccountInfo() {
+  const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const user = useSelector((state) => state.user); // Lấy user từ Redux
+  const [showPassword, setShowPassword] = useState(false);
+
   const [activeTab, setActiveTab] = useState("account");
   const [customer, setCustomer] = useState({
     email: "",
     password: "",
-    name: "",
-    birthDate: "",
+    fullName: "",
+    dateOfBirth: "",
     phone: "",
     gender: "Nam",
+    skinTypeEnum: "",
   });
-  const [originalCustomer] = useState({ ...customer });
+  const [originalCustomer, setOriginalCustomer] = useState({});
   const [errors, setErrors] = useState({});
-  const navigate = useNavigate();
 
+  useEffect(() => {
+    const fetchUserData = async () => {
+      if (!user?.id) {
+        console.error("User ID không hợp lệ:", user);
+        return;
+      }
+
+      const userData = await getUserById(user.id);
+      if (userData) {
+        setCustomer(userData);
+        setOriginalCustomer(userData);
+      }
+    };
+
+    fetchUserData();
+  }, [user]);
+
+  useEffect(() => {
+    console.log("customer state:", customer);
+  }, [customer]);
   // Hàm xử lý thay đổi input
   const handleChange = (e) => {
     const { name, value } = e.target;
     setCustomer({ ...customer, [name]: value });
-    // Kiểm tra lỗi ngay khi nhập
     validateField(name, value);
   };
 
@@ -35,48 +62,35 @@ export default function AccountInfo() {
     let errorMsg = "";
     switch (name) {
       case "email":
-        if (!value.trim()) {
-          errorMsg = "Email không được để trống.";
-        } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) {
-          errorMsg = "Email không hợp lệ.";
-        }
+        if (!value.trim()) errorMsg = "Email không được để trống.";
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) errorMsg = "Email không hợp lệ.";
         break;
       case "password":
-        if (!value.trim()) {
-          errorMsg = "Mật khẩu không được để trống.";
-        } else if (value.length < 8) {
+        if (value && value.length < 8) {
+          // Chỉ kiểm tra nếu người dùng nhập mật khẩu
           errorMsg = "Mật khẩu phải có ít nhất 8 ký tự.";
         }
         break;
-      case "name":
-        if (!value.trim()) {
-          errorMsg = "Họ và tên không được để trống.";
-        }
+      case "fullName":
+        if (!value.trim()) errorMsg = "Họ và tên không được để trống.";
         break;
       case "phone":
-        if (!value.trim()) {
-          errorMsg = "Số điện thoại không được để trống.";
-        } else if (!/^\d{10,11}$/.test(value)) {
-          errorMsg = "Số điện thoại không hợp lệ.";
-        }
+        if (!/^\d{10,11}$/.test(value)) errorMsg = "Số điện thoại không hợp lệ.";
         break;
       case "birthDate":
-        if (!value) {
-          errorMsg = "Vui lòng chọn ngày sinh.";
-        }
-        break;
-      default:
+        if (!value) errorMsg = "Vui lòng chọn ngày sinh.";
         break;
     }
 
     setErrors((prevErrors) => ({ ...prevErrors, [name]: errorMsg }));
   };
-  // Hàm kiểm tra toàn bộ form
+
+  // Kiểm tra form trước khi gửi
   const validateForm = () => {
     const newErrors = {};
     Object.keys(customer).forEach((key) => {
-      validateField(key, customer[key]);
-      if (errors[key]) newErrors[key] = errors[key];
+      const errorMsg = validateField(key, customer[key]);
+      if (errorMsg) newErrors[key] = errorMsg;
     });
 
     setErrors(newErrors);
@@ -84,10 +98,29 @@ export default function AccountInfo() {
   };
 
   // Hàm xử lý khi nhấn "Lưu thông tin mới"
-  const handleSubmit = () => {
-    if (validateForm()) {
-      alert("Thông tin đã được lưu thành công!");
-      // Thêm logic để lưu dữ liệu nếu cần
+  const handleSubmit = async () => {
+    if (!validateForm()) {
+      alert("Vui lòng kiểm tra lại thông tin.");
+      return;
+    }
+
+    // Tạo bản sao dữ liệu để chỉnh sửa
+    const updatedData = { ...customer };
+
+    // Nếu người dùng không nhập mật khẩu, xóa khỏi request để tránh cập nhật sai
+    if (!updatedData.password) {
+      delete updatedData.password;
+    }
+
+    try {
+      const updatedUser = await updateUser({ id: user.id, user: updatedData });
+
+      dispatch({ type: "UPDATE_USER", payload: updatedUser });
+      alert("Thông tin đã được cập nhật thành công!");
+      setOriginalCustomer(updatedUser);
+    } catch (error) {
+      console.error("Lỗi khi cập nhật dữ liệu:", error);
+      alert("Cập nhật thông tin thất bại, vui lòng thử lại.");
     }
   };
 
@@ -123,38 +156,37 @@ export default function AccountInfo() {
           <h2 className="text-lg py-3 font-semibold mb-4">Thông tin tài khoản</h2>
 
           {/* Email */}
-          <div className="flex items-center space-x-4 mb-4 py-3">
-            <FaEnvelope className="text-gray-500" />
-            <input
-              type="email"
-              name="email"
-              value={customer.email}
-              onChange={handleChange}
-              className="bg-transparent border-b border-gray-400 focus:outline-none focus:border-black w-80 p-1"
-              placeholder="Nhập email"
-            />
-            {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+          <div className="grid grid-cols-2 gap-6">
+            <div className="flex items-center space-x-4 mb-4 py-3">
+              <FaEnvelope className="text-gray-500" />
+              <input
+                type="email"
+                name="email"
+                value={customer?.email ?? ""} // Dùng toán tử ??
+                onChange={handleChange}
+                className="bg-transparent border-b border-gray-400 focus:outline-none focus:border-black w-80 p-1"
+                placeholder="Nhập email"
+              />
+              {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+            </div>
+            <div className="flex items-center space-x-4 pb-4">
+              <MdFace4 className="text-gray-500" />
+              <input type="skin" name="skinTypeEnum" value={customer.skinTypeEnum} onChange={handleChange} />
+            </div>
+            {/* Mật khẩu */}
+            <div>
+              <FaLock className="text-gray-500" />
+              <input
+                type="password"
+                name="password"
+                value={customer.password || ""} // Tránh lỗi undefined
+                onChange={handleChange}
+                autoComplete="new-password"
+                className="bg-transparent border-b border-gray-400 focus:outline-none focus:border-black w-80 p-1"
+                placeholder={customer.password ? "" : "*************"}
+              />
+            </div>
           </div>
-
-          {/* Mật khẩu */}
-          <div className="flex items-center space-x-4 mb-4 py-3 pb-4">
-            <FaLock className="text-gray-500" />
-            <input
-              type="password"
-              name="password"
-              value={customer.password}
-              onChange={handleChange}
-              className="bg-transparent border-b border-gray-400 focus:outline-none focus:border-black w-80 p-1"
-              placeholder="Nhập mật khẩu"
-            />
-            {errors.password && <p className="text-red-500 text-sm">{errors.password}</p>}
-          </div>
-
-          {/* Nút đổi mật khẩu */}
-          <button className="flex items-center text-sm text-yellow-600 hover:text-yellow-800 mb-6">
-            <FaEdit className="mr-2" />
-            ĐỔI MẬT KHẨU
-          </button>
 
           <h2 className="text-lg font-semibold mb-4 py-4">Thông tin cá nhân</h2>
 
@@ -164,25 +196,19 @@ export default function AccountInfo() {
               <FaUser className="text-gray-500" />
               <input
                 type="text"
-                name="name"
-                value={customer.name}
+                name="fullName" // Cập nhật name thành fullName
+                value={customer.fullName} // Sử dụng customer.fullName thay vì name
                 onChange={handleChange}
                 className="bg-transparent border-b border-gray-400 focus:outline-none focus:border-black w-80 p-1"
                 placeholder="Nhập họ và tên"
               />
-              {errors.name && <p className="text-red-500 text-sm">{errors.name}</p>}
+              {errors.fullName && <p className="text-red-500 text-sm">{errors.fullName}</p>}
             </div>
 
             {/* Ngày sinh */}
             <div className="flex items-center space-x-4 pb-4">
               <FaCalendar className="text-gray-500" />
-              <input
-                type="date"
-                name="birthDate"
-                value={customer.birthDate}
-                onChange={handleChange}
-                className="bg-transparent border-b border-gray-400 focus:outline-none focus:border-black w-80 p-1"
-              />
+              <input type="date" name="dateOfBirth" value={customer.dateOfBirth} onChange={handleChange} />
             </div>
 
             {/* Số điện thoại */}
@@ -232,3 +258,4 @@ export default function AccountInfo() {
     </div>
   );
 }
+export default AccountInfo;

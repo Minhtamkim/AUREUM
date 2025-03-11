@@ -128,7 +128,7 @@ const LoginPage = () => {
 
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Username
+              Email
             </label>
             <div className="relative mt-1">
               <FaEnvelope className="absolute left-3 top-3 text-gray-400" />

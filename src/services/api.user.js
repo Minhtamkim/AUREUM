@@ -11,11 +11,25 @@ export const getUser = async () => {
 };
 
 export const getUserById = async (id) => {
+  if (!id) {
+    console.error("ID không hợp lệ:", id);
+    return null; // Trả về null nếu ID không hợp lệ
+  }
+
   try {
     const response = await api.get(`user/${id}`);
     return response.data;
   } catch (error) {
-    toast.error(error.response.data);
+    console.error("Lỗi khi gọi API:", error);
+
+    // Kiểm tra nếu API có response cụ thể
+    if (error.response) {
+      toast.error(error.response.data?.message || "Lỗi từ server");
+    } else {
+      toast.error("Lỗi kết nối đến server");
+    }
+
+    return null; // Trả về null để tránh undefined
   }
 };
 
