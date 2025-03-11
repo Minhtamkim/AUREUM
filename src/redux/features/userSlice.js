@@ -12,10 +12,13 @@ export const userSlice = createSlice({
     logout: () => {
       return initialState;
     },
+    updateUserInfo: (state, action) => {
+      return { ...state, ...action.payload }; // Cập nhật thông tin mới mà vẫn giữ các dữ liệu cũ
+    },
   },
 });
 
 // Action creators are generated for each case reducer function
-export const { login, logout } = userSlice.actions;
+export const { login, logout, updateUserInfo } = userSlice.actions;
 
 export default userSlice.reducer;
