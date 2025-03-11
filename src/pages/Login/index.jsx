@@ -7,6 +7,8 @@ import { toast, ToastContainer } from "react-toastify";
 import api from "../../config/axios";
 import { useDispatch } from "react-redux";
 import { login } from "../../redux/features/userSlice";
+import { GoogleAuthProvider, signInWithPopup } from "firebase/auth";
+import { auth } from "../../config/firebase";
 
 const LoginPage = () => {
   const [formData, setFormData] = useState({
@@ -53,10 +55,10 @@ const LoginPage = () => {
 
       try {
         const response = await api.post("login", formData);
-        const { token, data } = response;
+        const { data } = response;
         const { roleEnum } = data;
         console.log(roleEnum);
-        localStorage.setItem("token", token);
+        localStorage.setItem("token", data.token);
         toast.success("Successfully login!");
         dispatch(login(response.data));
         if (roleEnum === "ADMIN") {
@@ -69,6 +71,44 @@ const LoginPage = () => {
       } finally {
         setIsLoading(false);
       }
+    }
+  };
+  const handleLoginGoogle = async () => {
+    console.log("Đang đăng nhập bằng Google...");
+
+    const provider = new GoogleAuthProvider();
+
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      console.log(user);
+      const idToken = await user.accessToken; // Lấy idToken để gửi lên backend
+
+      console.log("Thông tin người dùng:", user);
+
+      // Gửi token lên backend để đăng ký hoặc đăng nhập
+      const response = await api.post("loginGoogle", { token: idToken });
+      console.log(response.data);
+      const { data } = response;
+      const { roleEnum } = data; // Trích xuất token và roleEnum
+
+      console.log("Phản hồi từ server:", data);
+
+      // Lưu thông tin vào Redux
+      dispatch(login(data));
+
+      // Lưu token vào localStorage
+      localStorage.setItem("token", data.token);
+
+      // Chuyển hướng dựa vào vai trò
+      if (roleEnum === "ADMIN") {
+        navigate("/dashboard");
+      } else if (roleEnum === "CUSTOMER") {
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Lỗi đăng nhập bằng Google:", error.message);
+      toast.error("Đăng nhập bằng Google thất bại!");
     }
   };
 
@@ -88,7 +128,7 @@ const LoginPage = () => {
 
           <div>
             <label htmlFor="email" className="block text-sm font-medium text-gray-700">
-              Email
+              Username
             </label>
             <div className="relative mt-1">
               <FaEnvelope className="absolute left-3 top-3 text-gray-400" />
@@ -181,13 +221,10 @@ const LoginPage = () => {
         <div className="mt-6 flex items-center justify-between">
           <div className="text-gray-600">Hoặc đăng nhập bằng</div>
           <div className="flex gap-4">
-            <button className="flex items-center justify-center w-12 h-12 border border-gray-300 rounded-full hover:bg-gray-100">
-              <SiFacebook className="text-blue-600 text-2xl" />
-            </button>
             <button
               type="button"
               className="flex items-center justify-center w-12 h-12 border border-gray-300 rounded-full hover:bg-gray-100"
-              onClick={() => console.log("Google sign in clicked")}
+              onClick={handleLoginGoogle}
             >
               <FcGoogle className="text-2xl" />
             </button>

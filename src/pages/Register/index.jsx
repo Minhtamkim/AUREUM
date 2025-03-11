@@ -6,6 +6,8 @@ import { toast, ToastContainer } from "react-toastify";
 import api from "../../config/axios";
 import { FcGoogle } from "react-icons/fc";
 import { auth } from "../../config/firebase";
+import { useDispatch } from "react-redux";
+import { login } from "../../redux/features/userSlice";
 
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
@@ -112,33 +114,52 @@ const RegisterPage = () => {
       // promise
       const response = await api.post("register", formData);
       toast.success("Successfully create new account!");
-      navigate("/accountinfor");
+      navigate("/login");
     } catch (err) {
       // bị lỗi => showw message lỗi
       toast.error(err.response.data);
       console.log(err.response.data);
     }
   };
-  const handleLoginGoogle = () => {
-    console.log("login google...");
-    const provider = new GoogleAuthProvider();
-    signInWithPopup(auth, provider)
-      .then((result) => {
-        const token = result.user.accessToken;
-        const user = result.user;
+  const dispatch = useDispatch();
 
-        console.log(user);
-      })
-      .catch((error) => {
-        // Handle Errors here.
-        const errorCode = error.code;
-        const errorMessage = error.message;
-        // The email of the user's account used.
-        const email = error.customData.email;
-        // The AuthCredential type that was used.
-        const credential = GoogleAuthProvider.credentialFromError(error);
-        // ...
-      });
+  const handleLoginGoogle = async () => {
+    console.log("Đang đăng nhập bằng Google...");
+
+    const provider = new GoogleAuthProvider();
+
+    try {
+      const result = await signInWithPopup(auth, provider);
+      const user = result.user;
+      console.log(user);
+      const idToken = await user.accessToken; // Lấy idToken để gửi lên backend
+
+      console.log("Thông tin người dùng:", user);
+
+      // Gửi token lên backend để đăng ký hoặc đăng nhập
+      const response = await api.post("loginGoogle", { token: idToken });
+      console.log(response.data);
+      const { data } = response;
+      const { roleEnum } = data; // Trích xuất token và roleEnum
+
+      console.log("Phản hồi từ server:", data);
+
+      // Lưu thông tin vào Redux
+      dispatch(login(data));
+
+      // Lưu token vào localStorage
+      localStorage.setItem("token", data.token);
+
+      // Chuyển hướng dựa vào vai trò
+      if (roleEnum === "ADMIN") {
+        navigate("/dashboard");
+      } else if (roleEnum === "CUSTOMER") {
+        navigate("/");
+      }
+    } catch (error) {
+      console.error("Lỗi đăng nhập bằng Google:", error.message);
+      toast.error("Đăng nhập bằng Google thất bại!");
+    }
   };
   return (
     <div className="min-h-screen flex items-center justify-center bg-[#f8f2ea]">

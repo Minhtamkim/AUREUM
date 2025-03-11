@@ -114,18 +114,22 @@ const Header = () => {
 
   const userMenu = (
     <Menu className="w-48 shadow-2xs rounded-4xl">
+      <Menu.Item className="font-bold">
+        <p>Hi, {user?.fullName || "User"}</p>
+      </Menu.Item>
       <Menu.Item key="profile" icon={<UserOutlined />}>
         <Link to="/profile">Thông tin tài khoản</Link>
       </Menu.Item>
       <Menu.Item key="history" icon={<ShoppingOutlined />}>
         <Link to="/historyOrders">Lịch sử mua hàng</Link>
       </Menu.Item>
-      <Divider className="my-2" /> {/* Đường kẻ phân cách */}
+      <Divider className="my-2" />
       <Menu.Item key="logout" icon={<LogoutOutlined />} danger onClick={handleLogout}>
         Logout
       </Menu.Item>
     </Menu>
   );
+
   return (
     <header className="w-full bg-[#2d2d2b] shadow-md h-4-">
       <div className="container mx-auto px-4">
@@ -247,7 +251,6 @@ const Header = () => {
               <Dropdown overlay={userMenu} trigger={["click"]}>
                 <div className="flex items-center cursor-pointer text-white">
                   <Avatar icon={<UserOutlined />} className="mr-2" />
-                  <span>{user.fullName || "User"}</span>
                 </div>
               </Dropdown>
             ) : (
