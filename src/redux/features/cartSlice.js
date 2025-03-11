@@ -18,14 +18,19 @@ export const cartSlice = createSlice({
 
       if (exitstingProduct) {
         //neu da ton tai thi tang so luong
-        exitstingProduct.quantity += 1;
+        exitstingProduct.quantity += product.quantityPlain;
       } else {
         //neu chua ton tai thi them vao cart
-        state.cart.push({ ...product, quantity: 1 });
+        state.cart.push({
+          ...product,
+          quantity: product.quantityPlain,
+          quantityPlain: product.quantityPlain,
+          pricePlain: product.pricePlain,
+        });
       }
 
-      state.totalQuantity += 1;
-      state.totalPrice += product.price;
+      state.totalQuantity += product.quantityPlain;
+      state.totalPrice += product.pricePlain;
       return state;
     },
 
@@ -60,8 +65,10 @@ export const cartSlice = createSlice({
     decreaseQuantity: (state, action) => {
       const product = state.cart.find((item) => item.id === action.payload);
       if (product && product.quantity > 1) {
+        console.log(state.totalPrice);
         product.quantity -= 1;
         state.totalQuantity -= 1;
+        console.log(product.price);
         state.totalPrice -= product.price;
       }
     },
