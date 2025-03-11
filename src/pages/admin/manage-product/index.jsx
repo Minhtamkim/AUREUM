@@ -8,6 +8,7 @@ import { toast } from "react-toastify";
 import uploadFile from "../../../utils/upload";
 import { getBrand } from "../../../services/api.brand";
 import { getIngredient } from "../../../services/api.ingredient";
+import { getSkinType } from "../../../services/api.skin";
 
 function ManageProduct() {
   const [searchText, setSearchText] = useState(""); // Lưu từ khóa tìm kiếm
@@ -16,6 +17,7 @@ function ManageProduct() {
   const [categories, setCategories] = useState([]);
   const [brands, setBrands] = useState([]);
   const [ingredients, setIngredients] = useState([]);
+  const [skinTypes, setSkinTypes] = useState([]);
   const [open, setOpen] = useState(false);
   const [form] = useForm();
   const [previewOpen, setPreviewOpen] = useState(false);
@@ -58,7 +60,7 @@ function ManageProduct() {
 
   // CRUD
 
-  const fetchProduct = async () => {
+  const fetchProducts = async () => {
     const data = await getProduct();
     setProducts(data);
     setFilteredProducts(data); // Cập nhật danh sách hiển thị ban đầu
@@ -79,11 +81,17 @@ function ManageProduct() {
     setIngredients(data);
   };
 
+  const fetchSkinTypes = async () => {
+    const data = await getSkinType();
+    setSkinTypes(data);
+  };
+
   useEffect(() => {
-    fetchProduct();
+    fetchProducts();
     fetchCategories();
     fetchBrands();
     fetchIngredients();
+    fetchSkinTypes();
   }, []);
 
   const columns = [
@@ -129,16 +137,12 @@ function ManageProduct() {
       dataIndex: "ingredient",
       key: "ingredient",
       render: (ingredients) => ingredients?.map((ing) => ing.name).join(", ") || "No ingredient",
-      // render: (ingredients) =>
-      //   ingredients?.length > 0 ? (
-      //     <ul>
-      //       {ingredients.map((ing) => (
-      //         <li key={ing.id}>{ing.name}</li>
-      //       ))}
-      //     </ul>
-      //   ) : (
-      //     "No ingredient"
-      //   ),
+    },
+    {
+      title: "SkinType",
+      dataIndex: "skin",
+      key: "skin",
+      render: (skin) => skin?.name,
     },
     {
       title: "Image",
@@ -172,6 +176,7 @@ function ManageProduct() {
                   categoryId: record?.category?.id, // Lấy ID category
                   ingredientId: record?.ingredient?.map((item) => item.id), // Lấy ID ingredient
                   brandId: record?.brand?.id, // Lấy ID brand
+                  skinId: record?.skin?.id, // Lấy ID skin
                 });
                 if (record?.image) {
                   // Kiểm tra xem có ảnh không
@@ -208,11 +213,13 @@ function ManageProduct() {
 
   const handleSearch = (value) => {
     setSearchText(value); // Cập nhật từ khóa tìm kiếm
-    const filtered = products.filter( // Lọc danh sách sản phẩm theo từ khóa tìm kiếm
-      (product) => 
+    const filtered = products.filter(
+      // Lọc danh sách sản phẩm theo từ khóa tìm kiếm
+      (product) =>
         product.name.toLowerCase().includes(value.toLowerCase()) || // Tìm theo tên sản phẩm (không phân biệt hoa thường)
-        product.code.toLowerCase().includes(value.toLowerCase()) || // Tìm theo mã sản phẩm
-        product.brand?.name.toLowerCase().includes(value.toLowerCase()) // Tìm theo thương hiệu
+        product.brand?.name.toLowerCase().includes(value.toLowerCase()) || // Tìm theo thương hiệu
+        product.category?.name.toLowerCase().includes(value.toLowerCase()) ||
+        product.skin?.name.toLowerCase().includes(value.toLowerCase())
     );
     setFilteredProducts(filtered); // Cập nhật danh sách sản phẩm sau khi lọc
   };
@@ -221,7 +228,7 @@ function ManageProduct() {
     const response = await deleteProduct(id);
 
     if (response) {
-      fetchProduct();
+      fetchProducts();
     }
   };
 
@@ -260,7 +267,7 @@ function ManageProduct() {
 
     setOpen(false); // dong modal
     form.resetFields(); // reset form
-    fetchProduct(); // cập nhật lại danh sách product
+    fetchProducts(); // cập nhật lại danh sách product
   };
 
   return (
@@ -413,6 +420,29 @@ function ManageProduct() {
               {ingredients?.map((ingredient) => (
                 <Select.Option value={ingredient.id} key={ingredient.id}>
                   {ingredient.name}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label="SkinType"
+            name="skinId"
+            rules={[
+              {
+                required: true,
+                message: "One Skin Type must be selected!",
+              },
+            ]}
+          >
+            <Select
+              placeholder="Chọn loại da"
+              showSearch // Cho phép tìm kiếm
+              optionFilterProp="children" // Lọc theo nội dung hiển thị
+              filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())} // Hàm lọc danh sách theo input
+            >
+              {skinTypes?.map((skin) => (
+                <Select.Option value={skin.id} key={skin.id}>
+                  {skin.name}
                 </Select.Option>
               ))}
             </Select>
