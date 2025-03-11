@@ -10,10 +10,30 @@ export const getProduct = async () => {
   }
 };
 
+export const getProductPageable = async (currentPage, pageSize) => {
+  try {
+    const response = await api.get(`product/Pageable`, {
+      params: { currentPage, pageSize }, // Truyền tham số vào API
+    });
+    return response.data;
+  } catch (error) {
+    toast.error(error.response.data);
+  }
+};
+
+export const getProductById = async (id) => {
+  try {
+    const response = await api.get(`product/${id}`);
+    return response.data;
+  } catch (error) {
+    toast.error(error.response.data);
+  }
+};
+
 export const createProduct = async (product) => {
   try {
     const response = await api.post("product", product);
-    return response.data;   
+    return response.data;
   } catch (error) {
     toast.error(error.response.data);
   }
