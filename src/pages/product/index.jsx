@@ -5,30 +5,30 @@ import { useNavigate } from "react-router-dom";
 export default function ProductDetail() {
   const [products, setProducts] = useState([]);
   const [page, setPage] = useState(1);
-  const currentPage = 20;
-  const navigate = useNavigate(); // Dùng để điều hướng
+  const [totalPage, setTotalPages] = useState(1);
+  const navigate = useNavigate();
+
+  const itemsPerPage = 10;
 
   useEffect(() => {
     const fetchData = async () => {
-      const response = await api.get("product");
-      setProducts(response.data);
+      const response = await api.get(
+        `product/pageable?currentPage=${page - 1}&pageSize=${itemsPerPage}`
+      );
+      console.log(response.data.content);
+      setProducts(response.data.content);
+      setTotalPages(response.data.totalPages);
     };
     fetchData();
-  }, []);
-
-  const totalPage = Math.ceil(products.length / currentPage);
-  const currentProduct = products.slice(
-    (page - 1) * currentPage,
-    page * currentPage
-  );
+  }, [page]); //dependency mỗi lần page thay đổi thì useEffect sẽ chạy lại
 
   return (
     <div className="px-10 my-6 min-h-screen">
       <div>
-        <h2 className=" font-semibold  mt-6">Sản Phẩm/Tất Cả Sản Phẩm</h2>
+        <h2 className=" font-semibold  mt-6">Sản Phẩm &gt; Tất Cả Sản Phẩm</h2>
       </div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12 mt-6">
-        {currentProduct.map((product, index) => (
+        {products.map((product, index) => (
           <div
             key={index}
             className="bg-white shadow-md rounded-lg p-4 text-center
@@ -40,9 +40,11 @@ export default function ProductDetail() {
             >
               <img src={product.image} alt={product.title} className="h-70" />
             </div>
-            <p className="font-semibold mt-2">{product.name}</p>
-            <p className="text-sm text-gray-500 whitespace-pre-line">
-              {product.price + ".000đ"}
+            <p className="font-semibold items-center justify-center mt-2 min-h-[52px]">
+              {product.name}
+            </p>
+            <p className="text-sm font-bold whitespace-pre-line mt-2">
+              {`${product.price.toLocaleString("vi-VN")}`}VND
             </p>
           </div>
         ))}
