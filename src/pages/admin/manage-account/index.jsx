@@ -1,16 +1,18 @@
 import { Button, DatePicker, Form, Input, Modal, Popconfirm, Radio, Select, Table, Tag } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { useEffect, useState } from "react";
-import { getUser, toggleUserActive, updateRole, updateSkinType, updateUser } from "../../../services/api.user";
+import { getUser, toggleUserActive, updateUser } from "../../../services/api.user";
 import { toast } from "react-toastify";
 import viVN from "antd/es/date-picker/locale/vi_VN";
 import dayjs from "dayjs";
+import { getSkinType } from "../../../services/api.skin";
 
 function ManageAccount() {
   const [searchText, setSearchText] = useState(""); // Lưu từ khóa tìm kiếm
   const [filteredUsers, setFilteredUsers] = useState([]); // Lưu danh sách danh mục sau khi lọc
   const [users, setUsers] = useState([]);
   const [open, setOpen] = useState(false);
+  const [skinTypes, setSkinTypes] = useState([]);
   const [form] = useForm();
 
   const fetchUsers = async () => {
@@ -20,8 +22,14 @@ function ManageAccount() {
     setFilteredUsers(data); // Sao chép danh sách gốc để lọc
   };
 
+  const fetchSkinTypes = async () => {
+    const data = await getSkinType();
+    setSkinTypes(data);
+  };
+
   useEffect(() => {
     fetchUsers();
+    fetchSkinTypes();
   }, []);
 
   const columns = [
@@ -57,14 +65,15 @@ function ManageAccount() {
       key: "gender",
     },
     {
+      title: "SkinType",
+      dataIndex: "skin",
+      key: "skin",
+      render: (skin) => skin?.name,
+    },
+    {
       title: "Address",
       dataIndex: "address",
       key: "address",
-    },
-    {
-      title: "SkinType",
-      dataIndex: "skinTypeEnum",
-      key: "skinTypeEnum",
     },
     {
       title: "Role",
@@ -91,6 +100,7 @@ function ManageAccount() {
                 form.setFieldsValue({
                   ...record,
                   dateOfBirth: record.dateOfBirth ? dayjs(record.dateOfBirth) : null, // Chuyển đổi thành dayjs
+                  skinId: record?.skin?.id,
                 });
               }}
             >
@@ -235,9 +245,32 @@ function ManageAccount() {
           </Form.Item>
           <Form.Item label="Gender" name="gender">
             <Radio.Group>
-              <Radio value="male">Male</Radio>
-              <Radio value="female">Female</Radio>
+              <Radio value="male">Nam</Radio>
+              <Radio value="female">Nữ</Radio>
             </Radio.Group>
+          </Form.Item>
+          <Form.Item
+            label="SkinType"
+            name="skinId"
+            rules={[
+              {
+                required: true,
+                message: "One Skin Type must be selected!",
+              },
+            ]}
+          >
+            <Select
+              placeholder="Chọn loại da"
+              showSearch // Cho phép tìm kiếm
+              optionFilterProp="children" // Lọc theo nội dung hiển thị
+              filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())} // Hàm lọc danh sách theo input
+            >
+              {skinTypes?.map((skin) => (
+                <Select.Option value={skin.id} key={skin.id}>
+                  {skin.name}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
           <Form.Item label="Address" name="address">
             <Input.TextArea placeholder="Nhập địa chỉ" />
