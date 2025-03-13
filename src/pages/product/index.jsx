@@ -8,7 +8,7 @@ export default function ProductDetail() {
   const [totalPage, setTotalPages] = useState(1);
   const navigate = useNavigate();
 
-  const itemsPerPage = 10;
+  const itemsPerPage = 12;
 
   useEffect(() => {
     const fetchData = async () => {
