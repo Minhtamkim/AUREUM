@@ -125,6 +125,7 @@ function ManageProduct() {
       title: "Price",
       dataIndex: "price",
       key: "price",
+      render: (price) => new Intl.NumberFormat("vi-VN").format(price),
     },
     {
       title: "Category",
