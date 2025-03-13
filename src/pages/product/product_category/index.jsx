@@ -45,7 +45,7 @@ const ProductsPage = () => {
             return;
           }
           filteredProducts = productRes.data.filter(
-            (product) => product.category_id === selectedCategory.id
+            (product) => product.category.id === selectedCategory.id
           );
         } else if (type === "ingredient") {
           const selectedIngredient = ingredientRes.data.find(
