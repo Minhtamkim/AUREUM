@@ -1,7 +1,6 @@
 import { useState } from "react";
 import { FaEye, FaEyeSlash, FaLock, FaEnvelope } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
-import { SiFacebook } from "react-icons/si";
 import { useNavigate } from "react-router-dom";
 import { toast, ToastContainer } from "react-toastify";
 import api from "../../config/axios";
@@ -20,6 +19,7 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
+  const [active, setActive] = useState(true);
 
   const validateForm = () => {
     const newErrors = {};
@@ -56,23 +56,32 @@ const LoginPage = () => {
       try {
         const response = await api.post("login", formData);
         const { data } = response;
-        const { roleEnum } = data;
+        const { roleEnum, active } = data;
+        console.log("Active Status:", active); // Kiểm tra dữ liệu trả về từ API
+
+        if (active === false) {
+          toast.error("Tài khoản của bạn bị cấm truy cập!");
+          setIsLoading(false);
+          return; // Ngăn không cho tiếp tục đăng nhập
+        }
+
         console.log(roleEnum);
         localStorage.setItem("token", data.token);
         toast.success("Successfully login!");
         dispatch(login(response.data));
-        if (roleEnum === "ADMIN") {
+        if (roleEnum === "ADMIN" || roleEnum === "STAFF" || roleEnum === "MANAGER") {
           navigate("/dashboard");
         } else if (roleEnum === "CUSTOMER") {
           navigate("/");
         }
       } catch (err) {
-        toast.error(err.response);
+        toast.error(err.response?.data?.message || "Đăng Nhập Thất Bại!");
       } finally {
         setIsLoading(false);
       }
     }
   };
+
   const handleLoginGoogle = async () => {
     console.log("Đang đăng nhập bằng Google...");
 
