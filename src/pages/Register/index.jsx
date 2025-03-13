@@ -12,7 +12,7 @@ import { login } from "../../redux/features/userSlice";
 const RegisterPage = () => {
   const [formData, setFormData] = useState({
     fullName: "",
-    phoneNumber: "",
+    phone: "",
     email: "",
     password: "",
   });
@@ -26,7 +26,7 @@ const RegisterPage = () => {
   const validateForm = () => {
     const newErrors = {};
     if (!formData.fullName.trim()) newErrors.fullName = "Vui lòng nhập họ và tên.";
-    if (!formData.phoneNumber.trim()) newErrors.phoneNumber = "Vui lòng nhập số điện thoại.";
+    if (!formData.phone.trim()) newErrors.phone = "Vui lòng nhập số điện thoại.";
     if (!formData.email.trim()) {
       newErrors.email = "Vui lòng nhập email.";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
@@ -65,7 +65,7 @@ const RegisterPage = () => {
       case "fullName":
         if (!value) newErrors.fullName = "Full name is required";
         else if (value.length < 2) newErrors.fullName = "Name must be at least 2 characters";
-        else if (!/^[A-Za-z\s]+$/.test(value)) newErrors.fullName = "Only alphabets and spaces allowed";
+        else if (!/^[\p{L}\s]+$/u.test(value)) newErrors.fullName = "Only alphabets and spaces allowed";
         else delete newErrors.fullName;
         break;
 
@@ -191,24 +191,24 @@ const RegisterPage = () => {
           </div>
 
           <div>
-            <label htmlFor="phoneNumber" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="phone" className="block text-sm font-medium text-gray-700">
               Số điện thoại
             </label>
             <div className="relative mt-1">
               <FaPhone className="absolute left-3 top-3 text-gray-400" />
               <input
-                id="phoneNumber"
-                name="phoneNumber"
+                id="phone"
+                name="phone"
                 type="text"
                 className={`block w-full pl-10 py-2 border-b-2 focus:outline-none focus:ring-0 focus:border-black ${
-                  errors.phoneNumber ? "border-red-500" : "border-gray-400"
+                  errors.phone ? "border-red-500" : "border-gray-400"
                 }`}
                 placeholder="Nhập số điện thoại"
-                value={formData.phoneNumber}
+                value={formData.phone}
                 onChange={handleChange}
               />
             </div>
-            {errors.phoneNumber && <p className="text-red-500 text-sm mt-1">{errors.phoneNumber}</p>}
+            {errors.phone && <p className="text-red-500 text-sm mt-1">{errors.phone}</p>}
           </div>
 
           <div>
