@@ -88,7 +88,7 @@ const Header = () => {
     { id: 3, name: "Bài Viết", path: "/blog" },
     { id: 4, name: "Về Chúng Tôi", path: "/aboutUs" },
     { id: 5, name: "Xác Định Loại Da", path: "/quiz" },
-    { id: 6, name: "So Sánh Sản Phẩm", path: "/productComparison" },
+    { id: 6, name: "So Sánh Sản Phẩm", path: "/categorySidebar" },
   ];
 
   useEffect(() => {
@@ -119,6 +119,7 @@ const Header = () => {
   const userRole = user?.roleEnum; // Lấy role của user
 
   const handleLogout = () => {
+    localStorage.removeItem("token");
     dispatch(logout());
     dispatch(clearCart());
   };

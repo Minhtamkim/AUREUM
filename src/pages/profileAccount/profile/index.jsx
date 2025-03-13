@@ -18,8 +18,10 @@ function AccountInfo() {
     fullName: "",
     dateOfBirth: "",
     phone: "",
-    gender: "Nam",
-    skinTypeEnum: "",
+    gender: "",
+    skin: {
+      name: "",
+    },
   });
   const [originalCustomer, setOriginalCustomer] = useState({});
   const [errors, setErrors] = useState({});
@@ -112,6 +114,11 @@ function AccountInfo() {
       delete updatedData.password;
     }
 
+    if (updatedData.skin && updatedData.skin.id) {
+      updatedData.skinId = updatedData.skin.id;
+    }
+    delete updatedData.skin; // Xóa skin object để tránh lỗi API nếu không nhận object này
+
     try {
       const updatedUser = await updateUser({ id: user.id, user: updatedData });
 
@@ -171,7 +178,9 @@ function AccountInfo() {
             </div>
             <div className="flex items-center space-x-4 pb-4">
               <MdFace4 className="text-gray-500" />
-              <input type="skin" name="skinTypeEnum" value={customer.skinTypeEnum} onChange={handleChange} />
+              <p type="skin" name="skin">
+                {customer?.skin?.name}
+              </p>
             </div>
             {/* Mật khẩu */}
             <div>
