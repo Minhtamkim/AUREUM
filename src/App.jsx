@@ -38,7 +38,9 @@ import BlogPost05 from "./pages/Blog/blog-details-5";
 import BlogPost06 from "./pages/Blog/blog-details-6";
 import BlogPostAll from "./pages/Blog/blog-details-all";
 import HistoryOrders from "./pages/profileAccount/historyOrders";
-import ProductComparison from "./pages/productComparison/indev";
+import CategorySidebar from "./pages/Comparison/SidebarComparison";
+import ProductList from "./pages/Comparison/ProductList";
+import ProductComparison from "./pages/Comparison/productComparison";
 
 function App() {
   const router = createBrowserRouter([
@@ -171,8 +173,16 @@ function App() {
           element: <ProductDetailPage />,
         },
         {
+          path: "categorySidebar",
+          element: <CategorySidebar />,
+        },
+        {
           path: "productComparison",
           element: <ProductComparison />,
+        },
+        {
+          path: "productList/:category_id",
+          element: <ProductList />,
         },
       ],
     },
