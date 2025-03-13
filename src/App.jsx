@@ -159,7 +159,7 @@ function App() {
           element: <QuizResult />,
         },
         {
-          path: "products/:category_id",
+          path: "products/:type/:id",
           element: <ProductsPage />,
         },
         {

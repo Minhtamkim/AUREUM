@@ -69,11 +69,12 @@ const ProductsBrandPage = () => {
     <div className="container mx-auto p-6 min-h-screen">
       <div className="flex items-center">
         <h1 className="font-semibold mt-6 mb-8">
-          <Link to={"/products"}>Sản Phẩm &gt;</Link> Cocoon
+          <Link to={"/products"}>Sản Phẩm &gt;</Link>{" "}
+          {brands.find((b) => b.id === Number(brand_id))?.name}
         </h1>
       </div>
       <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 gap-6">
-        {products.map((product) => (
+        {currentProduct.map((product) => (
           <div
             key={product.id}
             className="bg-white shadow-md rounded-lg p-4 text-center
