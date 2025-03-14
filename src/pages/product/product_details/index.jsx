@@ -15,7 +15,6 @@ const ProductDetailPage = () => {
   const navigate = useNavigate(); // Dùng để điều hướng
   const [startIndex, setStartIndex] = useState(0);
   const itemsPerRow = 4;
-  const [cart, setCart] = useState([]);
   const dispatch = useDispatch();
 
   useEffect(() => {
@@ -95,7 +94,7 @@ const ProductDetailPage = () => {
               </div>
             </div>
 
-            <p className="text-2xl font-semibold text-gray-900 mt-4">{product.price}.000đ</p>
+            <p className="text-2xl font-semibold text-gray-900 mt-4">{`${product.price.toLocaleString("vi-VN")}`}VND</p>
             <h2 className="my-4 text-lg font-semibold">Chi tiết sản phẩm</h2>
             <p className=" text-gray-500 mt-3">{product.description}</p>
 
@@ -120,7 +119,7 @@ const ProductDetailPage = () => {
               onClick={() => handleAddToCart(product)}
               className="mt-6 bg-[#835229] text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-gray-800 transition"
             >
-              Thêm vào giỏ - {`${(product.price * quantity).toLocaleString("vi-VN")}`}.000VND
+              Thêm vào giỏ - {`${product.price.toLocaleString("vi-VN")}`}VND
             </button>
           </div>
         </div>
@@ -142,7 +141,7 @@ const ProductDetailPage = () => {
                   <img src={product.image} alt={product.name} className="h-70" />
                 </div>
                 <p className="font-semibold mt-2">{product.name}</p>
-                <p className="text-sm text-gray-500">{product.price}.000đ</p>
+                <p className="text-sm text-gray-500">{`${product.price.toLocaleString("vi-VN")}`}VND</p>
               </div>
             ))}
           </div>
