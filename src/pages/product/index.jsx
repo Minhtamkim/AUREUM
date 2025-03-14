@@ -20,6 +20,7 @@ export default function ProductDetail() {
       setTotalPages(response.data.totalPages);
     };
     fetchData();
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }, [page]); //dependency mỗi lần page thay đổi thì useEffect sẽ chạy lại
 
   return (
