@@ -41,6 +41,7 @@ import HistoryOrders from "./pages/profileAccount/historyOrders";
 import CategorySidebar from "./pages/Comparison/SidebarComparison";
 import ProductList from "./pages/Comparison/ProductList";
 import ProductComparison from "./pages/Comparison/productComparison";
+import PaymentResult from "./pages/paymentResult";
 
 function App() {
   const router = createBrowserRouter([
@@ -139,6 +140,10 @@ function App() {
         {
           path: "cart",
           element: <Cart />,
+        },
+        {
+          path: "payment-result",
+          element: <PaymentResult />,
         },
         {
           path: "products",
