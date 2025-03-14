@@ -14,6 +14,7 @@ export const cartSlice = createSlice({
     addToCart: (state, actions) => {
       const product = actions.payload;
       // check xem san pham product da ton tai chua
+      console.log(state);
       const exitstingProduct = state.cart.find((item) => item.id === product.id);
 
       if (exitstingProduct) {
@@ -78,4 +79,4 @@ export const cartSlice = createSlice({
 // Action creators are generated for each case reducer function
 export const { addToCart, removeFromCart, clearCart, increaseQuantity, decreaseQuantity } = cartSlice.actions;
 
-export default cartSlice.reducer;
+export default cartSlice;
