@@ -67,7 +67,8 @@ function ProductComparison() {
 
   // Hàm kiểm tra sản phẩm có phù hợp không
   const isSuitable = (product) => {
-    if (!userSkinType || !product.skin || !product.skin.name) return false;
+    if (!userSkinType) return null; // Nếu chưa có loại da, trả về null
+    if (!product.skin || !product.skin.name) return false;
     console.log(`So sánh: ${userSkinType} với ${product.skin.name}`);
     return userSkinType.toLowerCase() === product.skin.name.toLowerCase();
   };
@@ -96,7 +97,16 @@ function ProductComparison() {
 
             {/* Giữ phần kiểm tra sản phẩm phù hợp ở cuối */}
             <div className="flex-grow flex flex-col justify-end items-center w-full">
-              {isSuitable(product1) ? (
+              {userSkinType === null ? (
+                <div className="text-center">
+                  <p className="text-yellow-500 font-semibold">
+                    Hãy làm bài test để có lựa chọn tốt hơn cho da của bạn
+                  </p>
+                  <a href="/quiz" className="text-blue-500 underline font-medium hover:text-blue-700 transition">
+                    Làm bài test ngay
+                  </a>
+                </div>
+              ) : isSuitable(product1) ? (
                 <div className="text-center">
                   <p className="text-green-600 font-semibold"> Phù hợp với da của bạn</p>
                   <a
@@ -125,7 +135,16 @@ function ProductComparison() {
 
             {/* Giữ phần kiểm tra sản phẩm phù hợp ở cuối */}
             <div className="flex-grow flex flex-col justify-end items-center w-full">
-              {isSuitable(product2) ? (
+              {userSkinType === null ? (
+                <div className="text-center">
+                  <p className="text-yellow-500 font-semibold">
+                    Hãy làm bài test để có lựa chọn tốt hơn cho da của bạn
+                  </p>
+                  <a href="/quiz" className="text-blue-500 underline font-medium hover:text-blue-700 transition">
+                    Làm bài test ngay
+                  </a>
+                </div>
+              ) : isSuitable(product2) ? (
                 <div className="text-center">
                   <p className="text-green-600 font-semibold"> Phù hợp với da của bạn</p>
                   <a
