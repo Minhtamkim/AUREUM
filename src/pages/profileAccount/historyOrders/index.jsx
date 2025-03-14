@@ -39,7 +39,7 @@ export default function HistoryOrders() {
               key={order.id}
               className="bg-white p-6 rounded-xl shadow-lg hover:shadow-xl transition transform hover:-translate-y-2 flex flex-col space-y-2"
             >
-              <p className="text-xl font-semibold text-blue-600">🛒 Đơn hàng #{order.id}</p>
+              <p className="text-xl font-semibold text-blue-600">🛒 Đơn hàng</p>
               <p className="text-gray-600 text-lg">📅 Ngày đặt: {new Date(order.createAt).toLocaleDateString()}</p>
               <p className="text-green-600 text-lg font-bold">💰 Tổng tiền: {order.total.toLocaleString()} VNĐ</p>
             </li>
