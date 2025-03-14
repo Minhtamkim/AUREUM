@@ -4,15 +4,27 @@ import { MdDelete } from "react-icons/md";
 import { FaShoppingCart } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
+import { createOrder } from "../../services/api.order";
 
 export default function Cart() {
   const cart = useSelector((state) => state.cart);
   console.log(cart);
   const navigate = useNavigate();
-
   const dispatch = useDispatch();
   const handleShopNow = () => {
     navigate("/products");
+  };
+
+  const handleOrder = async () => {
+    const data = {
+      details: cart?.cart.map((item) => ({
+        productId: item.id,
+        quantity: item.quantity,
+      })),
+    };
+    const respone = await createOrder(data);
+    window.location.href = respone;
+    console.log(respone);
   };
 
   return (
@@ -69,7 +81,7 @@ export default function Cart() {
                   <h3 className="text-lg font-semibold">{item?.name}</h3>
 
                   <div className="flex gap-[100px] items-center">
-                    <p className="text-gray-500">{item.price.toLocaleString("vi-VN")}.000đ</p>
+                    <p className="text-gray-500">{`${item.price.toLocaleString("vi-VN")}`}VND</p>
                     {/* Số lượng sản phẩm */}
                     <div className="flex items-center border rounded-md px-2">
                       <button
@@ -110,9 +122,12 @@ export default function Cart() {
             <h3 className="text-xl font-semibold">🧾 Hóa đơn của bạn</h3>
 
             <span>Tổng cộng:</span>
-            <span className="text-orange-600">{"  " + cart?.totalPrice.toLocaleString("vi-VN")}.000đ</span>
+            <span className="text-orange-600">{"  " + cart?.totalPrice.toLocaleString("vi-VN")}VND</span>
             {/* </p> */}
-            <button className="w-full bg-[#494946] text-white py-2 mt-4 rounded-lg font-semibold hover:bg-[#333331]">
+            <button
+              onClick={() => handleOrder()}
+              className="w-full bg-[#494946] text-white py-2 mt-4 rounded-lg font-semibold hover:bg-[#333331]"
+            >
               Thanh Toán
             </button>
             <button
