@@ -58,7 +58,8 @@ const ProductsBrandPage = () => {
     };
 
     fetchData();
-  }, [brand_id]);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  }, [brand_id, page]);
 
   if (loading) return <p>Đang tải sản phẩm...</p>;
   if (error) return <p>{error}</p>;
@@ -81,7 +82,7 @@ const ProductsBrandPage = () => {
                 hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
             onClick={() => navigate(`/products/details/${product.id}`)} // Điều hướng khi bấm vào sản phẩm
           >
-            <div className="p-2 flex items-center justify-center">
+            <div className="p-2 flex items-center justify-center brightness-100">
               <img src={product.image} alt={product.name} className="h-70" />
             </div>
             <p className="font-semibold items-center justify-center mt-2 min-h-[52px]">

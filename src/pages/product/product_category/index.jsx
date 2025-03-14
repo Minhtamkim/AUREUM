@@ -112,7 +112,7 @@ const ProductsPage = () => {
                 hover:shadow-xl hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
             onClick={() => navigate(`/products/details/${product.id}`)} // Điều hướng khi bấm vào sản phẩm
           >
-            <div className="p-2">
+            <div className="p-2 flex items-center justify-center brightness-100">
               <img src={product.image} alt={product.title} className="h-70" />
             </div>
             <p className="font-semibold mt-2 min-h-[52px]">{product.name}</p>
