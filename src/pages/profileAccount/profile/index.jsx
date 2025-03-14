@@ -4,6 +4,7 @@ import { data, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserById, updateUser } from "../../../services/api.user";
 import { MdFace4 } from "react-icons/md";
+import { updateUserInfo } from "../../../redux/features/userSlice";
 
 function AccountInfo() {
   const navigate = useNavigate();
@@ -109,22 +110,25 @@ function AccountInfo() {
     // Tạo bản sao dữ liệu để chỉnh sửa
     const updatedData = { ...customer };
 
-    // Nếu người dùng không nhập mật khẩu, xóa khỏi request để tránh cập nhật sai
+    // Nếu không nhập mật khẩu, xóa khỏi request để tránh cập nhật sai
     if (!updatedData.password) {
       delete updatedData.password;
     }
 
-    if (updatedData.skin && updatedData.skin.id) {
+    // Chuyển đổi dữ liệu nếu có `skin`
+    if (updatedData.skin?.id) {
       updatedData.skinId = updatedData.skin.id;
     }
-    delete updatedData.skin; // Xóa skin object để tránh lỗi API nếu không nhận object này
+    delete updatedData.skin; // Xóa object `skin` để tránh lỗi API
 
     try {
       const updatedUser = await updateUser({ id: user.id, user: updatedData });
 
-      dispatch({ type: "UPDATE_USER", payload: updatedUser });
+      //  Cập nhật Redux Store đúng cách
+      dispatch(updateUserInfo(updatedUser));
+
       alert("Thông tin đã được cập nhật thành công!");
-      setOriginalCustomer(updatedUser);
+      setOriginalCustomer(updatedUser); // Cập nhật state nếu cần
     } catch (error) {
       console.error("Lỗi khi cập nhật dữ liệu:", error);
       alert("Cập nhật thông tin thất bại, vui lòng thử lại.");
