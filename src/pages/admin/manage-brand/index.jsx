@@ -72,9 +72,16 @@ function ManageBrand() {
     },
   ];
 
+  const removeDiacritics = (str) => {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Loại bỏ dấu
+  };
+
   const handleSearch = (value) => {
     setSearchText(value);
-    const filtered = brands.filter((brand) => brand.name.toLowerCase().includes(value.toLowerCase()));
+    const normalizedValue = removeDiacritics(value.toLowerCase()); // Chuẩn hóa từ khóa tìm kiếm
+
+    const filtered = brands.filter((brand) => removeDiacritics(brand.name.toLowerCase()).includes(normalizedValue));
+
     setFilteredBrands(filtered);
   };
 

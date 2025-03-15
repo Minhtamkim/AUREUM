@@ -212,15 +212,21 @@ function ManageProduct() {
     },
   ];
 
+  const removeDiacritics = (str) => {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Loại bỏ dấu
+  };
+
   const handleSearch = (value) => {
-    setSearchText(value); // Cập nhật từ khóa tìm kiếm
+    setSearchText(value);
+    const normalizedValue = removeDiacritics(value.toLowerCase()); // Chuẩn hóa từ khóa tìm kiếm
+
     const filtered = products.filter(
-      // Lọc danh sách sản phẩm theo từ khóa tìm kiếm
       (product) =>
-        product.name.toLowerCase().includes(value.toLowerCase()) || // Tìm theo tên sản phẩm (không phân biệt hoa thường)
-        product.brand?.name.toLowerCase().includes(value.toLowerCase()) || // Tìm theo thương hiệu
-        product.category?.name.toLowerCase().includes(value.toLowerCase()) ||
-        product.skin?.name.toLowerCase().includes(value.toLowerCase())
+        removeDiacritics(product.name.toLowerCase()).includes(normalizedValue) ||
+        removeDiacritics(product.brand?.name?.toLowerCase() || "").includes(normalizedValue) ||
+        removeDiacritics(product.category?.name?.toLowerCase() || "").includes(normalizedValue) ||
+        removeDiacritics(product.skin?.name?.toLowerCase() || "").includes(normalizedValue) ||
+        product.ingredient?.some((item) => removeDiacritics(item.name.toLowerCase()).includes(normalizedValue))
     );
     setFilteredProducts(filtered); // Cập nhật danh sách sản phẩm sau khi lọc
   };

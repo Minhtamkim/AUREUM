@@ -131,16 +131,22 @@ function ManageAccount() {
     }
   };
 
+  const removeDiacritics = (str) => {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Loại bỏ dấu
+  };
+
   const handleSearch = (value) => {
-    setSearchText(value); // Lưu từ khóa tìm kiếm
+    setSearchText(value);
+    const normalizedValue = removeDiacritics(value.toLowerCase()); // Chuẩn hóa từ khóa tìm kiếm
+
     const filtered = users.filter(
-      // Lọc danh sách danh mục
       (user) =>
-        user.fullName?.toLowerCase().includes(value.toLowerCase()) ||
-        user.email?.toLowerCase().includes(value.toLowerCase()) ||
-        user.phone?.toLowerCase().includes(value.toLowerCase())
+        removeDiacritics(user.fullName?.toLowerCase() || "").includes(normalizedValue) ||
+        removeDiacritics(user.email?.toLowerCase() || "").includes(normalizedValue) ||
+        removeDiacritics(user.phone?.toLowerCase() || "").includes(normalizedValue)
     );
-    setFilteredUsers(filtered); // Cập nhật danh sách danh mục sau khi lọc
+
+    setFilteredUsers(filtered);
   };
 
   const handleSubmit = async (formValues) => {

@@ -73,10 +73,16 @@ function ManageCategory() {
     },
   ];
 
+  const removeDiacritics = (str) => {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Loại bỏ dấu
+  };
+
   const handleSearch = (value) => {
     setSearchText(value);
-    const filtered = categories.filter(
-      (category) => category.name.toLowerCase().includes(value.toLowerCase()) // Tìm kiếm không phân biệt hoa/thường
+    const normalizedValue = removeDiacritics(value.toLowerCase()); // Chuẩn hóa từ khóa tìm kiếm
+
+    const filtered = categories.filter((category) =>
+      removeDiacritics(category.name.toLowerCase()).includes(normalizedValue)
     );
     setFilteredCategories(filtered);
   };

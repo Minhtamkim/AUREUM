@@ -72,11 +72,15 @@ function ManageIngredient() {
     },
   ];
 
+  const removeDiacritics = (str) => {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Loại bỏ dấu
+  };
+
   const handleSearch = (value) => {
     setSearchText(value);
-    const filtered = ingredients.filter(
-      (item) => item.name.toLowerCase().includes(value.toLowerCase()) // Tìm kiếm không phân biệt hoa/thường
-    );
+    const normalizedValue = removeDiacritics(value.toLowerCase()); // Chuẩn hóa từ khóa tìm kiếm
+
+    const filtered = ingredients.filter((item) => removeDiacritics(item.name.toLowerCase()).includes(normalizedValue));
     setFilteredData(filtered);
   };
 
@@ -123,7 +127,7 @@ function ManageIngredient() {
         placeholder="Tìm kiếm thành phần..."
         allowClear
         onChange={(e) => handleSearch(e.target.value)}
-        style={{ marginBottom: 16, width: 250, marginLeft: 12}}
+        style={{ marginBottom: 16, width: 250, marginLeft: 12 }}
       />
 
       <Table dataSource={filteredData.filter((ingredient) => !ingredient.deleted)} columns={columns} rowKey="id" />
