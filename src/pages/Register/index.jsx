@@ -153,6 +153,7 @@ const RegisterPage = () => {
 
       // Lưu token vào localStorage
       localStorage.setItem("token", data.token);
+      localStorage.setItem("roleEnum", data.roleEnum);
 
       // Chuyển hướng dựa vào vai trò
       if (roleEnum === "ADMIN") {

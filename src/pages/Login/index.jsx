@@ -67,6 +67,7 @@ const LoginPage = () => {
 
         console.log(roleEnum);
         localStorage.setItem("token", data.token);
+        localStorage.setItem("roleEnum", data.roleEnum);
         toast.success("Successfully login!");
         dispatch(login(response.data));
         if (roleEnum === "ADMIN" || roleEnum === "STAFF" || roleEnum === "MANAGER") {
@@ -75,7 +76,7 @@ const LoginPage = () => {
           navigate("/");
         }
       } catch (err) {
-        toast.error(err.response?.data?.message || "Đăng Nhập Thất Bại!");
+        toast.error(err.response?.data?.message || "Sai email hoặc password!");
       } finally {
         setIsLoading(false);
       }
@@ -114,6 +115,7 @@ const LoginPage = () => {
 
       // Lưu token vào localStorage
       localStorage.setItem("token", data.token);
+      localStorage.setItem("roleEnum", data.roleEnum);
 
       // Chuyển hướng dựa vào vai trò
       if (roleEnum === "ADMIN") {
