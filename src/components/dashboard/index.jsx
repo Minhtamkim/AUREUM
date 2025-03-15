@@ -45,7 +45,8 @@ const Dashboard = () => {
 
   const handleLogout = () => {
     dispatch(logout());
-    navigate("/login");
+    localStorage.removeItem("token");
+    localStorage.removeItem("roleEnum"); 
   };
 
   const userMenu = (
@@ -71,21 +72,24 @@ const Dashboard = () => {
 
   return (
     <Layout style={{ minHeight: "100vh" }}>
-      <Sider collapsible collapsed={collapsed} onCollapse={(value) => setCollapsed(value)}>
+      <Sider
+        collapsible
+        collapsed={collapsed}
+        onCollapse={(value) => setCollapsed(value)}
+        style={{
+          height: "100vh",
+          position: "fixed",
+          left: 0,
+          top: 0,
+          bottom: 0,
+          overflow: "auto",
+        }}
+      >
         <div className="demo-logo-vertical" />
         <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline" items={items} />
       </Sider>
-      <Layout>
-        {/* <Header
-          style={{
-            padding: "0 16px",
-            background: colorBgContainer,
-            display: "flex",
-            alignItems: "center",
-            justifyContent: "space-between",
-          }}
-        ></Header> */}
-        <div className="bg-white flex justify-between w-[100%] p-3">
+      <Layout style={{ marginLeft: collapsed ? 80 : 200 }}>
+        <div className="bg-white flex justify-between w-[100%] p-3 sticky top-0 z-50 shadow-md">
           <img className="h-12 " src="/images/logo-aureum.jpg" alt="" onClick={() => navigate("/")} />
           <div>
             {user ? (

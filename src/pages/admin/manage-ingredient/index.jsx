@@ -97,14 +97,14 @@ function ManageIngredient() {
     if (formValues.id) {
       const response = await updateIngredient({ id: formValues.id, ingredient: formValues });
       console.log(response);
-      toast.success("Successfully update product!");
+      toast.success("Successfully update ingredient!");
     }
 
     // khong co id thi la create
     else {
       const response = await createIngredient(formValues);
       console.log(response);
-      toast.success("Successfully create new product!");
+      toast.success("Successfully create new ingredient!");
     }
 
     setOpen(false);

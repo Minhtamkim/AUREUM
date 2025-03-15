@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Navigate, useNavigate, useParams } from "react-router-dom";
 import api from "../../../config/axios";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../../redux/features/cartSlice";
+import PrivateRoute from "../../../components/privateRouter";
 
 const ProductDetailPage = () => {
   const { product_id } = useParams(); // Lấy product_id từ URL
@@ -70,9 +71,14 @@ const ProductDetailPage = () => {
 
   const handleAddToCart = (product) => {
     // setCart((prev) => [...prev, { ...product, quantity: 1 }]);
-    const plain = { ...product, quantityPlain: quantity, pricePlain: quantity * product.price };
-    dispatch(addToCart(plain));
-    console.log("Adding to cart:", product); // Kiểm tra dữ liệu
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+    } else {
+      const plain = { ...product, quantityPlain: quantity, pricePlain: quantity * product.price };
+      dispatch(addToCart(plain));
+      console.log("Adding to cart:", product); // Kiểm tra dữ liệu
+    }
   };
 
   return (
