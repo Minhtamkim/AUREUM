@@ -42,28 +42,6 @@ export const updateUser = async ({ id, user }) => {
   }
 };
 
-export const updateSkinType = async ({ id, skinTypeEnum }) => {
-  try {
-    const response = await api.patch(`user/updateSkinType/${id}`, null, {
-      params: { skinTypeEnum }, // query parameter
-    });
-    return response.data;
-  } catch (error) {
-    toast.error(error.response.data);
-  }
-};
-
-export const updateRole = async ({ id, roleEnum }) => {
-  try {
-    const response = await api.patch(`user/updateRole/${id}`, null, {
-      params: { roleEnum }, // query parameter
-    });
-    return response.data;
-  } catch (error) {
-    toast.error(error.response.data);
-  }
-};
-
 export const toggleUserActive = async (id) => {
   try {
     const response = await api.put(`user/${id}/isActive`);

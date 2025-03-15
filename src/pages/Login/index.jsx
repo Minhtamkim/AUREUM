@@ -90,7 +90,6 @@ const LoginPage = () => {
     try {
       const result = await signInWithPopup(auth, provider);
       const user = result.user;
-      console.log(user);
       const idToken = await user.accessToken; // Lấy idToken để gửi lên backend
 
       console.log("Thông tin người dùng:", user);
@@ -99,9 +98,16 @@ const LoginPage = () => {
       const response = await api.post("loginGoogle", { token: idToken });
       console.log(response.data);
       const { data } = response;
-      const { roleEnum } = data; // Trích xuất token và roleEnum
+      const { roleEnum, active } = data; // Trích xuất token và roleEnum
+      console.log("Active Status:", active); // Kiểm tra dữ liệu trả về từ API
 
-      console.log("Phản hồi từ server:", data);
+      if (active === false) {
+        toast.error("Tài khoản của bạn bị cấm truy cập!");
+        setIsLoading(false);
+        return; // Ngăn không cho tiếp tục đăng nhập
+      }
+
+      console.log(roleEnum);
 
       // Lưu thông tin vào Redux
       dispatch(login(data));
