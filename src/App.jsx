@@ -42,9 +42,11 @@ import CategorySidebar from "./pages/Comparison/SidebarComparison";
 import ProductList from "./pages/Comparison/ProductList";
 import ProductComparison from "./pages/Comparison/productComparison";
 import PaymentResult from "./pages/paymentResult";
+import PrivateRoute from "./components/privateRouter";
 
 function App() {
   const router = createBrowserRouter([
+    // Nếu Người dùng chưa đăng kí tài khoản, truy câpj được những trang này
     {
       path: "",
       element: <Layout />,
@@ -60,14 +62,6 @@ function App() {
         {
           path: "/",
           element: <Home />,
-        },
-        {
-          path: "profile",
-          element: <ProfileAccount />,
-        },
-        {
-          path: "historyOrders",
-          element: <HistoryOrders />,
         },
         {
           path: "policiesShipping",
@@ -138,32 +132,12 @@ function App() {
           element: <BlogPostAll />,
         },
         {
-          path: "cart",
-          element: <Cart />,
-        },
-        {
-          path: "payment-result",
-          element: <PaymentResult />,
-        },
-        {
           path: "products",
           element: <ProductDetail />,
         },
         {
           path: "aboutUs",
           element: <AboutUs />,
-        },
-        {
-          path: "quiz",
-          element: <QuizPage />,
-        },
-        {
-          path: "quizDetail",
-          element: <QuizDetail />,
-        },
-        {
-          path: "quizResult",
-          element: <QuizResult />,
         },
         {
           path: "products/:type/:id",
@@ -178,6 +152,42 @@ function App() {
           element: <ProductDetailPage />,
         },
         {
+          path: "productList/:category_id",
+          element: <ProductList />,
+        },
+      ],
+    },
+
+    // người dùng phải đăng nhập mới có thể sử dụng các chức năng này
+    {
+      path: "",
+      element: (
+        <PrivateRoute>
+          <Layout />
+        </PrivateRoute>
+      ),
+      children: [
+        {
+          path: "profile",
+          element: <ProfileAccount />,
+        },
+        {
+          path: "historyOrders",
+          element: <HistoryOrders />,
+        },
+        {
+          path: "quiz",
+          element: <QuizPage />,
+        },
+        {
+          path: "quizDetail",
+          element: <QuizDetail />,
+        },
+        {
+          path: "quizResult",
+          element: <QuizResult />,
+        },
+        {
           path: "categorySidebar",
           element: <CategorySidebar />,
         },
@@ -186,15 +196,24 @@ function App() {
           element: <ProductComparison />,
         },
         {
-          path: "productList/:category_id",
-          element: <ProductList />,
+          path: "cart",
+          element: <Cart />,
+        },
+        {
+          path: "payment-result",
+          element: <PaymentResult />,
         },
       ],
     },
 
+    // phải là admin mới có quyền truy cập
     {
       path: "dashboard",
-      element: <Dashboard />,
+      element: (
+        <PrivateRoute adminOnly={true}>
+          <Dashboard />
+        </PrivateRoute>
+      ),
       children: [
         {
           path: "product",
