@@ -3,44 +3,51 @@ import { useNavigate, useParams } from "react-router-dom";
 import api from "../../../config/axios";
 import CategorySidebar from "../SidebarComparison";
 
-export default function ProductList() {
+function ProductList() {
   const { category_id } = useParams(); // Lấy ID danh mục từ URL
   const [products, setProducts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [page, setPage] = useState(1);
+  const [categories, setCategories] = useState([]);
+
   const [selectedProducts, setSelectedProducts] = useState([]); // Lưu sản phẩm đã chọn
   const itemsPerPage = 20;
   const navigate = useNavigate();
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchData = async (categoryId) => {
       setLoading(true);
       setError(null);
-      try {
-        const categoryRes = await api.get("category");
-        const productRes = await api.get("product");
 
-        const selectedCategory = categoryRes.data.find((cat) => cat.id === Number(category_id));
+      try {
+        const [categoryRes, productRes] = await Promise.all([api.get("category"), api.get("product")]);
+
+        setCategories(categoryRes.data);
+        let filteredProducts = productRes.data;
+
+        // Lọc sản phẩm theo danh mục
+        const selectedCategory = categoryRes.data.find((cat) => cat.id === Number(categoryId));
         if (!selectedCategory) {
           setError("Danh mục không tồn tại!");
           return;
         }
 
-        const filteredProducts = productRes.data.filter((product) =>
-          product.name.toLowerCase().includes(selectedCategory.name.toLowerCase())
-        );
+        filteredProducts = productRes.data.filter((product) => product.category.id === selectedCategory.id);
 
         setProducts(filteredProducts);
       } catch (err) {
-        console.error("Lỗi API:", err.response ? err.response.data : err.message);
+        console.error("Lỗi API:", err);
         setError("Không thể tải sản phẩm. Vui lòng thử lại!");
+      } finally {
+        setLoading(false);
       }
-      setLoading(false);
     };
 
-    fetchData();
-  }, [category_id]);
+    if (category_id) {
+      fetchData(category_id);
+    }
+  }, [category_id]); // Chạy lại khi category_id thay đổi
 
   // Xử lý chọn/bỏ chọn sản phẩm
   const toggleSelectProduct = (product) => {
@@ -136,3 +143,4 @@ export default function ProductList() {
     </div>
   );
 }
+export default ProductList;
