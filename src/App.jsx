@@ -43,6 +43,13 @@ import ProductList from "./pages/Comparison/ProductList";
 import ProductComparison from "./pages/Comparison/productComparison";
 import PaymentResult from "./pages/paymentResult";
 import PrivateRoute from "./components/privateRouter";
+import SidebarRoutine from "./pages/Routine/sidebarRoutine";
+import OilyskinPage from "./pages/Routine/routinePage/oilyskinPage";
+import DryskinPage from "./pages/Routine/routinePage/dryskinPage";
+import NormalskinPage from "./pages/Routine/routinePage/normalskinPage";
+import CombinationskinPage from "./pages/Routine/routinePage/combinationskinPage";
+import SensitiveskinPage from "./pages/Routine/routinePage/sensitiveskinPage";
+import RedirectToSkinPage from "./pages/Routine";
 
 function App() {
   const router = createBrowserRouter([
@@ -202,6 +209,34 @@ function App() {
         {
           path: "payment-result",
           element: <PaymentResult />,
+        },
+        {
+          path: "sidebarRoutine",
+          element: <SidebarRoutine />,
+        },
+        {
+          path: "oilyskinPage",
+          element: <OilyskinPage />,
+        },
+        {
+          path: "dryskinPage",
+          element: <DryskinPage />,
+        },
+        {
+          path: "normalskinPage",
+          element: <NormalskinPage />,
+        },
+        {
+          path: "combinationskinPage",
+          element: <CombinationskinPage />,
+        },
+        {
+          path: "sensitiveskinPage",
+          element: <SensitiveskinPage />,
+        },
+        {
+          path: "redirecttoskinPage",
+          element: <RedirectToSkinPage />,
         },
       ],
     },

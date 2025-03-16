@@ -9,6 +9,7 @@ import { Avatar, Divider, Dropdown, Menu } from "antd";
 import { DashboardOutlined, LogoutOutlined, ShoppingOutlined, UserOutlined } from "@ant-design/icons";
 import { addToCart, clearCart } from "../../redux/features/cartSlice";
 import { FaShoppingCart } from "react-icons/fa";
+import { MdFace4 } from "react-icons/md";
 
 const Header = () => {
   const [isMenuOpen, setIsMenuOpen] = useState(false);
@@ -125,6 +126,9 @@ const Header = () => {
       </Menu.Item>
       <Menu.Item key="history" icon={<ShoppingOutlined />}>
         <Link to="/historyOrders">Lịch sử mua hàng</Link>
+      </Menu.Item>
+      <Menu.Item key="routine" icon={<MdFace4 />}>
+        <Link to="/redirecttoskinPage">Lộ trình chăm sóc da </Link>
       </Menu.Item>
       {(userRole === "ADMIN" || userRole === "MANAGER" || userRole === "STAFF") && (
         <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
