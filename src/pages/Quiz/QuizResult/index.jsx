@@ -1,356 +1,217 @@
+// import { useLocation, useNavigate } from "react-router-dom";
+// import { useEffect, useState } from "react";
+// import api from "../../../config/axios";
+
+// const QuizResult = () => {
+//   const location = useLocation();
+//   const navigate = useNavigate();
+//   const answers = location.state?.answers || [];
+
+//   const [skinType, setSkinType] = useState("");
+//   const [products, setProducts] = useState([]);
+//   const [loading, setLoading] = useState(true);
+
+//   // Điểm cho từng lựa chọn
+//   const scoreMap = { A: 2, B: 4, C: 6, D: 8, E: 10 };
+
+//   // Xác định loại da dựa trên điểm số
+//   const determineSkinType = (score) => {
+//     if (score <= 40) return "Da khô";
+//     if (score > 40 && score <= 60) return "Da dầu";
+//     if (score > 60 && score <= 75) return "Da hỗn hợp";
+//     if (score > 75 && score <= 85) return "Da nhạy cảm";
+//     return "Da thường";
+//   };
+
+//   // Tính tổng điểm và cập nhật loại da khi answers thay đổi
+//   useEffect(() => {
+//     const totalScore = answers.reduce((sum, answer) => sum + (scoreMap[answer?.value] || 0), 0);
+//     setSkinType(determineSkinType(totalScore));
+//   }, [answers]);
+
+//   // Gọi API lấy sản phẩm khi skinType thay đổi
+//   useEffect(() => {
+//     if (!skinType) return;
+
+//     const fetchProducts = async () => {
+//       setLoading(true);
+//       try {
+//         const { data } = await api.get("product");
+//         const filteredProducts = data.filter(
+//           (product) => product.skin?.name?.trim().toLowerCase() === skinType.trim().toLowerCase()
+//         );
+//         setProducts(filteredProducts);
+//       } catch (error) {
+//         console.error("Lỗi khi lấy sản phẩm:", error);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchProducts();
+//   }, [skinType]);
+
+//   return (
+//     <div className="min-h-screen flex flex-col items-center bg-[#FAF0E8] py-10">
+//       {/* Kết quả kiểm tra */}
+//       <div className="w-100 h-90 max-w-3xl bg-white shadow-lg rounded-2xl p-8 text-center">
+//         <p className="text-2xl font-extrabold text-transparent bg-clip-text bg-gradient-to-r from-pink-500 to-purple-500">
+//           Cảm ơn bạn đã hoàn thành bài kiểm tra!
+//         </p>
+//         <h1 className="text-3xl font-bold text-green-600 mt-2">Kết Quả</h1>
+
+//         <div className="mt-6 p-4 bg-gray-50 rounded-lg shadow-md">
+//           <h2 className="text-xl font-semibold">Loại da của bạn là:</h2>
+//           <p className="text-gray-700 mt-2 text-2xl font-bold">{skinType}</p>
+//         </div>
+
+//         <a
+//           href="/quiz"
+//           className="mt-5 px-6 py-3 text-white rounded-full font-semibold bg-gradient-to-r from-pink-400 to-purple-400 shadow-lg transition-all duration-300 transform hover:scale-105 inline-block"
+//         >
+//           Làm bài lại
+//         </a>
+//       </div>
+
+//       {/* Danh sách sản phẩm phù hợp */}
+//       <div className="w-full max-w-5xl mt-10">
+//         <h2 className="text-2xl font-bold text-green-600 text-center">
+//           {loading ? "Đang tìm sản phẩm phù hợp..." : `Sản phẩm phù hợp với ${skinType}`}
+//         </h2>
+
+//         {loading ? (
+//           <p className="text-center text-gray-500 mt-4">Đang tải sản phẩm...</p>
+//         ) : products.length > 0 ? (
+//           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-6">
+//             {products.map((product) => (
+//               <div
+//                 key={product.id}
+//                 className="bg-white shadow-md rounded-lg p-4 text-center transform hover:scale-105 hover:shadow-lg transition duration-300 cursor-pointer"
+//                 onClick={() => navigate(`/products/details/${product.id}`)}
+//               >
+//                 <img src={product.image} alt={product.name} className="bg-[#FAF0E8] w-full h-77 object-cover rounded-md" />
+//                 <h3 className="text-sm font-semibold mt-3">{product.name}</h3>
+//                 <span className="block mt-2 text-pink-600 font-bold">
+//                   {new Intl.NumberFormat("vi-VN").format(product.price)} VND
+//                 </span>
+//               </div>
+//             ))}
+//           </div>
+//         ) : (
+//           <p className="text-center text-gray-500 mt-4">Không có sản phẩm phù hợp</p>
+//         )}
+//       </div>
+//     </div>
+//   );
+// };
+
+
+// export default QuizResult;
+
 import { useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
+import api from "../../../config/axios";
+import { motion } from "framer-motion";
 
 const QuizResult = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const answers = location.state?.answers || [];
+
   const [skinType, setSkinType] = useState("");
-  const [skincareRoutine, setSkincareRoutine] = useState(null);
+  const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-  // Điểm cho từng đáp án
-  const scoreMap = { A: 5, B: 10, C: 15, D: 20, E: 12.5 };
+  const scoreMap = { A: 2, B: 4, C: 6, D: 8, E: 10 };
 
-  // Hàm tính tổng điểm
-  const calculateScore = () => {
-    return answers.reduce((sum, answer) => sum + (scoreMap[answer?.value] || 0), 0);
-  };
-
-  // Xác định loại da dựa trên mức điểm
   const determineSkinType = (score) => {
-    let skin = { type: "", condition: "", pigmentation: "", aging: "" };
-
-    if (score <= 40) {
-      skin = { type: "Da khô", condition: "Nhạy cảm", pigmentation: "Không nhiễm sắc tố", aging: "Căng" };
-    } else if (score <= 55) {
-      skin = { type: "Da khô", condition: "Nhạy cảm", pigmentation: "Không nhiễm sắc tố", aging: "Nhăn" };
-    } else if (score <= 70) {
-      skin = { type: "Da khô", condition: "Nhạy cảm", pigmentation: "Nhiễm sắc tố", aging: "Căng" };
-    } else if (score <= 85) {
-      skin = { type: "Da khô", condition: "Nhạy cảm", pigmentation: "Nhiễm sắc tố", aging: "Nhăn" };
-    } else if (score <= 100) {
-      skin = { type: "Da khô", condition: "Khỏe", pigmentation: "Không nhiễm sắc tố", aging: "Căng" };
-    } else if (score <= 115) {
-      skin = { type: "Da khô", condition: "Khỏe", pigmentation: "Không nhiễm sắc tố", aging: "Nhăn" };
-    } else if (score <= 130) {
-      skin = { type: "Da khô", condition: "Khỏe", pigmentation: "Nhiễm sắc tố", aging: "Căng" };
-    } else if (score <= 145) {
-      skin = { type: "Da khô", condition: "Khỏe", pigmentation: "Nhiễm sắc tố", aging: "Nhăn" };
-    } else if (score <= 160) {
-      skin = { type: "Da dầu", condition: "Nhạy cảm", pigmentation: "Không nhiễm sắc tố", aging: "Căng" };
-    } else if (score <= 175) {
-      skin = { type: "Da dầu", condition: "Nhạy cảm", pigmentation: "Không nhiễm sắc tố", aging: "Nhăn" };
-    } else if (score <= 190) {
-      skin = { type: "Da dầu", condition: "Nhạy cảm", pigmentation: "Nhiễm sắc tố", aging: "Căng" };
-    } else if (score <= 205) {
-      skin = { type: "Da dầu", condition: "Nhạy cảm", pigmentation: "Nhiễm sắc tố", aging: "Nhăn" };
-    } else if (score <= 220) {
-      skin = { type: "Da dầu", condition: "Khỏe", pigmentation: "Không nhiễm sắc tố", aging: "Căng" };
-    } else if (score <= 235) {
-      skin = { type: "Da dầu", condition: "Khỏe", pigmentation: "Không nhiễm sắc tố", aging: "Nhăn" };
-    } else if (score <= 250) {
-      skin = { type: "Da dầu", condition: "Khỏe", pigmentation: "Nhiễm sắc tố", aging: "Căng" };
-    } else {
-      skin = { type: "Da dầu", condition: "Khỏe", pigmentation: "Nhiễm sắc tố", aging: "Nhăn" };
-    }
-
-    return `${skin.type} - ${skin.condition} - ${skin.pigmentation} - ${skin.aging}`;
-  };
-  const skincareRoutines = {
-    "Da khô - Nhạy cảm - Không nhiễm sắc tố - Căng": {
-      routine: ["Dầu tẩy trang nhẹ", "Gel rửa mặt dưỡng ẩm", "Toner cấp nước", "Serum cấp ẩm", "Kem dưỡng khóa ẩm"],
-      products: [
-        "Kose Softymo Speedy Cleansing Oil",
-        "Cetaphil Gentle Skin Cleanser",
-        "Fresh Rose Deep Hydration Toner",
-        "Estee Lauder Advanced Night Repair",
-        "Belif The True Cream Aqua Bomb",
-      ],
-    },
-    "Da khô - Nhạy cảm - Nhiễm sắc tố - Nhăn": {
-      routine: [
-        "Dầu tẩy trang dưỡng ẩm",
-        "Sữa rửa mặt dưỡng ẩm",
-        "Toner làm dịu da",
-        "Serum dưỡng trắng",
-        "Kem dưỡng tái tạo",
-      ],
-      products: [
-        "Garnier Micellar Cleansing Water",
-        "First Aid Beauty Pure Skin Face Cleanser",
-        "Klairs Supple Preparation Toner",
-        "Hyaluronic Acid 2% + B5",
-        "Dr. Jart+ Ceramidin Cream",
-      ],
-    },
-    "Da khô - Khỏe - Không nhiễm sắc tố - Căng": {
-      routine: [
-        "Dầu tẩy trang dưỡng da",
-        "Sữa rửa mặt dịu nhẹ",
-        "Toner cấp nước",
-        "Serum cấp ẩm",
-        "Kem dưỡng khóa nước",
-      ],
-      products: [
-        "Simple Micellar Water",
-        "Vanicream Gentle Facial Cleanser",
-        "Avene Gentle Toning Lotion",
-        "SkinCeuticals C E Ferulic",
-        "Eucerin Advanced Repair Cream",
-      ],
-    },
-    "Da khô - Khỏe - Nhiễm sắc tố - Nhăn": {
-      routine: [
-        "Dầu tẩy trang làm sạch sâu",
-        "Sữa rửa mặt tạo bọt",
-        "Toner dưỡng da",
-        "Serum chống lão hóa",
-        "Kem dưỡng tái tạo",
-      ],
-      products: [
-        "Bioderma Sebium H2O",
-        "CeraVe Foaming Facial Cleanser",
-        "Some By Mi AHA-BHA-PHA 30 Days Miracle Toner",
-        "SkinCeuticals C E Ferulic",
-        "La Roche-Posay Toleriane Double Repair",
-      ],
-    },
-    "Da dầu - Nhạy cảm - Nhiễm sắc tố - Căng": {
-      routine: [
-        "Nước tẩy trang cho da dầu",
-        "Gel rửa mặt kiềm dầu",
-        "Toner se khít lỗ chân lông",
-        "Serum vitamin C",
-        "Kem dưỡng cấp nước",
-      ],
-      products: [
-        "Garnier Micellar Cleansing Water",
-        "COSRX Low pH Good Morning Gel Cleanser",
-        "Thayers Witch Hazel Toner",
-        "Vichy Mineral 89",
-        "Neutrogena Hydro Boost Water Gel",
-      ],
-    },
-    "Da dầu - Nhạy cảm - Không nhiễm sắc tố - Nhăn": {
-      routine: [
-        "Dầu tẩy trang nhẹ dịu",
-        "Sữa rửa mặt dịu nhẹ",
-        "Toner cân bằng",
-        "Serum phục hồi",
-        "Kem dưỡng ẩm dịu nhẹ",
-      ],
-      products: [
-        "Simple Micellar Water",
-        "Eucerin DermoPurifyer Cleansing Gel",
-        "Kiehl's Calendula Herbal Extract Toner",
-        "Drunk Elephant C-Firma Day Serum",
-        "Clinique Dramatically Different Moisturizing Gel",
-      ],
-    },
-    "Da dầu - Khỏe - Nhiễm sắc tố - Căng": {
-      routine: [
-        "Tẩy trang kiềm dầu",
-        "Gel rửa mặt cho da dầu",
-        "Toner kiểm soát dầu",
-        "Serum làm sáng da",
-        "Kem dưỡng cân bằng",
-      ],
-      products: [
-        "DHC Deep Cleansing Oil",
-        "Drunk Elephant Beste No.9 Jelly Cleanser",
-        "Thayers Witch Hazel Alcohol-Free Toner",
-        "The Ordinary Niacinamide 10% + Zinc 1%",
-        "Tatcha The Water Cream",
-      ],
-    },
-    "Da dầu - Khỏe - Không nhiễm sắc tố - Nhăn": {
-      routine: [
-        "Tẩy trang dịu nhẹ",
-        "Sữa rửa mặt không bọt",
-        "Toner dưỡng ẩm",
-        "Serum phục hồi da",
-        "Kem dưỡng chuyên sâu",
-      ],
-      products: [
-        "Banila Co Clean It Zero",
-        "Hada Labo Gokujyun Foaming Cleanser",
-        "Klairs Supple Preparation Facial Toner",
-        "Mizon Snail Repair Intensive Ampoule",
-        "CeraVe Moisturizing Cream",
-      ],
-    },
-    "Da dầu - Nhạy cảm - Không nhiễm sắc tố - Căng": {
-      routine: [
-        "Nước tẩy trang không cồn",
-        "Gel rửa mặt không gây khô",
-        "Toner dưỡng ẩm",
-        "Serum cấp nước",
-        "Kem dưỡng khóa ẩm",
-      ],
-      products: [
-        "Banila Co Clean It Zero",
-        "Cetaphil Gentle Skin Cleanser",
-        "Laneige Essential Power Skin Refiner",
-        "Estée Lauder Advanced Night Repair",
-        "Belif The True Cream Aqua Bomb",
-      ],
-    },
-    "Da dầu - Nhạy cảm - Nhiễm sắc tố - Nhăn": {
-      routine: [
-        "Dầu tẩy trang dịu nhẹ",
-        "Sữa rửa mặt không xà phòng",
-        "Toner dưỡng ẩm",
-        "Serum chống lão hóa",
-        "Kem dưỡng ẩm phục hồi",
-      ],
-      products: [
-        "Bioderma Sensibio H2O",
-        "La Roche-Posay Toleriane Purifying Foaming Cleanser",
-        "Paula's Choice Skin Perfecting 2% BHA",
-        "The Ordinary Niacinamide 10% + Zinc 1%",
-        "CeraVe Facial Moisturizing Lotion PM",
-      ],
-    },
-    "Da dầu - Khỏe - Không nhiễm sắc tố - Căng": {
-      routine: [
-        "Nước tẩy trang cho da thường",
-        "Gel rửa mặt dịu nhẹ",
-        "Toner cấp nước",
-        "Serum cấp ẩm",
-        "Kem dưỡng khóa nước",
-      ],
-      products: [
-        "Simple Micellar Cleansing Water",
-        "Krave Beauty Matcha Hemp Hydrating Cleanser",
-        "Etude House Soon Jung pH 5.5 Relief Toner",
-        "Neogen Real Ferment Micro Serum",
-        "Laneige Water Sleeping Mask",
-      ],
-    },
-    "Da dầu - Khỏe - Nhiễm sắc tố - Nhăn": {
-      routine: [
-        "Dầu tẩy trang sâu",
-        "Sữa rửa mặt tạo bọt",
-        "Toner làm sáng da",
-        "Serum retinol",
-        "Kem dưỡng chống lão hóa",
-      ],
-      products: [
-        "Banila Co Clean It Zero",
-        "Vanicream Gentle Facial Cleanser",
-        "Klairs Supple Preparation Unscented Toner",
-        "Estee Lauder Advanced Night Repair",
-        "CeraVe Moisturizing Cream",
-      ],
-    },
-    "Da khô - Nhạy cảm - Nhiễm sắc tố - Căng": {
-      routine: [
-        "Nước tẩy trang dịu nhẹ",
-        "Sữa rửa mặt cấp nước",
-        "Toner dưỡng da",
-        "Serum sáng da",
-        "Kem dưỡng chống lão hóa",
-      ],
-      products: [
-        "Banila Co Clean It Zero",
-        "Cosrx Low pH Good Morning Gel Cleanser",
-        "Pyunkang Yul Essence Toner",
-        "Missha Time Revolution Night Repair",
-        "CeraVe Moisturizing Cream",
-      ],
-    },
-    "Da khô - Nhạy cảm - Không nhiễm sắc tố - Nhăn": {
-      routine: [
-        "Tẩy trang nhẹ dịu",
-        "Sữa rửa mặt dưỡng ẩm",
-        "Toner cân bằng",
-        "Serum phục hồi",
-        "Kem dưỡng chuyên sâu",
-      ],
-      products: [
-        "Burt’s Bees Cleansing Oil",
-        "Vanicream Gentle Facial Cleanser",
-        "Avene Gentle Toning Lotion",
-        "Drunk Elephant B-Hydra Intensive Hydration Serum",
-        "Weleda Skin Food",
-      ],
-    },
-    "Da khô - Khỏe - Nhiễm sắc tố - Căng": {
-      routine: [
-        "Nước tẩy trang nhẹ nhàng",
-        "Sữa rửa mặt dịu nhẹ",
-        "Toner cân bằng",
-        "Serum sáng da",
-        "Kem dưỡng nâng tông",
-      ],
-      products: [
-        "Clinique Take The Day Off",
-        "Bioderma Sensibio Gel Moussant",
-        "Thayers Witch Hazel Toner",
-        "The Ordinary Hyaluronic Acid 2% + B5",
-        "Neutrogena Hydro Boost Gel Cream",
-      ],
-    },
-    "Da khô - Khỏe - Không nhiễm sắc tố - Nhăn": {
-      routine: ["Tẩy trang cấp ẩm", "Gel rửa mặt nhẹ", "Toner dưỡng ẩm", "Serum phục hồi", "Kem dưỡng chuyên sâu"],
-      products: [
-        "Banila Co Clean It Zero",
-        "CeraVe Hydrating Facial Cleanser",
-        "Klairs Supple Preparation Toner",
-        "The Ordinary Hyaluronic Acid 2% + B5",
-        "First Aid Beauty Ultra Repair Cream",
-      ],
-    },
+    if (score <= 40) return "Da khô";
+    if (score > 40 && score <= 60) return "Da dầu";
+    if (score > 60 && score <= 75) return "Da hỗn hợp";
+    if (score > 75 && score <= 85) return "Da nhạy cảm";
+    return "Da thường";
   };
 
   useEffect(() => {
-    const totalScore = calculateScore();
-    // setSkinType(determineSkinType(totalScore));
-    // setSkincareRoutine(skincareRoutines[determineSkinType] || null);
-    const determinedSkinType = determineSkinType(totalScore);
-    setSkinType(determinedSkinType);
-    setSkincareRoutine(skincareRoutines[determinedSkinType] || null);
+    const totalScore = answers.reduce((sum, answer) => sum + (scoreMap[answer?.value] || 0), 0);
+    setSkinType(determineSkinType(totalScore));
   }, [answers]);
 
+  useEffect(() => {
+    if (!skinType) return;
+
+    const fetchProducts = async () => {
+      setLoading(true);
+      try {
+        const { data } = await api.get("product");
+        const filteredProducts = data.filter(
+          (product) => product.skin?.name?.trim().toLowerCase() === skinType.trim().toLowerCase()
+        );
+        setProducts(filteredProducts);
+      } catch (error) {
+        console.error("Lỗi khi lấy sản phẩm:", error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProducts();
+  }, [skinType]);
+
   return (
-    <div className="max-w-full w-screen h-screen flex flex-col items-center justify-center bg-[#FAF0E8] text-center">
-      <div className="bg-white shadow-lg rounded-2xl p-8 max-w-xl">
-        <h1 className="text-3xl font-bold text-center text-green-600">Kết Quả</h1>
-        <p className="text-gray-600 text-center mt-4">Cảm ơn bạn đã hoàn thành bài kiểm tra!</p>
-
-        <div className="mt-6 p-4 bg-gray-50 rounded-lg">
-          <h2 className="text-xl font-semibold">Loại da của bạn là:</h2>
-          <p className="text-gray-700 mt-2 text-2xl font-bold">{skinType}</p>
-          {skincareRoutine && (
-            <div className="mt-4">
-              <h2 className="text-xl font-semibold">Lộ trình chăm sóc da:</h2>
-              <ul className="list-disc ml-6 mt-2">
-                {skincareRoutine.routine.map((step, index) => (
-                  <li key={index}>{step}</li>
-                ))}
-              </ul>
-              <h2 className="text-xl font-semibold mt-4">Sản phẩm gợi ý:</h2>
-              <ul className="list-disc ml-6 mt-2">
-                {skincareRoutine.products.map((product, index) => (
-                  <li key={index}>{product}</li>
-                ))}
-              </ul>
-            </div>
-          )}
-        </div>
-
-        <a
-          href="/quiz"
-          className="mt-5 px-6 py-3 text-white rounded-full 
-              block mx-auto text-center font-semibold 
-              bg-gradient-to-r from-pink-400 to-purple-400
-              shadow-lg transition-all duration-300 transform hover:scale-105"
+    <div className="min-h-screen flex flex-col items-center bg-[#FAF0E8] py-10">
+      <motion.div 
+        initial={{ opacity: 0, scale: 0.8 }} 
+        animate={{ opacity: 1, scale: 1 }} 
+        transition={{ duration: 0.5 }} 
+        className="w-full max-w-3xl bg-white shadow-2xl rounded-2xl p-10 text-center border border-gray-200"
+      >
+        <h1 className="text-3xl font-bold text-gray-900">Kết Quả Phân Tích Da</h1>
+        <p className="text-lg text-gray-500 mt-2">Loại da của bạn:</p>
+        <p className="text-2xl font-semibold text-[#D4AF37] mt-3">{skinType}</p>
+        <div className="flex justify-center items-center mt-6">
+        <button
+          onClick={() => navigate("/quiz")}
+          className="bg-gradient-to-r from-[#C8A45D] to-black text-white font-bold py-3 px-6 rounded-lg transition-transform duration-300 hover:scale-105"
         >
-          Làm bài lại
-        </a>
+          Làm lại bài kiểm tra
+        </button>
+        </div>
+      </motion.div>
+
+      <div className="w-full max-w-6xl mt-12">
+        <h2 className="text-2xl font-bold text-gray-800 text-center">
+          {loading ? "Đang tìm sản phẩm phù hợp..." : `Sản phẩm dành cho ${skinType}`}
+        </h2>
+        
+        {loading ? (
+          <p className="text-center text-gray-500 mt-4">Đang tải sản phẩm...</p>
+        ) : products.length > 0 ? (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-6">
+            {products.map((product) => (
+              <motion.div
+                key={product.id}
+                initial={{ opacity: 0, y: 50 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{ duration: 0.5 }}
+                className="bg-white shadow-md rounded-xl p-5 text-center border border-gray-300 hover:shadow-xl transition duration-300 cursor-pointer"
+                onClick={() => navigate(`/products/details/${product.id}`)}
+              >
+                <img src={product.image} alt={product.name} className="w-full h-80 object-cover rounded-md" />
+                <h3 className="text-lg font-semibold mt-4 text-gray-900">{product.name}</h3>
+                <span className="block mt-2 text-[#D4AF37] font-bold">
+                  {new Intl.NumberFormat("vi-VN").format(product.price)} VND
+                </span>
+              </motion.div>
+            ))}
+          </div>
+        ) : (
+          <p className="text-center text-gray-500 mt-4">Không có sản phẩm phù hợp</p>
+        )}
       </div>
     </div>
   );
 };
 
 export default QuizResult;
+
