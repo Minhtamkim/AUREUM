@@ -29,6 +29,7 @@ const Header = () => {
   const navigate = useNavigate();
   const location = useLocation();
   const totalQuantity = useSelector((state) => state.cart?.totalQuantity || 0);
+  const [skin, setSkin] = useState([]);
 
   useEffect(() => {
     setSearchTerm("");
@@ -88,9 +89,11 @@ const Header = () => {
       const response = await api.get("category");
       const responses = await api.get("brand");
       const responsese = await api.get("ingredient");
+      const responseses = await api.get("skin");
       setIngredient(responsese.data);
       setBrand(responses.data);
       setCategories(response.data);
+      setSkin(responseses.data);
     };
     fetchData();
   }, []);
@@ -173,13 +176,13 @@ const Header = () => {
                 </a>
 
                 {openDropdown === item.id && (
-                  <div className="absolute left-[-100px]  top-full mt-2 bg-black/20 backdrop-blur-md p-4  shadow-lg grid grid-cols-[1fr_1fr_1fr] gap-3 min-w-[800px] z-50">
+                  <div className="absolute left-[-100px] top-full mt-4 bg-black/20 backdrop-blur-lg p-6 shadow-xl rounded-xl grid grid-cols-2 md:grid-cols-4 gap-6 min-w-[850px] z-50">
                     <div>
-                      <h3 className="text-white font-bold text-lg uppercase tracking-wide">Sản Phẩm</h3>
+                      <h3 className="text-white font-bold text-lg uppercase tracking-wide mb-3">Sản Phẩm</h3>
                       {categories.map((category) => (
                         <a
                           key={category.id}
-                          className="block text-gray-100 hover:text-white mt-1 text-sm"
+                          className="block text-white -600 hover:text-amber-200 transition-all duration-300 ease-in-out mt-1 text-sm"
                           onClick={() => navigate(`/products/category/${category.id}`)}
                         >
                           {category.name}
@@ -187,38 +190,49 @@ const Header = () => {
                       ))}
                       <a
                         href="/products"
-                        className="block text-black -400  hover:text-white -300 font-semibold mt-2 text-sm uppercase"
+                        className="block text-black font-semibold mt-3 text-sm uppercase hover:text-black-400 transition-all duration-300  hover:text-white"
                       >
                         Tất cả sản phẩm &rarr;
                       </a>
                     </div>
-                    <div>
-                      <div className="border-l border-gray-300 -500/50 pl-4">
-                        <h3 className="text-white font-bold text-lg uppercase tracking-wide">Thương Hiệu</h3>
-                        {brand.map((brand) => (
-                          <a
-                            key={brand.id}
-                            className="block text-gray-100 hover:text-white mt-1 text-sm"
-                            onClick={() => navigate(`/products/brand/${brand.id}`)}
-                          >
-                            {brand.name}
-                          </a>
-                        ))}
-                      </div>
+
+                    <div className="border-l border-gray-400 pl-5">
+                      <h3 className="text-white font-bold text-lg uppercase tracking-wide mb-3">Thương Hiệu</h3>
+                      {brand.map((brand) => (
+                        <a
+                          key={brand.id}
+                          className="block text-white -400 hover:text-amber-200 transition-all duration-300 mt-1 text-sm"
+                          onClick={() => navigate(`/products/brand/${brand.id}`)}
+                        >
+                          {brand.name}
+                        </a>
+                      ))}
                     </div>
-                    <div>
-                      <div className="border-l border-gray-300 -500/50 pl-4">
-                        <h3 className="text-white font-bold text-lg uppercase tracking-wide">Thành phần</h3>
-                        {ingredient.slice(0, 15).map((ingredient) => (
-                          <a
-                            key={ingredient.id}
-                            className="block text-gray-100 hover:text-white mt-1 text-sm"
-                            onClick={() => navigate(`/products/ingredient/${ingredient.id}`)}
-                          >
-                            {ingredient.name}
-                          </a>
-                        ))}
-                      </div>
+
+                    <div className="border-l border-gray-400 pl-5">
+                      <h3 className="text-white font-bold text-lg uppercase tracking-wide mb-3">Thành phần</h3>
+                      {ingredient.slice(0, 15).map((ingredient) => (
+                        <a
+                          key={ingredient.id}
+                          className="block text-white -400 hover:text-amber-200 transition-all duration-300 mt-1 text-sm"
+                          onClick={() => navigate(`/products/ingredient/${ingredient.id}`)}
+                        >
+                          {ingredient.name}
+                        </a>
+                      ))}
+                    </div>
+
+                    <div className="border-l border-gray-400 pl-5">
+                      <h3 className="text-white font-bold text-lg uppercase tracking-wide mb-3">Loại da</h3>
+                      {skin.slice(0, 15).map((skin) => (
+                        <a
+                          key={skin.id}
+                          className="block text-white -400 hover:text-amber-200 transition-all duration-300 mt-1 text-sm"
+                          onClick={() => navigate(`/products/skin/${skin.id}`)}
+                        >
+                          {skin.name}
+                        </a>
+                      ))}
                     </div>
                   </div>
                 )}
