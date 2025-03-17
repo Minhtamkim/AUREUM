@@ -228,68 +228,175 @@ const questions = [
   },
 ];
 
+// const QuizDetail = () => {
+//   const navigate = useNavigate();
+//   const [currentPage, setCurrentPage] = useState(0);
+//   const [answers, setAnswers] = useState(new Array(40).fill(null));
+//   const [error, setError] = useState(null);
+//   const questionsPerPage = 10;
+//   const totalPages = Math.ceil(questions.length / questionsPerPage);
+
+//   const questionRefs = useRef(questions.map(() => React.createRef()));
+
+//   const handleNextPage = () => {
+//     setCurrentPage((prev) => {
+//       const nextPage = Math.min(prev + 1, totalPages - 1);
+//       window.scrollTo({ top: 0, behavior: "smooth" }); // Cuộn lên đầu trang mượt mà
+//       return nextPage;
+//     });
+//   };
+
+//   const handleAnswer = (questionIndex, option) => {
+//     setAnswers((prevAnswers) => {
+//       const updatedAnswers = [...prevAnswers];
+//       updatedAnswers[questionIndex] = prevAnswers[questionIndex]?.value === option.value ? null : option;
+//       return updatedAnswers;
+//     });
+//     setError(null);
+//   };
+
+//   const handleSubmit = () => {
+//     const unansweredIndex = questions.findIndex((_, index) => !answers[index]);
+
+//     if (unansweredIndex !== -1) {
+//       const newPage = Math.floor(unansweredIndex / questionsPerPage);
+//       setCurrentPage(newPage);
+
+//       toast.error("Bạn chưa trả lời hết câu hỏi! Vui lòng hoàn thành tất cả trước khi nộp bài.");
+//       // Chờ cập nhật trang rồi cuộn đến câu hỏi
+//       setTimeout(() => {
+//         questionRefs.current[unansweredIndex]?.current?.scrollIntoView({
+//           behavior: "smooth",
+//           block: "center",
+//         });
+//       }, 100);
+//       return;
+//     }
+//     const isConfirmed = window.confirm("Bạn có chắc chắn muốn nộp bài không?");
+//     if (!isConfirmed) return;
+
+//     // Chuyển đến trang kết quả với dữ liệu câu trả lời
+//     navigate("/quizResult", { state: { answers } });
+//   };
+//   const startIndex = currentPage * questionsPerPage;
+//   const currentQuestions = questions.slice(startIndex, startIndex + questionsPerPage);
+
+//   return (
+//     <div className="min-h-screen w-screen flex flex-col items-center justify-center bg-[#FAF0E8] text-center">
+//       <div className="max-w-2xl w-full mx-auto bg-white/80 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-xl">
+//         <div className="flex items-center justify-center gap-3 mb-8">
+//           <FaHeart className="text-pink-400 text-2xl md:text-3xl animate-pulse" />
+//           <h1 className="text-3xl md:text-4xl font-bold text-gray-800 text-center">Bài kiểm tra xác định loại da</h1>
+//         </div>
+
+//         {error && <div className="text-red-500 mb-4 font-semibold">{error}</div>}
+
+//         <div className="space-y-6">
+//           {currentQuestions.map((question, index) => {
+//             const globalIndex = startIndex + index;
+//             return (
+//               <div key={globalIndex} ref={questionRefs.current[globalIndex]} className="bg-gray-50 p-6 rounded-xl">
+//                 <h2 className="text-xl font-semibold mb-4">{question.question}</h2>
+//                 <div className="space-y-3">
+//                   {question.options.map((option) => (
+//                     <button
+//                       key={option.value}
+//                       onClick={() => handleAnswer(globalIndex, option)}
+//                       className={`w-full text-left p-4 rounded-lg transition-colors ${
+//                         answers[globalIndex]?.value === option.value
+//                           ? "bg-purple-100 border-2 border-purple-400"
+//                           : "bg-white hover:bg-gray-100 border-2 border-gray-200"
+//                       }`}
+//                     >
+//                       {option.value}. {option.text}
+//                     </button>
+//                   ))}
+//                 </div>
+//               </div>
+//             );
+//           })}
+
+//           <div className="flex justify-between mt-8">
+//             <button
+//               onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
+//               disabled={currentPage === 0}
+//               className="px-6 py-3 bg-gray-200 text-gray-700 rounded-full font-semibold disabled:opacity-50"
+//             >
+//               Trang trước
+//             </button>
+
+//             {currentPage === totalPages - 1 ? (
+//               <button
+//                 onClick={handleSubmit}
+//                 className="px-8 py-3 bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-full font-semibold"
+//               >
+//                 Hoàn thành
+//               </button>
+//             ) : (
+//               <button
+//                 onClick={handleNextPage}
+//                 className="px-6 py-3 bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-full font-semibold"
+//               >
+//                 Trang tiếp theo
+//               </button>
+//             )}
+//           </div>
+
+//           <div className="mt-4 text-center text-gray-500">
+//             Trang {currentPage + 1}/{totalPages}
+//           </div>
+//         </div>
+//       </div>
+//     </div>
+//   );
+// };
 const QuizDetail = () => {
   const navigate = useNavigate();
   const [currentPage, setCurrentPage] = useState(0);
-  const [answers, setAnswers] = useState(new Array(40).fill(null));
-  const [error, setError] = useState(null);
+  const [answers, setAnswers] = useState(questions.map(() => null));
   const questionsPerPage = 10;
-  const totalPages = Math.ceil(questions.length / questionsPerPage);
-
+  const totalPages = questions.map(() => 1).reduce((acc) => acc + 1, 0) / questionsPerPage;
   const questionRefs = useRef(questions.map(() => React.createRef()));
 
   const handleNextPage = () => {
-    setCurrentPage((prev) => {
-      const nextPage = Math.min(prev + 1, totalPages - 1);
-      window.scrollTo({ top: 0, behavior: "smooth" }); // Cuộn lên đầu trang mượt mà
-      return nextPage;
-    });
+    setCurrentPage((prev) => (prev + 1 < totalPages ? prev + 1 : prev));
+    window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
   const handleAnswer = (questionIndex, option) => {
     setAnswers((prevAnswers) => {
       const updatedAnswers = [...prevAnswers];
-      updatedAnswers[questionIndex] = prevAnswers[questionIndex]?.value === option.value ? null : option;
+      updatedAnswers[questionIndex] = option;
       return updatedAnswers;
     });
-    setError(null);
   };
 
   const handleSubmit = () => {
     const unansweredIndex = questions.findIndex((_, index) => !answers[index]);
-
     if (unansweredIndex !== -1) {
       const newPage = Math.floor(unansweredIndex / questionsPerPage);
       setCurrentPage(newPage);
-      // setError("Bạn chưa trả lời hết câu hỏi! Vui lòng hoàn thành tất cả trước khi nộp bài.");
       toast.error("Bạn chưa trả lời hết câu hỏi! Vui lòng hoàn thành tất cả trước khi nộp bài.");
-      // Chờ cập nhật trang rồi cuộn đến câu hỏi
       setTimeout(() => {
-        questionRefs.current[unansweredIndex]?.current?.scrollIntoView({
-          behavior: "smooth",
-          block: "center",
-        });
+        questionRefs.current[unansweredIndex]?.current?.scrollIntoView({ behavior: "smooth", block: "center" });
       }, 100);
       return;
     }
-    const isConfirmed = window.confirm("Bạn có chắc chắn muốn nộp bài không?");
-    if (!isConfirmed) return;
-
-    // Chuyển đến trang kết quả với dữ liệu câu trả lời
-    navigate("/quizResult", { state: { answers } });
+    if (window.confirm("Bạn có chắc chắn muốn nộp bài không?")) {
+      navigate("/quizResult", { state: { answers } });
+    }
   };
+
   const startIndex = currentPage * questionsPerPage;
   const currentQuestions = questions.slice(startIndex, startIndex + questionsPerPage);
 
   return (
     <div className="min-h-screen w-screen flex flex-col items-center justify-center bg-[#FAF0E8] text-center">
-      <div className="max-w-2xl w-full mx-auto bg-white/80 backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-xl">
+      <div className="max-w-2xl w-full mx-auto bg-[#F5F1EB] backdrop-blur-sm rounded-2xl p-8 md:p-12 shadow-xl">
         <div className="flex items-center justify-center gap-3 mb-8">
-          <FaHeart className="text-pink-400 text-2xl md:text-3xl animate-pulse" />
+          <FaHeart className="text-amber-400 text-2xl md:text-3xl animate-pulse" />
           <h1 className="text-3xl md:text-4xl font-bold text-gray-800 text-center">Bài kiểm tra xác định loại da</h1>
         </div>
-
-        {error && <div className="text-red-500 mb-4 font-semibold">{error}</div>}
 
         <div className="space-y-6">
           {currentQuestions.map((question, index) => {
@@ -299,17 +406,20 @@ const QuizDetail = () => {
                 <h2 className="text-xl font-semibold mb-4">{question.question}</h2>
                 <div className="space-y-3">
                   {question.options.map((option) => (
-                    <button
+                    <label
                       key={option.value}
-                      onClick={() => handleAnswer(globalIndex, option)}
-                      className={`w-full text-left p-4 rounded-lg transition-colors ${
-                        answers[globalIndex]?.value === option.value
-                          ? "bg-purple-100 border-2 border-purple-400"
-                          : "bg-white hover:bg-gray-100 border-2 border-gray-200"
-                      }`}
+                      className="flex items-center space-x-3 p-2 rounded-lg cursor-pointer hover:bg-gray-100"
                     >
-                      {option.value}. {option.text}
-                    </button>
+                      <input
+                        type="radio"
+                        name={`question-${globalIndex}`}
+                        value={option.value}
+                        checked={answers[globalIndex] === option}
+                        onChange={() => handleAnswer(globalIndex, option)}
+                        className="form-radio h-5 w-5 text-purple-400"
+                      />
+                      <span>{option.text}</span>
+                    </label>
                   ))}
                 </div>
               </div>
@@ -318,9 +428,13 @@ const QuizDetail = () => {
 
           <div className="flex justify-between mt-8">
             <button
-              onClick={() => setCurrentPage((prev) => Math.max(prev - 1, 0))}
+              onClick={() => setCurrentPage((prev) => (prev > 0 ? prev - 1 : 0))}
               disabled={currentPage === 0}
-              className="px-6 py-3 bg-gray-200 text-gray-700 rounded-full font-semibold disabled:opacity-50"
+              className={`px-6 py-3 rounded-full font-semibold ${
+                currentPage === 0
+                  ? "bg-gray-200 text-gray-500 cursor-not-allowed"
+                  : "bg-gray-300 text-gray-700 hover:bg-gray-400"
+              }`}
             >
               Trang trước
             </button>
@@ -328,20 +442,19 @@ const QuizDetail = () => {
             {currentPage === totalPages - 1 ? (
               <button
                 onClick={handleSubmit}
-                className="px-8 py-3 bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-full font-semibold"
+                className="px-6 py-3 bg-gradient-to-r from-[#C8A45D] to-black text-white rounded-full font-semibold"
               >
                 Hoàn thành
               </button>
             ) : (
               <button
                 onClick={handleNextPage}
-                className="px-6 py-3 bg-gradient-to-r from-pink-400 to-purple-400 text-white rounded-full font-semibold"
+                className="px-6 py-3 bg-gradient-to-r from-[#C8A45D] to-black text-white rounded-full font-semibold"
               >
                 Trang tiếp theo
               </button>
             )}
           </div>
-
           <div className="mt-4 text-center text-gray-500">
             Trang {currentPage + 1}/{totalPages}
           </div>
