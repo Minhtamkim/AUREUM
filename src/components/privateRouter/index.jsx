@@ -7,8 +7,8 @@ const PrivateRoute = ({ children, adminOnly = false }) => {
   const token = localStorage.getItem("token");
   const role = localStorage.getItem("roleEnum");
 
-  if (adminOnly && (!token || role !== "ADMIN")) {
-    alert("Bạn cần đăng nhập với quyền ADMIN để truy cập!");
+  if (adminOnly && (!token || role === "CUSTOMER")) {
+    alert("Bạn không có quyền được truy cập!");
     dispatch(logout());
     localStorage.removeItem("token");
     localStorage.removeItem("roleEnum");

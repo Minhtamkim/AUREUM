@@ -19,7 +19,6 @@ const LoginPage = () => {
   const [showPassword, setShowPassword] = useState(false);
   const navigate = useNavigate();
   const [isLoading, setIsLoading] = useState(false);
-  const [active, setActive] = useState(true);
 
   const validateForm = () => {
     const newErrors = {};
@@ -118,7 +117,7 @@ const LoginPage = () => {
       localStorage.setItem("roleEnum", data.roleEnum);
 
       // Chuyển hướng dựa vào vai trò
-      if (roleEnum === "ADMIN") {
+      if (roleEnum === "ADMIN" || roleEnum === "MANAGER" || roleEnum === "STAFF") {
         navigate("/dashboard");
       } else if (roleEnum === "CUSTOMER") {
         navigate("/");
@@ -206,7 +205,7 @@ const LoginPage = () => {
                 Ghi nhớ mật khẩu cho lần sau
               </label>
             </div>
-            <a href="#" className="text-sm text-yellow-600">
+            <a href="forgotPassword" className="text-sm text-yellow-600">
               Quên mật khẩu?
             </a>
           </div>

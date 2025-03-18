@@ -156,7 +156,7 @@ const RegisterPage = () => {
       localStorage.setItem("roleEnum", data.roleEnum);
 
       // Chuyển hướng dựa vào vai trò
-      if (roleEnum === "ADMIN") {
+      if (roleEnum === "ADMIN" || roleEnum === "MANAGER" || roleEnum === "STAFF") {
         navigate("/dashboard");
       } else if (roleEnum === "CUSTOMER") {
         navigate("/");
