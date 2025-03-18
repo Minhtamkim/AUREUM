@@ -4,6 +4,7 @@ import useGetParams from "../../hooks/useGetParams";
 import { changeStatusOrder } from "../../services/api.order";
 import { useDispatch } from "react-redux";
 import { clearCart } from "../../redux/features/cartSlice";
+import { useNavigate } from "react-router-dom";
 // import useGetParams from "../../hooks/useGetParams";
 // import { format } from "date-fns";
 
@@ -11,18 +12,38 @@ const PaymentResult = () => {
   const dispatch = useDispatch();
   const [paymentStatus, setPaymentStatus] = useState(true);
   const [loading, setLoading] = useState(true);
+  const navigate = useNavigate();
+  const [order, setOrder] = useState({});
   const [orderDetails, setOrderDetails] = useState({
-    orderNumber: "ORD123456789",
-    amount: 1299.99,
+    orderNumber: "",
+    amount: 0,
     paymentMethod: "VNPAY",
     transactionDate: new Date(),
   });
+  const formatVNPayDate = (dateString) => {
+    if (!dateString) return "";
 
-  const [order, setOrder] = useState({});
+    const year = dateString.substring(0, 4);
+    const month = dateString.substring(4, 6);
+    const day = dateString.substring(6, 8);
+    const hours = dateString.substring(8, 10);
+    const minutes = dateString.substring(10, 12);
+    const seconds = dateString.substring(12, 14);
+
+    return `${day}/${month}/${year} - ${hours}:${minutes}:${seconds}`;
+  };
 
   const getParams = useGetParams();
-  const orderId = getParams("orderId");
   const status = getParams("vnp_TransactionStatus");
+  const orderId = getParams("orderId") || "";
+
+  useEffect(() => {
+    const amount = getParams("vnp_Amount") / 100;
+    const bank = getParams("vnp_BankCode");
+    const date = getParams("vnp_PayDate");
+
+    setOrderDetails({ orderId, amount, bank, date });
+  }, []);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -78,19 +99,19 @@ const PaymentResult = () => {
               <div className="mt-6 space-y-4 text-left">
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Order Number:</span>
-                  <span className="font-semibold">{orderDetails.orderNumber}</span>
+                  <span className="font-semibold">{orderDetails.orderId}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Amount:</span>
-                  <span className="font-semibold">${orderDetails.amount.toFixed(2)}</span>
+                  <span className="font-semibold">{`${orderDetails.amount.toLocaleString("vi-VN")} VND`}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Payment Method:</span>
-                  <span className="font-semibold">{orderDetails.paymentMethod}</span>
+                  <span className="text-gray-600">Bank:</span>
+                  <span className="font-semibold">{orderDetails.bank}</span>
                 </div>
                 <div className="flex justify-between items-center">
                   <span className="text-gray-600">Date & Time:</span>
-                  <span className="font-semibold">{/* {format(orderDetails.transactionDate, "PPpp")} */}</span>
+                  <span className="font-semibold">{formatVNPayDate(orderDetails.date)}</span>
                 </div>
               </div>
             </div>
@@ -123,7 +144,7 @@ const PaymentResult = () => {
           </button>
           <button
             className="w-full flex justify-center items-center px-4 py-3 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
-            onClick={() => (window.location.href = "/orders")}
+            onClick={() => navigate("/historyOrders")}
           >
             <FaHistory className="mr-2" /> View Order History
           </button>
