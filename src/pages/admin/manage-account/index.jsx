@@ -99,7 +99,7 @@ function ManageAccount() {
                 setOpen(true);
                 form.setFieldsValue({
                   ...record,
-                  dateOfBirth: record.dateOfBirth ? dayjs(record.dateOfBirth) : null, // Chuyển đổi thành dayjs
+                  dateOfBirth: record?.dateOfBirth ? dayjs(record.dateOfBirth) : null, // Chuyển đổi thành dayjs
                   skinId: record?.skin?.id,
                 });
               }}
@@ -251,24 +251,16 @@ function ManageAccount() {
           </Form.Item>
           <Form.Item label="Gender" name="gender">
             <Radio.Group>
-              <Radio value="male">Nam</Radio>
-              <Radio value="female">Nữ</Radio>
+              <Radio value="Nam">Nam</Radio>
+              <Radio value="Nữ">Nữ</Radio>
             </Radio.Group>
           </Form.Item>
-          <Form.Item
-            label="SkinType"
-            name="skinId"
-            rules={[
-              {
-                required: true,
-                message: "One Skin Type must be selected!",
-              },
-            ]}
-          >
+          <Form.Item label="SkinType" name="skinId">
             <Select
               placeholder="Chọn loại da"
               showSearch // Cho phép tìm kiếm
               optionFilterProp="children" // Lọc theo nội dung hiển thị
+              allowClear
               filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())} // Hàm lọc danh sách theo input
             >
               {skinTypes?.map((skin) => (

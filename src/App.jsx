@@ -50,6 +50,9 @@ import NormalskinPage from "./pages/Routine/routinePage/normalskinPage";
 import CombinationskinPage from "./pages/Routine/routinePage/combinationskinPage";
 import SensitiveskinPage from "./pages/Routine/routinePage/sensitiveskinPage";
 import RedirectToSkinPage from "./pages/Routine";
+import ForgotPassword from "./pages/password/forgot-password";
+import ResetPassword from "./pages/password/reset-password";
+import ManageVoucher from "./pages/admin/manage-voucher";
 
 function App() {
   const router = createBrowserRouter([
@@ -162,6 +165,14 @@ function App() {
           path: "productList/:category_id",
           element: <ProductList />,
         },
+        {
+          path: "forgotPassword",
+          element: <ForgotPassword />,
+        },
+        {
+          path: "resetPassword",
+          element: <ResetPassword />,
+        },
       ],
     },
 
@@ -269,6 +280,10 @@ function App() {
         {
           path: "brand",
           element: <ManageBrand />,
+        },
+        {
+          path: "voucher",
+          element: <ManageVoucher />,
         },
       ],
     },

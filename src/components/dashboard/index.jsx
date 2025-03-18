@@ -9,10 +9,12 @@ import {
 } from "@ant-design/icons";
 import { TbBrandCodesandbox } from "react-icons/tb";
 import { BiLeaf } from "react-icons/bi";
+import { IoTicketOutline } from "react-icons/io5";
 import { Avatar, Breadcrumb, Divider, Dropdown, Layout, Menu, theme } from "antd";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/features/userSlice";
+import { MdFace4 } from "react-icons/md";
 
 const { Content, Footer, Sider } = Layout;
 function getItem(label, key, icon, children) {
@@ -24,18 +26,34 @@ function getItem(label, key, icon, children) {
   };
 }
 
-const items = [
-  getItem("Account", "/dashboard/account", <UserOutlined />),
-  getItem("Product", "/dashboard/product", <ProductOutlined />),
-  getItem("Category", "/dashboard/category", <PieChartOutlined />),
-  getItem("Ingredient", "/dashboard/ingredient", <BiLeaf />),
-  getItem("Brand", "/dashboard/brand", <TbBrandCodesandbox />),
-];
-
 const Dashboard = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user); // Lấy user từ Redux
   const userRole = user?.roleEnum; // Lấy role của user
+
+  // const items = [
+  //   getItem("Account", "/dashboard/account", <UserOutlined />),
+  //   getItem("Product", "/dashboard/product", <ProductOutlined />),
+  //   getItem("Category", "/dashboard/category", <PieChartOutlined />),
+  //   getItem("Ingredient", "/dashboard/ingredient", <BiLeaf />),
+  //   getItem("Brand", "/dashboard/brand", <TbBrandCodesandbox />),
+  //   getItem("voucher", "/dashboard/voucher", <IoTicketOutline />),
+  // ];
+
+  const items = [
+    ...(userRole === "ADMIN" ? [getItem("Account", "/dashboard/account", <UserOutlined />)] : []),
+    ...(userRole === "ADMIN" || userRole === "MANAGER"
+      ? [
+          getItem("Product", "/dashboard/product", <ProductOutlined />),
+          getItem("Category", "/dashboard/category", <PieChartOutlined />),
+          getItem("Ingredient", "/dashboard/ingredient", <BiLeaf />),
+          getItem("Brand", "/dashboard/brand", <TbBrandCodesandbox />),
+        ]
+      : []),
+    ...(userRole === "ADMIN" || userRole === "STAFF"
+      ? [getItem("Voucher", "/dashboard/voucher", <IoTicketOutline />)]
+      : []),
+  ];
 
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
@@ -46,7 +64,7 @@ const Dashboard = () => {
   const handleLogout = () => {
     dispatch(logout());
     localStorage.removeItem("token");
-    localStorage.removeItem("roleEnum"); 
+    localStorage.removeItem("roleEnum");
   };
 
   const userMenu = (
@@ -56,6 +74,9 @@ const Dashboard = () => {
       </Menu.Item>
       <Menu.Item key="history" icon={<ShoppingOutlined />}>
         <Link to="/historyOrders">Lịch sử mua hàng</Link>
+      </Menu.Item>
+      <Menu.Item key="routine" icon={<MdFace4 />}>
+        <Link to="/redirecttoskinPage">Lộ trình chăm sóc da </Link>
       </Menu.Item>
       {(userRole === "ADMIN" || userRole === "MANAGER" || userRole === "STAFF") && (
         <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
