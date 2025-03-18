@@ -12,6 +12,7 @@ const PrivateRoute = ({ children, adminOnly = false }) => {
     dispatch(logout());
     localStorage.removeItem("token");
     localStorage.removeItem("roleEnum");
+    localStorage.removeItem("skinType");
     return <Navigate to="/login" />;
   }
 

@@ -15,6 +15,7 @@ import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/features/userSlice";
 import { MdFace4 } from "react-icons/md";
+import { clearCart } from "../../redux/features/cartSlice";
 
 const { Content, Footer, Sider } = Layout;
 function getItem(label, key, icon, children) {
@@ -63,8 +64,10 @@ const Dashboard = () => {
 
   const handleLogout = () => {
     dispatch(logout());
+    dispatch(clearCart());
     localStorage.removeItem("token");
     localStorage.removeItem("roleEnum");
+    localStorage.removeItem("skinType");
   };
 
   const userMenu = (

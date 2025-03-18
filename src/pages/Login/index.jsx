@@ -55,8 +55,9 @@ const LoginPage = () => {
       try {
         const response = await api.post("login", formData);
         const { data } = response;
-        const { roleEnum, active } = data;
+        const { roleEnum, active, skin } = data;
         console.log("Active Status:", active); // Kiểm tra dữ liệu trả về từ API
+        console.log("Response Data:", data);
 
         if (active === false) {
           toast.error("Tài khoản của bạn bị cấm truy cập!");
@@ -65,8 +66,15 @@ const LoginPage = () => {
         }
 
         console.log(roleEnum);
+        console.log("User Skin Type:", skin?.name); // Kiểm tra loại da trong console
+
         localStorage.setItem("token", data.token);
         localStorage.setItem("roleEnum", data.roleEnum);
+        
+        if (skin && skin.name) {
+          localStorage.setItem("skinType", skin.name);
+        }
+
         toast.success("Successfully login!");
         dispatch(login(response.data));
         if (roleEnum === "ADMIN" || roleEnum === "STAFF" || roleEnum === "MANAGER") {
@@ -98,7 +106,7 @@ const LoginPage = () => {
       const response = await api.post("loginGoogle", { token: idToken });
       console.log(response.data);
       const { data } = response;
-      const { roleEnum, active } = data; // Trích xuất token và roleEnum
+      const { roleEnum, active, skin } = data; // Trích xuất token và roleEnum
       console.log("Active Status:", active); // Kiểm tra dữ liệu trả về từ API
 
       if (active === false) {
@@ -107,14 +115,19 @@ const LoginPage = () => {
         return; // Ngăn không cho tiếp tục đăng nhập
       }
 
-      console.log(roleEnum);
-
       // Lưu thông tin vào Redux
       dispatch(login(data));
+
+      console.log(roleEnum);
+      console.log("Skin Type:", skin?.name); // Kiểm tra loại da trong console
 
       // Lưu token vào localStorage
       localStorage.setItem("token", data.token);
       localStorage.setItem("roleEnum", data.roleEnum);
+
+      if (skin && skin.name) {
+        localStorage.setItem("skinType", skin.name);
+      }
 
       // Chuyển hướng dựa vào vai trò
       if (roleEnum === "ADMIN" || roleEnum === "MANAGER" || roleEnum === "STAFF") {
