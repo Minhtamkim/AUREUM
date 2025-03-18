@@ -36,3 +36,16 @@ export const deleteSkinType = async (id) => {
     toast.error(error.response.data);
   }
 };
+
+export const determineSkinType = async (answerIds, userId) => {
+  try {
+    const response = await api.post(`skin/submit`, {
+      answerIds: answerIds,
+      userId: userId || null,
+    });
+    return response.data; // Kết quả loại da trả về
+  } catch (error) {
+    console.error("Error determining skin type:", error);
+    throw error;
+  }
+};
