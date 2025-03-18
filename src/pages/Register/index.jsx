@@ -137,7 +137,7 @@ const RegisterPage = () => {
       const response = await api.post("loginGoogle", { token: idToken });
       console.log(response.data);
       const { data } = response;
-      const { roleEnum, active } = data; // Trích xuất token và roleEnum
+      const { roleEnum, active, skin } = data; // Trích xuất token và roleEnum
       console.log("Active Status:", active); // Kiểm tra dữ liệu trả về từ API
 
       if (active === false) {
@@ -154,6 +154,9 @@ const RegisterPage = () => {
       // Lưu token vào localStorage
       localStorage.setItem("token", data.token);
       localStorage.setItem("roleEnum", data.roleEnum);
+      if (skin && skin.name) {
+        localStorage.setItem("skinType", skin.name);
+      }
 
       // Chuyển hướng dựa vào vai trò
       if (roleEnum === "ADMIN" || roleEnum === "MANAGER" || roleEnum === "STAFF") {

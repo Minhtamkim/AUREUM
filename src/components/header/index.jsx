@@ -116,6 +116,7 @@ const Header = () => {
   const handleLogout = () => {
     localStorage.removeItem("token");
     localStorage.removeItem("roleEnum");
+    localStorage.removeItem("skinType");
     dispatch(logout());
     dispatch(clearCart());
   };
