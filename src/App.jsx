@@ -53,6 +53,7 @@ import RedirectToSkinPage from "./pages/Routine";
 import ForgotPassword from "./pages/password/forgot-password";
 import ResetPassword from "./pages/password/reset-password";
 import ManageVoucher from "./pages/admin/manage-voucher";
+import OrdersHistory from "./pages/profileAccount/historyOrders";
 
 function App() {
   const router = createBrowserRouter([
@@ -191,7 +192,7 @@ function App() {
         },
         {
           path: "historyOrders",
-          element: <HistoryOrders />,
+          element: <OrdersHistory />,
         },
         {
           path: "quiz",
