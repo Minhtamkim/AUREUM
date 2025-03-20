@@ -16,5 +16,16 @@ export const changeStatusOrder = async (id, status) => {
     return response.data;
   } catch (error) {
     toast.error(error.response.data);
+  } 
+}
+
+export const fetchOrderHistory = async () => {
+  try {
+    const response = await api.get("order/user");
+    return response.data;
+  } catch (error) {
+    toast.error(error.response.data);
   }
-};
+}
+
+
