@@ -10,6 +10,15 @@ export const getSkinType = async () => {
   }
 };
 
+export const getSkinById = async (id) => {
+  try {
+    const response = await api.get(`skin/${id}`);
+    return response.data;
+  } catch (error) {
+    toast.error(error.response.data);
+  }
+};
+
 export const createSkinType = async () => {
   try {
     const response = await api.post("skin");

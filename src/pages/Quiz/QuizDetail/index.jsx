@@ -4,10 +4,11 @@ import { useNavigate } from "react-router-dom";
 import { useRef } from "react";
 import React from "react";
 import { toast } from "react-toastify";
-import { getQuestions } from "../../../services/api.question";
 import { getAnswers } from "../../../services/api.answer";
-import { determineSkinType, getSkinType } from "../../../services/api.skin";
-import { getUser } from "../../../services/api.user";
+import { determineSkinType, getSkinById, getSkinType } from "../../../services/api.skin";
+import { updateUserSkin } from "../../../services/api.user";
+import { useDispatch, useSelector } from "react-redux";
+import { setSkin } from "../../../redux/features/userSlice";
 
 const QuizDetail = () => {
   const navigate = useNavigate();
@@ -19,28 +20,12 @@ const QuizDetail = () => {
   const questionsPerPage = 10;
   const totalPages = Math.ceil(questions.length / questionsPerPage);
   const questionRefs = useRef(questions.map(() => React.createRef()));
-
-  // const fetchQuestions = async () => {
-  //   const data = await getQuestions();
-  //   setQuestions(data);
-  // };
+  const userId = useSelector((state) => state.user?.id); // Sử dụng useSelector để lấy userId từ store
+  const dispatch = useDispatch();
 
   const fetchSkins = async () => {
     const data = await getSkinType();
     setSkins(data);
-  };
-
-  const fetchUsers = async () => {
-    try {
-      const data = await getUser();
-      if (Array.isArray(data) && data.length > 0) {
-        setUsers(data);
-      } else {
-        console.warn("No users found!");
-      }
-    } catch (error) {
-      console.error("Lỗi lấy thông tin người dùng:", error);
-    }
   };
 
   const fetchAnswers = async () => {
@@ -71,7 +56,6 @@ const QuizDetail = () => {
 
   useEffect(() => {
     fetchAnswers();
-    fetchUsers();
     fetchSkins();
   }, []);
 
@@ -95,18 +79,18 @@ const QuizDetail = () => {
   };
 
   const handleSubmit = async () => {
-    if (users.length === 0) {
+    if (!userId) {
+      // Kiểm tra nếu userId không có
       toast.error("Không thể xác định người dùng!");
       return;
     }
 
-    const currentUser = users[0]; // Lấy user đầu tiên
-    if (!currentUser || !currentUser.id) {
-      toast.error("Không thể xác định ID người dùng!");
+    // Kiểm tra xem có câu hỏi nào chưa được trả lời
+    const unansweredQuestions = answers.filter((answer) => answer === undefined || answer === null);
+    if (unansweredQuestions.length > 0) {
+      toast.error("Bạn chưa điền câu trả lời cho một số câu hỏi!");
       return;
     }
-
-    const userId = currentUser.id;
 
     // Chuyển danh sách câu trả lời thành danh sách ID
     const answerIds = questions
@@ -123,12 +107,24 @@ const QuizDetail = () => {
     }
 
     try {
-      const result = await determineSkinType(answerIds, userId);
+      const result = await determineSkinType(answerIds, userId); // Gửi userId từ useSelector
       console.log("Kết quả loại da:", result);
 
-      if (result && result.name) {
-        toast.success(`Loại da của bạn là: ${result.name}`);
-        navigate("/quizResult", { state: { skinType: result.name } });
+      if (result && result.id) {
+        const newUserSkin = await updateUserSkin(userId, result.id);
+        console.log("Cập nhật loại da cho user:", newUserSkin);
+
+        // Dispatch action để cập nhật skinId vào Redux store
+        dispatch(setSkin({ id: result.id, name: result.name })); // Cập nhật thông tin loại da vào Redux
+
+        // Điều hướng đến trang quizResult và truyền thông tin về loại da
+        const skinData = await getSkinById(result.id); // Lấy thông tin chi tiết loại da
+        navigate("/quizResult", {
+          state: {
+            skinId: result.id,
+            skinType: skinData.name, // Truyền thông tin loại da
+          },
+        });
       } else {
         toast.error("Không nhận diện được loại da!");
       }

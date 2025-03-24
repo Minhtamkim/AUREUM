@@ -1,20 +1,28 @@
+/* eslint-disable react/no-unescaped-entities */
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 
 const QuizPage = () => {
   const [isHovered, setIsHovered] = useState(false);
-  const [skinType, setSkinType] = useState(null);
   const navigate = useNavigate();
 
+  // Lấy thông tin loại da (skin) từ Redux store
+  const skin = useSelector((state) => state.user?.skin); // Lấy skin từ Redux store
+  const [skinType, setSkinType] = useState(null);
+
+  // Nếu skin có giá trị, gán tên loại da vào skinType
   useEffect(() => {
-    // Giả sử loại da được lưu trong localStorage hoặc state từ backend
-    const storedSkinType = localStorage.getItem("skinType");
-    if (storedSkinType) {
-      setSkinType(storedSkinType);
+    if (skin) {
+      setSkinType(skin.name); // Lưu tên loại da vào state skinType
     }
-  }, []);
+  }, [skin]);
 
   const handleStartQuiz = () => {
+    navigate("/quizDetail");
+  };
+
+  const handleRetakeQuiz = () => {
     navigate("/quizDetail");
   };
 
@@ -54,7 +62,7 @@ const QuizPage = () => {
 
         <div className="flex justify-center items-center mt-6">
           <button
-            onClick={handleStartQuiz}
+            onClick={skinType ? handleRetakeQuiz : handleStartQuiz}
             onMouseEnter={() => setIsHovered(true)}
             onMouseLeave={() => setIsHovered(false)}
             className={`bg-gradient-to-r from-[#C8A45D] to-black text-white font-bold py-3 px-6 rounded-lg transition-transform duration-300 hover:scale-105 ${
