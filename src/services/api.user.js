@@ -42,6 +42,15 @@ export const updateUser = async ({ id, user }) => {
   }
 };
 
+export const updateUserSkin = async (id, skinId) => {
+  try {
+    const response = await api.put(`user/${id}/skinType`, { skinId });
+    return response.data;
+  } catch (error) {
+    toast.error(error.response.data);
+  }
+};
+
 export const toggleUserActive = async (id) => {
   try {
     const response = await api.put(`user/${id}/isActive`);

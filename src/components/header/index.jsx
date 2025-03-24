@@ -67,11 +67,21 @@ const Header = () => {
       .catch((error) => console.error("Error fetching products:", error));
   }, []);
 
+  const removeDiacritics = (str) => {
+    return str.normalize("NFD").replace(/[\u0300-\u036f]/g, ""); // Loại bỏ dấu
+  };
+
   useEffect(() => {
     if (searchTerm.trim() === "") {
       setFilteredProducts([]);
     } else {
-      setFilteredProducts(products.filter((product) => product.name.toLowerCase().includes(searchTerm.toLowerCase())));
+      // Chuẩn hóa từ khóa tìm kiếm
+      const normalizedSearchTerm = removeDiacritics(searchTerm.toLowerCase());
+
+      // Lọc sản phẩm dựa trên tên sản phẩm đã chuẩn hóa
+      setFilteredProducts(
+        products.filter((product) => removeDiacritics(product.name.toLowerCase()).includes(normalizedSearchTerm))
+      );
     }
   }, [searchTerm, products]);
 

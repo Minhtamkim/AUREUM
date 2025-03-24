@@ -9,7 +9,7 @@ import { useState } from "react";
 import { useEffect } from "react";
 
 import api from "../../config/axios";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 
 function Home() {
   const [products, setProducts] = useState([]);
@@ -44,40 +44,22 @@ function Home() {
         <div className="flex items-center justify-center 	">
           <Slider className="overflow-hidden max-w-[1200px]  " {...settings}>
             <div>
-              <img
-                src="https://template.canva.com/EAGSe-jkm2o/1/0/1600w-MyX8gsmbwVA.jpg"
-                alt="Slide 1"
-              />
+              <img src="https://template.canva.com/EAGSe-jkm2o/1/0/1600w-MyX8gsmbwVA.jpg" alt="Slide 1" />
             </div>
             <div>
-              <img
-                src="https://template.canva.com/EAGSe-jkm2o/1/2/1600w-TPAlZ_aih2c.jpg"
-                alt="Slide 2"
-              />
+              <img src="https://template.canva.com/EAGSe-jkm2o/1/2/1600w-TPAlZ_aih2c.jpg" alt="Slide 2" />
             </div>
             <div>
-              <img
-                src="https://template.canva.com/EAGSe-jkm2o/1/5/1600w-cIpDDJpgc_U.jpg"
-                alt="Slide 3"
-              />
+              <img src="https://template.canva.com/EAGSe-jkm2o/1/5/1600w-cIpDDJpgc_U.jpg" alt="Slide 3" />
             </div>
             <div>
-              <img
-                src="https://template.canva.com/EAGSe-jkm2o/1/6/1600w-lHmU2V9LHCY.jpg"
-                alt="Slide 3"
-              />
+              <img src="https://template.canva.com/EAGSe-jkm2o/1/6/1600w-lHmU2V9LHCY.jpg" alt="Slide 3" />
             </div>
             <div>
-              <img
-                src="https://template.canva.com/EAGSe-jkm2o/1/4/1600w-qBUXtF5gU6A.jpg"
-                alt="Slide 3"
-              />
+              <img src="https://template.canva.com/EAGSe-jkm2o/1/4/1600w-qBUXtF5gU6A.jpg" alt="Slide 3" />
             </div>
             <div>
-              <img
-                src="https://template.canva.com/EAGSe-jkm2o/1/3/1600w-EvEyLCp3dzw.jpg"
-                alt="Slide 3"
-              />
+              <img src="https://template.canva.com/EAGSe-jkm2o/1/3/1600w-EvEyLCp3dzw.jpg" alt="Slide 3" />
             </div>
           </Slider>
         </div>
@@ -125,17 +107,11 @@ function Home() {
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 1, ease: "easeOut", delay: 0.3 }}
             >
-              <h2 className="text-2xl font-bold text-gray-800 ">
-                Sản phẩm mới
-              </h2>
-              <h1 className="text-3xl font-bold text-gray-800 mb-20">
-                Sữa rửa mặt Sen Hậu Giang
-              </h1>
+              <h2 className="text-2xl font-bold text-gray-800 ">Sản phẩm mới</h2>
+              <h1 className="text-3xl font-bold text-gray-800 mb-20">Sữa rửa mặt Sen Hậu Giang</h1>
               <p className="text-lg text-gray-600 mt-2 max-w-md">
-                Với công trình nghiên cứu kỹ lưỡng, kết hợp sự hiểu biết về cấu
-                trúc sinh học của da và sự kiểm nghiệm khắt khe qua bài test
-                HRIPT trên 61 lần da nhạy cảm, Cocoon tự hào giới thiệu đột phá
-                mới.
+                Với công trình nghiên cứu kỹ lưỡng, kết hợp sự hiểu biết về cấu trúc sinh học của da và sự kiểm nghiệm
+                khắt khe qua bài test HRIPT trên 61 lần da nhạy cảm, Cocoon tự hào giới thiệu đột phá mới.
               </p>
               <a
                 href="/product-content"
@@ -163,9 +139,7 @@ function Home() {
         <div className="max-w-6xl mx-auto px-4">
           {/* Tiêu đề */}
           <h2 className="text-xl font-bold text-black mb-2">KHÁM PHÁ</h2>
-          <h3 className="text-2xl font-extrabold text-black">
-            CÁC SẢN PHẨM NỔI BẬT
-          </h3>
+          <h3 className="text-2xl font-extrabold text-black">CÁC SẢN PHẨM NỔI BẬT</h3>
 
           {/* Grid chứa 4 sản phẩm */}
 
@@ -182,18 +156,10 @@ function Home() {
                 hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
                   onClick={() => navigate(`/products/details/${product.id}`)} // Điều hướng khi bấm vào sản phẩm
                 >
-                  <div
-                    className={`p-2 flex items-center justify-center brightness-100 }`}
-                  >
-                    <img
-                      src={product.image}
-                      alt={product.title}
-                      className="h-70"
-                    />
+                  <div className={`p-2 flex items-center justify-center brightness-100 }`}>
+                    <img src={product.image} alt={product.title} className="h-70" />
                   </div>
-                  <p className="font-semibold items-center justify-center mt-2 min-h-[52px]">
-                    {product.name}
-                  </p>
+                  <p className="font-semibold items-center justify-center mt-2 min-h-[52px]">{product.name}</p>
                   <p className="text-sm font-bold whitespace-pre-line mt-1">
                     {`${product.price.toLocaleString("vi-VN")}`}VND
                   </p>
@@ -209,9 +175,7 @@ function Home() {
         <div className="container mx-auto px-4">
           {/* Tiêu đề */}
           <div className="flex justify-between items-center mb-6">
-            <h2 className="text-5xl font-semibold italic text-[#835229] pb-4">
-              Bài viết mới nhất
-            </h2>
+            <h2 className="text-5xl font-semibold italic text-[#835229] pb-4">Bài viết mới nhất</h2>
             <button
               onClick={() => navigate("/blogs/tat-ca-bai-viet")}
               className="bg-[#835229]  rounded-md px-5 py-2  flex items-center  text-white transition
@@ -226,72 +190,73 @@ function Home() {
           {/* Danh sách bài viết */}
           <div className="grid md:grid-cols-3 gap-6 mb-10">
             {/* Bài viết 1 */}
-            <div
-              className="bg-white rounded-lg overflow-hidden shadow-md
+            <Link to="/blogs/chuong-trinh-ung-hong-khong-cu-do-chung-tay-cham-soc-tre-em-vung-cao">
+              <div
+                className="bg-white h-full rounded-lg overflow-hidden shadow-md
             hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
-            >
-              <img
-                src="https://image.cocoonvietnam.com/uploads/Hinh_1_Social_Ung_Hong_29d3981238.jpg"
-                alt="Bài viết 1"
-                className="w-full"
-              />
-              <div className="p-4">
-                <p className="text-gray-500 text-sm">Cocoon | 01.01.70</p>
-                <h3 className="text-lg font-semibold mt-2">
-                  Chương trình "Ứng hồng Không ứng đỏ" - chung tay chăm sóc trẻ
-                  em vùng cao
-                </h3>
-                <p className="text-gray-700 mt-2">
-                  Chương trình "Ứng Hồng Không Ứng Đỏ" được Cocoon và UNESCO-CEP
-                  triển khai nhằm hướng đến...
-                </p>
+              >
+                <img
+                  src="https://image.cocoonvietnam.com/uploads/Hinh_1_Social_Ung_Hong_29d3981238.jpg"
+                  alt="Bài viết 1"
+                  className="w-full"
+                />
+                <div className="p-4">
+                  <p className="text-gray-500 text-sm">Cocoon | 01.01.70</p>
+                  <h3 className="text-lg font-semibold mt-2">
+                    Chương trình "Ứng hồng Không ứng đỏ" - chung tay chăm sóc trẻ em vùng cao
+                  </h3>
+                  <p className="text-gray-700 mt-2">
+                    Chương trình "Ứng Hồng Không Ứng Đỏ" được Cocoon và UNESCO-CEP triển khai nhằm hướng đến...
+                  </p>
+                </div>
               </div>
-            </div>
+            </Link>
 
             {/* Bài viết 2 */}
-            <div
-              className="bg-white rounded-lg overflow-hidden shadow-md
+            <Link to="/blogs/chuong-trinh-cung-aureum-song-xanh-moi-ngay">
+              <div
+                className="bg-white h-full rounded-lg overflow-hidden shadow-md
             hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
-            >
-              <img
-                src="https://image.cocoonvietnam.com/uploads/CSR_Ra_mat_thu_doi_vo_chai_cu_2024_240909_Hinh_con_2_fe4cd256d2.jpg"
-                alt="Bài viết 2"
-                className="w-full"
-              />
-              <div className="p-4">
-                <p className="text-gray-500 text-sm">Cocoon | 01.09.24</p>
-                <h3 className="text-lg font-semibold mt-2">
-                  Chương trình "Cùng Cocoon Sống Xanh Mỗi Ngày" năm 2024
-                </h3>
-                <p className="text-gray-700 mt-2">
-                  Từ tháng 9/2024, Cocoon mang lại 115 điểm thu hồi vỏ chai trực
-                  tiếp, giúp khách hàng dễ dàng tham gia...
-                </p>
+              >
+                <img
+                  src="https://image.cocoonvietnam.com/uploads/CSR_Ra_mat_thu_doi_vo_chai_cu_2024_240909_Hinh_con_2_fe4cd256d2.jpg"
+                  alt="Bài viết 2"
+                  className="w-full"
+                />
+                <div className="p-4">
+                  <p className="text-gray-500 text-sm">Cocoon | 01.09.24</p>
+                  <h3 className="text-lg font-semibold mt-2">Chương trình "Cùng Cocoon Sống Xanh Mỗi Ngày" năm 2024</h3>
+                  <p className="text-gray-700 mt-2">
+                    Từ tháng 9/2024, Cocoon mang lại 115 điểm thu hồi vỏ chai trực tiếp, giúp khách hàng dễ dàng tham
+                    gia...
+                  </p>
+                </div>
               </div>
-            </div>
+            </Link>
 
             {/* Bài viết 3 */}
-            <div
-              className="bg-white rounded-lg overflow-hidden shadow-md
+            <Link to="/blogs/chung-tay-cuu-tro-cho-meo-lang-thang">
+              <div
+                className="bg-white h-full rounded-lg overflow-hidden shadow-md
             hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
-            >
-              <img
-                src="https://image.cocoonvietnam.com/uploads/z5289500671503_2bb0e27d20058692600c5890aa8bbff2_9fbba4729a.jpg"
-                alt="Bài viết 3"
-                className=""
-              />
+              >
+                <img
+                  src="https://image.cocoonvietnam.com/uploads/z5289500671503_2bb0e27d20058692600c5890aa8bbff2_9fbba4729a.jpg"
+                  alt="Bài viết 3"
+                  className="h-120"
+                />
 
-              <div className="p-4">
-                <p className="text-gray-500 text-sm">Cocoon | 15.05.24</p>
-                <h3 className="text-lg font-semibold mt-2">
-                  Cocoon x Guardian Vietnam: ra mắt 20 trạm refill tại TP.HCM
-                </h3>
-                <p className="text-gray-700 mt-2">
-                  Trạm Refill giúp giảm tải số lượng vỏ chai nhựa cũ thải ra
-                  ngoài môi trường...
-                </p>
+                <div className="p-4">
+                  <p className="text-gray-500 text-sm">Cocoon | 15.05.24</p>
+                  <h3 className="text-lg font-semibold mt-2">
+                    Cocoon x Guardian Vietnam: ra mắt 20 trạm refill tại TP.HCM
+                  </h3>
+                  <p className="text-gray-700 mt-2">
+                    Trạm Refill giúp giảm tải số lượng vỏ chai nhựa cũ thải ra ngoài môi trường...
+                  </p>
+                </div>
               </div>
-            </div>
+            </Link>
           </div>
         </div>
       </section>
