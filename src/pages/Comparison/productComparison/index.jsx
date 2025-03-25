@@ -96,9 +96,9 @@ function ProductComparison() {
 
         {/* Hiển thị lỗi nếu sản phẩm khác category nhưng vẫn hiển thị so sánh */}
         {product1.category?.id !== product2.category?.id && (
-          <div className="bg-yellow-400 text-white p-4 rounded-md mt-6 flex items-center justify-center space-x-2">
+          <div className="bg-transparent border-2 border-yellow-400 text-yellow-400 p-4 rounded-md mt-6 flex items-center justify-center space-x-2">
             <MdError className="text-xl" /> {/* Icon lỗi */}
-            <p className="font-semibold">Hai sản phẩm thuộc danh mục khác nhau. Cân nhắc!</p>
+            <p className="font-semibold">Lưu ý: Hai sản phẩm thuộc danh mục khác nhau!</p>
           </div>
         )}
 
