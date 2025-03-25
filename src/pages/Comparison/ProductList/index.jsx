@@ -15,8 +15,6 @@ function ProductList() {
   const itemsPerPage = 20;
   const navigate = useNavigate();
 
-
-
   useEffect(() => {
     const fetchData = async (categoryId) => {
       setLoading(true);
@@ -71,9 +69,13 @@ function ProductList() {
     }
   };
 
+  // Xóa sản phẩm đã chọn
+  const clearSelectedProducts = () => {
+    setSelectedProducts([]); // Đặt lại selectedProducts thành mảng rỗng
+  };
+
   const totalPage = Math.ceil(products.length / itemsPerPage);
   const currentProducts = products.slice((page - 1) * itemsPerPage, page * itemsPerPage);
-
   {
     !products?.length ? (
       <p className="text-center text-gray-500 mt-6">Không có sản phẩm nào trong danh mục này.</p>
@@ -97,7 +99,6 @@ function ProductList() {
       </div>
     );
   }
-
   return (
     <div className="flex min-h-screen">
       {/* Sidebar Danh Mục */}
@@ -109,8 +110,8 @@ function ProductList() {
       <div className="w-3/4 p-6">
         <h1 className="text-2xl font-bold mb-4">Sản Phẩm</h1>
 
-        {/* Nút So Sánh */}
-        <div className="flex mt-6 pb-8">
+        {/* Nút So Sánh và Clear */}
+        <div className="flex mt-6 pb-8 space-x-4">
           <button
             onClick={compareProducts}
             disabled={selectedProducts.length !== 2}
@@ -118,7 +119,15 @@ function ProductList() {
           >
             So sánh
           </button>
+          <button
+            onClick={clearSelectedProducts}
+            disabled={selectedProducts.length === 0}
+            className="px-6 py-2 bg-gray-300 text-black rounded-md disabled:opacity-50"
+          >
+            Xóa lựa chọn
+          </button>
         </div>
+
         {loading ? (
           <p className="text-center text-gray-500 mt-6">Đang tải...</p>
         ) : error ? (
@@ -174,4 +183,5 @@ function ProductList() {
     </div>
   );
 }
+
 export default ProductList;

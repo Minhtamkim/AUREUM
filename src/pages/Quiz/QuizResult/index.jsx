@@ -1,8 +1,7 @@
-import { useLocation, useNavigate } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
 import { useEffect, useState } from "react";
 import api from "../../../config/axios";
 import { motion } from "framer-motion";
-
 
 const QuizResult = () => {
   const location = useLocation();
@@ -44,7 +43,9 @@ const QuizResult = () => {
       >
         <h1 className="text-3xl font-bold text-gray-900">Kết Quả Phân Tích Da</h1>
         <p className="text-lg text-gray-500 mt-2">Loại da của bạn là:</p>
-        <p className="text-2xl font-semibold text-[#D4AF37] mt-3">{skinType}</p>
+        <p className="text-2xl font-semibold text-[#D4AF37] mt-3 mb-4">{skinType}</p>
+        <Link to="/redirecttoskinPage" className="text-blue-500 underline">Lộ trình chăm sóc da dành cho bạn</Link>
+
         <div className="flex justify-center items-center mt-6">
           <button
             onClick={() => navigate("/quiz")}

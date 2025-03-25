@@ -20,7 +20,6 @@ import FrequentlyaskedquestionsPage from "./pages/policies/faq";
 import TermsOfUsePage from "./pages/policies/termsOfUse";
 import AboutUs from "./pages/aboutUs";
 import QuizPage from "./pages/Quiz";
-
 import ProductsPage from "./pages/product/product_category";
 import ManageCategory from "./pages/admin/manage-category";
 import ManageIngredient from "./pages/admin/manage-ingredient";
@@ -37,7 +36,6 @@ import BlogPost3 from "./pages/Blog/blog-details-3";
 import BlogPost05 from "./pages/Blog/blog-details-5";
 import BlogPost06 from "./pages/Blog/blog-details-6";
 import BlogPostAll from "./pages/Blog/blog-details-all";
-import HistoryOrders from "./pages/profileAccount/historyOrders";
 import CategorySidebar from "./pages/Comparison/SidebarComparison";
 import ProductList from "./pages/Comparison/ProductList";
 import ProductComparison from "./pages/Comparison/productComparison";
@@ -54,7 +52,8 @@ import ForgotPassword from "./pages/password/forgot-password";
 import ResetPassword from "./pages/password/reset-password";
 import ManageVoucher from "./pages/admin/manage-voucher";
 import OrdersHistory from "./pages/profileAccount/historyOrders";
-import ReviewSection from "./components/reviewSection";
+import ManageQuestion from "./pages/admin/manage-question";
+import ManageAnswer from "./pages/admin/manage-answer";
 
 function App() {
   const router = createBrowserRouter([
@@ -290,6 +289,14 @@ function App() {
         {
           path: "voucher",
           element: <ManageVoucher />,
+        },
+        {
+          path: "question",
+          element: <ManageQuestion />,
+        },
+        {
+          path: "answer",
+          element: <ManageAnswer />,
         },
       ],
     },
