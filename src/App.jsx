@@ -54,6 +54,7 @@ import ManageVoucher from "./pages/admin/manage-voucher";
 import OrdersHistory from "./pages/profileAccount/historyOrders";
 import ManageQuestion from "./pages/admin/manage-question";
 import ManageAnswer from "./pages/admin/manage-answer";
+import ReviewSection from "./components/reviewSection";
 
 function App() {
   const router = createBrowserRouter([

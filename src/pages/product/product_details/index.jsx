@@ -4,6 +4,7 @@ import api from "../../../config/axios";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../../redux/features/cartSlice";
+import ReviewSection from "../../../components/reviewSection";
 
 const ProductDetailPage = () => {
   const { product_id } = useParams(); // Lấy product_id từ URL
@@ -110,10 +111,9 @@ const ProductDetailPage = () => {
               </div>
             </div>
 
-
-        
-
-            <p className="text-2xl font-semibold text-gray-900 mt-4">{`${product.price.toLocaleString("vi-VN")}`}VND</p>
+            <p className="text-2xl font-semibold text-gray-900 mt-4">
+              {`${product.price.toLocaleString("vi-VN")}`}VND
+            </p>
 
             {/* Thêm phần hiển thị loại da của sản phẩm */}
             <p className="text-lg font-semibold text-gray-700 mt-3">
@@ -124,7 +124,6 @@ const ProductDetailPage = () => {
                 <span className="text-red-500">Không xác định</span>
               )}
             </p>
-
 
             <h2 className="my-4 text-lg font-semibold">Chi tiết sản phẩm</h2>
             <p className="text-gray-500 mt-3">{product.description}</p>
