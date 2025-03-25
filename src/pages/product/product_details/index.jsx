@@ -1,10 +1,10 @@
 import { useEffect, useState } from "react";
-import { Navigate, useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import api from "../../../config/axios";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
 import { useDispatch } from "react-redux";
 import { addToCart } from "../../../redux/features/cartSlice";
-import PrivateRoute from "../../../components/privateRouter";
+import ReviewSection from "../../../components/reviewSection";
 
 const ProductDetailPage = () => {
   const { product_id } = useParams(); // Lấy product_id từ URL
@@ -41,7 +41,10 @@ const ProductDetailPage = () => {
         const productRes = await api.get(`product/${product_id}`);
         setProduct(productRes.data);
       } catch (err) {
-        console.error("Lỗi API:", err.response ? err.response.data : err.message);
+        console.error(
+          "Lỗi API:",
+          err.response ? err.response.data : err.message
+        );
         setError("Không thể tải thông tin sản phẩm.");
       } finally {
         setLoading(false);
@@ -75,7 +78,11 @@ const ProductDetailPage = () => {
     if (!token) {
       navigate("/login");
     } else {
-      const plain = { ...product, quantityPlain: quantity, pricePlain: quantity * product.price };
+      const plain = {
+        ...product,
+        quantityPlain: quantity,
+        pricePlain: quantity * product.price,
+      };
       dispatch(addToCart(plain));
       console.log("Adding to cart:", product); // Kiểm tra dữ liệu
     }
@@ -87,7 +94,11 @@ const ProductDetailPage = () => {
         <div className="flex flex-col md:flex-row items-center bg-gray-100 p-6 rounded-lg shadow-lg">
           {/* Ảnh sản phẩm */}
           <div className="w-full md:w-1/2 flex justify-center">
-            <img src={product.image} alt={product.name} className="w-96 h-96 object-cover rounded-lg shadow-md" />
+            <img
+              src={product.image}
+              alt={product.name}
+              className="w-96 h-96 object-cover rounded-lg shadow-md"
+            />
           </div>
 
           {/* Thông tin sản phẩm */}
@@ -100,7 +111,9 @@ const ProductDetailPage = () => {
               </div>
             </div>
 
-            <p className="text-2xl font-semibold text-gray-900 mt-4">{`${product.price.toLocaleString("vi-VN")}`}VND</p>
+            <p className="text-2xl font-semibold text-gray-900 mt-4">
+              {`${product.price.toLocaleString("vi-VN")}`}VND
+            </p>
             <h2 className="my-4 text-lg font-semibold">Chi tiết sản phẩm</h2>
             <p className=" text-gray-500 mt-3">{product.description}</p>
 
@@ -111,7 +124,9 @@ const ProductDetailPage = () => {
               >
                 -
               </button>
-              <span className="px-4 py-2 bg-white border text-lg">{quantity}</span>
+              <span className="px-4 py-2 bg-white border text-lg">
+                {quantity}
+              </span>
               <button
                 onClick={increaseQuantity}
                 className="bg-gray-300 text-gray-800 px-3 py-2 rounded-r-lg hover:bg-gray-400"
@@ -131,25 +146,35 @@ const ProductDetailPage = () => {
         </div>
       </div>
 
-      <div className="max-w-6xl mx-auto px-4">
+      <ReviewSection ratings={product.ratings || []} />
+
+      <div className=" mx-auto px-4 bg-[#faf0e8] max-w-[100%]">
         <h2 className="text-xl font-bold text-black mb-2">Tìm hiểu thêm</h2>
         <h3 className="text-xl font-light text-black">Có thể bạn cũng thích</h3>
         <div className="relative max-w-6xl mx-auto">
           {/* Danh sách sản phẩm */}
           <div className="grid grid-cols-4 gap-6 overflow-hidden transition-transform duration-300 ease-in-out">
-            {products.slice(startIndex, startIndex + itemsPerRow).map((product, index) => (
-              <div
-                key={index}
-                className="bg-white shadow-md rounded-lg p-4 text-center hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
-                onClick={() => navigate(`/products/details/${product.id}`)}
-              >
-                <div className="p-2 flex items-center justify-center">
-                  <img src={product.image} alt={product.name} className="h-70" />
+            {products
+              .slice(startIndex, startIndex + itemsPerRow)
+              .map((product, index) => (
+                <div
+                  key={index}
+                  className="bg-white shadow-md rounded-lg p-4 text-center hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
+                  onClick={() => navigate(`/products/details/${product.id}`)}
+                >
+                  <div className="p-2 flex items-center justify-center">
+                    <img
+                      src={product.image}
+                      alt={product.name}
+                      className="h-70"
+                    />
+                  </div>
+                  <p className="font-semibold mt-2">{product.name}</p>
+                  <p className="text-sm text-gray-500">
+                    {`${product.price.toLocaleString("vi-VN")}`}VND
+                  </p>
                 </div>
-                <p className="font-semibold mt-2">{product.name}</p>
-                <p className="text-sm text-gray-500">{`${product.price.toLocaleString("vi-VN")}`}VND</p>
-              </div>
-            ))}
+              ))}
           </div>
 
           {/* Nút mũi tên điều hướng */}

@@ -54,6 +54,7 @@ import ForgotPassword from "./pages/password/forgot-password";
 import ResetPassword from "./pages/password/reset-password";
 import ManageVoucher from "./pages/admin/manage-voucher";
 import OrdersHistory from "./pages/profileAccount/historyOrders";
+import ReviewSection from "./components/reviewSection";
 
 function App() {
   const router = createBrowserRouter([
@@ -173,6 +174,10 @@ function App() {
         {
           path: "resetPassword",
           element: <ResetPassword />,
+        },
+        {
+          path: "reviewSection",
+          element: <ReviewSection />,
         },
       ],
     },
