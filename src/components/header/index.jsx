@@ -340,22 +340,26 @@ const Header = () => {
             />
 
             {searchTerm && filteredProducts.length > 0 && (
-              <div className="absolute mt-1 w-full bg-white border rounded-md shadow-lg z-50">
-                {filteredProducts.map((product) => (
-                  <div
-                    key={product.id}
-                    className="flex items-center p-2 border-b hover:bg-gray-100 cursor-pointer"
-                    onClick={() => handleProductClick(product)}
-                  >
-                    <img src={product.image} alt={product.name} className="w-12 h-12 object-cover rounded-md" />
-                    <div className="ml-3">
-                      <p className="text-sm font-semibold">{product.name}</p>
-                      <p className="text-xs text-gray-500">
-                        {product.brand.name} - {product.price}K
-                      </p>
+              <div className="absolute mt-1 w-full bg-white border rounded-md shadow-lg z-50 max-h-64 overflow-y-auto">
+                {filteredProducts.map(
+                  (
+                    product // Hiển thị tất cả các sản phẩm
+                  ) => (
+                    <div
+                      key={product.id}
+                      className="flex items-center p-2 border-b hover:bg-gray-100 cursor-pointer"
+                      onClick={() => handleProductClick(product)}
+                    >
+                      <img src={product.image} alt={product.name} className="w-12 h-12 object-cover rounded-md" />
+                      <div className="ml-3">
+                        <p className="text-sm font-semibold">{product.name}</p>
+                        <p className="text-xs text-gray-500">
+                          {product.brand.name} - {product.price}K
+                        </p>
+                      </div>
                     </div>
-                  </div>
-                ))}
+                  )
+                )}
               </div>
             )}
           </div>
