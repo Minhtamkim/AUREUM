@@ -1,12 +1,17 @@
-import { Button, Form, Input, Modal, Popconfirm, Table } from "antd";
+import { Button, Form, Input, Modal, Popconfirm, Select, Table } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { createAnswer, deleteAnswer, getAnswers, updateAnswer } from "../../../services/api.answer";
+import { getQuestions } from "../../../services/api.question";
+import { getSkinType } from "../../../services/api.skin";
+import { render } from "sass";
 
 function ManageAnswer() {
   const [searchText, setSearchText] = useState(""); // Lưu từ khóa tìm kiếm
   const [filteredAnswers, setFilteredAnswers] = useState([]); // Lưu danh sách danh mục sau khi lọc
+  const [questions, setQuestions] = useState([]);
+  const [skins, setSkins] = useState([]);
   const [answers, setAnswers] = useState([]);
   const [open, setOpen] = useState(false);
   const [form] = useForm();
@@ -17,8 +22,20 @@ function ManageAnswer() {
     setFilteredAnswers(data); // Sao chép danh sách gốc để lọc
   };
 
+  const fetchQuestions = async () => {
+    const data = await getQuestions();
+    setQuestions(data);
+  };
+
+  const fetchSkins = async () => {
+    const data = await getSkinType();
+    setSkins(data);
+  };
+
   useEffect(() => {
     fetchAnswers();
+    fetchQuestions();
+    fetchSkins();
   }, []);
 
   const columns = [
@@ -28,9 +45,21 @@ function ManageAnswer() {
       key: "id",
     },
     {
+      title: "Question",
+      dataIndex: "question",
+      key: "question",
+      render: (question) => question?.questionText,
+    },
+    {
       title: "Answer",
       dataIndex: "answerText",
       key: "answerText",
+    },
+    {
+      title: "skin Type",
+      dataIndex: "skin",
+      key: "skin",
+      render: (skin) => skin?.name,
     },
     {
       title: "Action",
@@ -44,13 +73,10 @@ function ManageAnswer() {
               onClick={() => {
                 setOpen(true);
                 form.setFieldsValue({
-                  ...record, // chấm hỏi ? đằng sau chữ "record?" là để không hiện bảng báo lỗi (tránh crack webweb)
-                  //lệnh kiểm tra (?. là optional chaining). Nếu record.categories tồn tại,
-                  // nó sẽ lấy tất cả các id từ danh sách categories của record và
-                  // lưu vào trường categoryID. Nếu không có categories, nó sẽ gán
-                  // một mảng rỗng ([]). Việc sử dụng optional chaining giúp tránh
-                  // lỗi khi record.categories không tồn tại.
-                  // BrandID: record?.brands ? record?.brands?.map((item) => item.id) : [],
+                  ...record,
+
+                  questionId: record?.question?.id, // Lấy ID question
+                  skinId: record?.skin?.id, // Lấy ID skin
                 });
               }}
             >
@@ -80,7 +106,12 @@ function ManageAnswer() {
     setSearchText(value);
     const normalizedValue = removeDiacritics(value.toLowerCase()); // Chuẩn hóa từ khóa tìm kiếm
 
-    const filtered = answers.filter((answer) => removeDiacritics(answer.name.toLowerCase()).includes(normalizedValue));
+    const filtered = answers.filter(
+      (answer) =>
+        removeDiacritics(answer.name.toLowerCase()).includes(normalizedValue) ||
+        removeDiacritics(answer.question?.questionText.toLowerCase()).includes(normalizedValue) ||
+        removeDiacritics(answer.skin?.name.toLowerCase()).includes(normalizedValue)
+    );
 
     setFilteredAnswers(filtered);
   };
@@ -151,6 +182,52 @@ function ManageAnswer() {
             ]}
           >
             <Input placeholder="Nhập Câu Trả Lời...." />
+          </Form.Item>
+          <Form.Item
+            label="Question"
+            name="questionId"
+            rules={[
+              {
+                required: true,
+                message: "One question must be selected!",
+              },
+            ]}
+          >
+            <Select
+              placeholder="Chọn câu hỏi...."
+              showSearch // Cho phép tìm kiếm
+              optionFilterProp="children" // Lọc theo nội dung hiển thị
+              filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())} // Hàm lọc danh sách theo input
+            >
+              {questions?.map((question) => (
+                <Select.Option value={question.id} key={question.id}>
+                  {question.questionText}
+                </Select.Option>
+              ))}
+            </Select>
+          </Form.Item>
+          <Form.Item
+            label="Skin Type"
+            name="skinId"
+            rules={[
+              {
+                required: true,
+                message: "One skin type must be selected!",
+              },
+            ]}
+          >
+            <Select
+              placeholder="Chọn loại da tương ứng với câu trả lời...."
+              showSearch // Cho phép tìm kiếm
+              optionFilterProp="children" // Lọc theo nội dung hiển thị
+              filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())} // Hàm lọc danh sách theo input
+            >
+              {skins?.map((skin) => (
+                <Select.Option value={skin.id} key={skin.id}>
+                  {skin.name}
+                </Select.Option>
+              ))}
+            </Select>
           </Form.Item>
         </Form>
       </Modal>
