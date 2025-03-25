@@ -16,6 +16,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/features/userSlice";
 import { MdFace4 } from "react-icons/md";
 import { clearCart } from "../../redux/features/cartSlice";
+import { MdOutlineQuestionAnswer } from "react-icons/md";
+import { FaQuestion } from "react-icons/fa";
 
 const { Content, Footer, Sider } = Layout;
 function getItem(label, key, icon, children) {
@@ -52,7 +54,11 @@ const Dashboard = () => {
         ]
       : []),
     ...(userRole === "ADMIN" || userRole === "STAFF"
-      ? [getItem("Voucher", "/dashboard/voucher", <IoTicketOutline />)]
+      ? [
+          getItem("Voucher", "/dashboard/voucher", <IoTicketOutline />),
+          getItem("Question", "/dashboard/question", <FaQuestion />),
+          getItem("Answer", "/dashboard/answer", <MdOutlineQuestionAnswer />),
+        ]
       : []),
   ];
 
