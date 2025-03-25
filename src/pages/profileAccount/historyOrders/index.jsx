@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
@@ -7,6 +8,8 @@ import { Button } from "antd";
 import FeedbackPopup from "../../../components/feedbackPopup";
 import { createRating, createReport } from "../../../services/api.feedback";
 import api from "../../../config/axios";
+import { toast } from "react-toastify";
+import { AiOutlineExclamationCircle } from "react-icons/ai";
 
 const OrdersHistory = () => {
   const navigate = useNavigate();
@@ -29,19 +32,28 @@ const OrdersHistory = () => {
     if (popupMode === "rating") {
       const newData = {
         ...data,
-        orderDetailId: selectedOrderDetail.id,
-        image: "",
+        orderDetailId: selectedOrderDetail?.id,
+        image: data.image,
       };
       const response = await createRating(newData);
       console.log(response);
+      toast.success("Đánh giá thành công!", {
+        position: "top-right",
+      });
+      fetchOrders();
     } else {
       const newData = {
         ...data,
-        orderId: selectedOrder?.id,
-        image: "",
+        orderDetailId: selectedOrderDetail?.id,
+        image: data.image,
       };
       const response = await createReport(newData);
+      toast.success("Báo cáo thành công!", {
+        position: "top-right",
+      });
+
       console.log(response);
+      fetchOrders();
     }
     handleClosePopup();
   };
@@ -88,11 +100,17 @@ const OrdersHistory = () => {
                     Mã đơn hàng #<span>{order?.id}</span>
                   </p>
                   <p className="font-bold flex mt-2">
-                    {order?.status === "PAID" && <p>Đã Thanh Toán</p>}
+                    {order?.status === "PAID"
+                      ? "Đã Thanh Toán"
+                      : order?.status === "IN_PROCESS"
+                      ? "Chưa Thanh Toán"
+                      : ""}
                   </p>
                 </div>
 
-                <button onClick={() => toggleOrderDetails(order?.id)}>
+                <button
+                  onClick={() => toggleOrderDetails(order?.id, order?.status)}
+                >
                   {expandedOrder === order?.id ? (
                     <HiMiniMinusSmall />
                   ) : (
@@ -130,7 +148,7 @@ const OrdersHistory = () => {
                           </p>
                         </div>
                       </div>
-                      {order?.status === "PAID" && (
+                      {order?.status === "PAID" && !orderDetails?.isRated && (
                         <Button
                           type="default"
                           className="!bg-transparent !border-[#EDE0D4] !text-black px-4 py-2 rounded-md transition-all duration-300 
@@ -143,6 +161,21 @@ const OrdersHistory = () => {
                           Đánh Giá
                         </Button>
                       )}
+                      {order?.status === "PAID" &&
+                        !orderDetails?.isReported && (
+                          <Button
+                            type="default"
+                            className="!bg-transparent !border-[#EDE0D4] !text-black px-4 py-2 rounded-md transition-all duration-300 
+                          hover:!bg-[#EDE0D4] hover:!text-black "
+                            onClick={() => {
+                              console.log("Order được chọn:", order);
+                              handleOpenPopup("report");
+                              setSelectedOrderDetail(orderDetails);
+                            }}
+                          >
+                            <AiOutlineExclamationCircle className="w-5 h-5 group-hover:text-red-600 transition-all duration-300" />
+                          </Button>
+                        )}
                     </div>
                   ))}
                   <hr className="border-t border-gray-300 my-4" />
@@ -152,32 +185,37 @@ const OrdersHistory = () => {
                     </p>
                   </div>
                   <div className="flex justify-end mt-4">
-                    <Button
-                      type="default"
-                      className="!bg-transparent !border-[#EDE0D4] !text-black px-4 py-2 rounded-md transition-all duration-300 
+                    {order?.status === "IN_PROCESS" ? (
+                      // Chỉ hiển thị nút Thanh Toán nếu đơn hàng đang xử lý
+                      <Button
+                        type="default"
+                        className="!bg-transparent !border-[#EDE0D4] !text-black px-4 py-2 rounded-md transition-all duration-300 
                           hover:!bg-[#EDE0D4] hover:!text-black"
-                    >
-                      Yêu Cầu Trả Hàng/Hoàn Tiền
-                    </Button>
-                    <Button
-                      type="default"
-                      className="!bg-transparent !border-[#EDE0D4] !text-black px-4 py-2 rounded-md transition-all duration-300 
-                    hover:!bg-[#EDE0D4] hover:!text-black ml-2"
-                      onClick={() => {
-                        console.log("Order được chọn:", order);
-                        handleOpenPopup("report");
-                        setSelectedOrder(order); // select xem chọn order nào để truyền id
-                      }}
-                    >
-                      Report
-                    </Button>
-                    <Button
-                      type="default"
-                      className="!bg-transparent !border-[#EDE0D4] !text-black px-4 py-2 rounded-md transition-all duration-300 
+                        // onClick={() =>
+                        //   console.log("Thanh toán đơn hàng", order.id)
+                        // }
+                      >
+                        Thanh Toán
+                      </Button>
+                    ) : (
+                      <>
+                        <Button
+                          type="default"
+                          className="!bg-transparent !border-[#EDE0D4] !text-black px-4 py-2 rounded-md transition-all duration-300 
+                          hover:!bg-[#EDE0D4] hover:!text-black"
+                        >
+                          Yêu Cầu Hoàn Tiền
+                        </Button>
+
+                        <Button
+                          type="default"
+                          className="!bg-transparent !border-[#EDE0D4] !text-black px-4 py-2 rounded-md transition-all duration-300 
                           hover:!bg-[#EDE0D4] hover:!text-black ml-2"
-                    >
-                      Mua Lại
-                    </Button>
+                        >
+                          Mua Lại
+                        </Button>
+                      </>
+                    )}
                   </div>
                 </div>
               )}

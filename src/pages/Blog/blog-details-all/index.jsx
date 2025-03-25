@@ -17,7 +17,7 @@ const BlogPostAll = () => {
         "Một trong các công cuộc níu kéo thanh xuân này nằm cốt lõi ở việc phục hồi và tăng cường củng cố chức năng của MA TRẬN NGOẠI BÀO (ECM hay MTNB) mà trong bài viết này Láng muốn mọi...",
       image:
         "https://theme.hstatic.net/1000231140/1000917511/14/blog_slider_1_2048x2048.jpg?v=694",
-      path: "/blogs/chong-lao-hoa-da-voi-cac-phuong-phap-tiem-tai-aureum",
+      path: "/blogs/cot-loi-cua-viec-chong-lao-hoa-nam-o-dau",
     },
     {
       id: 2,

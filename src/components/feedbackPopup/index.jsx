@@ -3,6 +3,7 @@ import { PlusOutlined } from "@ant-design/icons";
 import { Button, Image, Modal, Rate, Select, Upload } from "antd";
 import TextArea from "antd/es/input/TextArea";
 import { useState } from "react";
+import uploadFile from "../../utils/upload";
 
 function FeedbackPopup({ mode, visible, onClose, onSubmit }) {
   const [rating, setRating] = useState(0);
@@ -35,7 +36,7 @@ function FeedbackPopup({ mode, visible, onClose, onSubmit }) {
           marginTop: 8,
         }}
       >
-        Upload
+        Hình ảnh
       </div>
     </button>
   );
@@ -46,8 +47,9 @@ function FeedbackPopup({ mode, visible, onClose, onSubmit }) {
     let image = ""; // ko có ảnh string rỗng
 
     if (fileList.length > 0) {
-      image = await getBase64(fileList[0].originFileObj); // fileList lấy ảnh đầu tiền và chuyển string = base64
+      image = await uploadFile(fileList[0].originFileObj); // fileList lấy ảnh đầu tiền và chuyển string = base64
     }
+    console.log(image);
 
     if (mode == "rating") {
       onSubmit({ rating, comment, image });
@@ -127,9 +129,9 @@ function FeedbackPopup({ mode, visible, onClose, onSubmit }) {
       )}
       <div className="mt-4">
         <Upload
+          beforeUpload={() => false}
           lable="Image"
           name="image"
-          action="https://14.225.211.152:8081/api"
           fileList={fileList}
           listType="picture-card"
           onPreview={handlePreview}

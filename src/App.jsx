@@ -174,6 +174,10 @@ function App() {
           path: "resetPassword",
           element: <ResetPassword />,
         },
+        {
+          path: "reviewSection",
+          element: <ReviewSection />,
+        },
       ],
     },
 
