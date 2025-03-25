@@ -50,7 +50,12 @@ function AccountInfo() {
   // Hàm xử lý thay đổi input
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setCustomer({ ...customer, [name]: value });
+
+    setCustomer((prev) => ({
+      ...prev,
+      [name]: name === "skin" ? { id: value } : value, // Xử lý riêng cho skin
+    }));
+
     validateField(name, value);
   };
 
@@ -115,11 +120,13 @@ function AccountInfo() {
       delete updatedData.password;
     }
 
-    // Chuyển đổi dữ liệu nếu có `skin`
+    // Đảm bảo `skinId` được gửi đi nếu có loại da
     if (updatedData.skin?.id) {
-      updatedData.skinId = updatedData.skin.id;
+      updatedData.skinId = updatedData.skin.id; // Chuyển đổi `skin.id` thành `skinId`
     }
-    delete updatedData.skin; // Xóa object `skin` để tránh lỗi API
+    delete updatedData.skin; // Xóa `skin` để tránh lỗi API
+
+    console.log("Dữ liệu gửi lên API:", updatedData); // Kiểm tra dữ liệu trước khi gửi
 
     try {
       const updatedUser = await updateUser({ id: user.id, user: updatedData });
@@ -182,9 +189,19 @@ function AccountInfo() {
             </div>
             <div className="flex items-center space-x-4 pb-4">
               <MdFace4 className="text-gray-500" />
-              <p type="skin" name="skin">
-                {customer?.skin?.name}
-              </p>
+              <select
+                name="skin"
+                value={customer.skin?.id || ""} // Kiểm tra nếu skin có id thì lấy, nếu không thì để mặc định là ""
+                onChange={handleChange}
+                className="bg-transparent border-b border-gray-400 focus:outline-none focus:border-black w-80 p-1"
+              >
+                <option value="">Chọn loại da</option>
+                <option value="1">da thường</option>
+                <option value="2">da dầu</option>
+                <option value="3">da khô</option>
+                <option value="4">da hỗ hợp</option>
+                <option value="5">da nhạy cảm</option>
+              </select>
             </div>
             {/* Mật khẩu */}
             <div>
