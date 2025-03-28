@@ -100,7 +100,9 @@ const OrdersHistory = () => {
                     Mã đơn hàng #<span>{order?.id}</span>
                   </p>
                   <p className="font-bold flex mt-2">
-                    {order?.status === "PAID"
+                    {order?.status === "COMPLETED"
+                      ? "Đã Hoàn Thành"
+                      : order?.status === "PAID"
                       ? "Đã Thanh Toán"
                       : order?.status === "IN_PROCESS"
                       ? "Chưa Thanh Toán"
@@ -148,20 +150,21 @@ const OrdersHistory = () => {
                           </p>
                         </div>
                       </div>
-                      {order?.status === "PAID" && !orderDetails?.isRated && (
-                        <Button
-                          type="default"
-                          className="!bg-transparent !border-[#EDE0D4] !text-black px-4 py-2 rounded-md transition-all duration-300 
+                      {order?.status === "COMPLETED" &&
+                        !orderDetails?.isRated && (
+                          <Button
+                            type="default"
+                            className="!bg-transparent !border-[#EDE0D4] !text-black px-4 py-2 rounded-md transition-all duration-300 
                           hover:!bg-[#EDE0D4] hover:!text-black"
-                          onClick={() => {
-                            handleOpenPopup("rating");
-                            setSelectedOrderDetail(orderDetails);
-                          }}
-                        >
-                          Đánh Giá
-                        </Button>
-                      )}
-                      {order?.status === "PAID" &&
+                            onClick={() => {
+                              handleOpenPopup("rating");
+                              setSelectedOrderDetail(orderDetails);
+                            }}
+                          >
+                            Đánh Giá
+                          </Button>
+                        )}
+                      {order?.status === "COMPLETED" &&
                         !orderDetails?.isReported && (
                           <Button
                             type="default"
@@ -185,37 +188,27 @@ const OrdersHistory = () => {
                     </p>
                   </div>
                   <div className="flex justify-end mt-4">
-                    {order?.status === "IN_PROCESS" ? (
-                      // Chỉ hiển thị nút Thanh Toán nếu đơn hàng đang xử lý
-                      <Button
-                        type="default"
-                        className="!bg-transparent !border-[#EDE0D4] !text-black px-4 py-2 rounded-md transition-all duration-300 
-                          hover:!bg-[#EDE0D4] hover:!text-black"
-                        // onClick={() =>
-                        //   console.log("Thanh toán đơn hàng", order.id)
-                        // }
-                      >
-                        Thanh Toán
-                      </Button>
-                    ) : (
-                      <>
+                    {
+                      order?.status === "IN_PROCESS" ? (
+                        // Chỉ hiển thị nút Thanh Toán nếu đơn hàng đang xử lý
                         <Button
                           type="default"
-                          className="!bg-transparent !border-[#EDE0D4] !text-black px-4 py-2 rounded-md transition-all duration-300 
-                          hover:!bg-[#EDE0D4] hover:!text-black"
+                          className="!bg-transparent !border-[black] !text-black px-4 py-2 rounded-md transition-all duration-300 
+                        hover:!bg-[#EDE0D4] hover:!text-black"
                         >
-                          Yêu Cầu Hoàn Tiền
+                          Thanh Toán
                         </Button>
-
+                      ) : order?.status === "PAID" ? (
+                        // Chỉ hiển thị nút Hủy Đơn Hàng nếu đơn hàng đã thanh toán
                         <Button
                           type="default"
-                          className="!bg-transparent !border-[#EDE0D4] !text-black px-4 py-2 rounded-md transition-all duration-300 
-                          hover:!bg-[#EDE0D4] hover:!text-black ml-2"
+                          className="!bg-transparent !border-[black] !text-black px-4 py-2 rounded-md transition-all duration-300 
+                        hover:!bg-[#EDE0D4] hover:!text-black"
                         >
-                          Mua Lại
+                          Hủy Đơn Hàng
                         </Button>
-                      </>
-                    )}
+                      ) : null /* Không hiển thị nút nào nếu status là COMPLETED */
+                    }
                   </div>
                 </div>
               )}
