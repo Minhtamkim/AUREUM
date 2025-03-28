@@ -25,17 +25,24 @@ const ProductsBrandPage = () => {
 
         const productRes = await api.get("product");
 
-        const selectedBrand = brandRes.data.find((brand) => brand.id === Number(brand_id));
+        const selectedBrand = brandRes.data.find(
+          (brand) => brand.id === Number(brand_id)
+        );
         if (!selectedBrand) {
           setError("Thương hiệu không tồn tại!");
           return;
         }
 
-        const filteredProducts = productRes.data.filter((product) => product.brand?.id === Number(selectedBrand.id));
+        const filteredProducts = productRes.data.filter(
+          (product) => product.brand?.id === Number(selectedBrand.id)
+        );
 
         setOriginalProducts(filteredProducts);
       } catch (err) {
-        console.error("Lỗi API:", err.response ? err.response.data : err.message);
+        console.error(
+          "Lỗi API:",
+          err.response ? err.response.data : err.message
+        );
         setError("Không thể tải sản phẩm. Vui lòng thử lại!");
       } finally {
         setLoading(false);
@@ -60,21 +67,30 @@ const ProductsBrandPage = () => {
   }, [sortOrder, originalProducts]);
 
   // Phân trang
-  const currentProduct = products.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+  const currentProduct = products.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  );
 
   if (loading) return <p>Đang tải sản phẩm...</p>;
   if (error) return <p>{error}</p>;
-  if (!products.length) return <p>Không có sản phẩm nào thuộc thương hiệu này.</p>;
+  if (!products.length)
+    return <p>Không có sản phẩm nào thuộc thương hiệu này.</p>;
 
   return (
-    <div className="container mx-auto p-6 min-h-screen">
+    <div className="container mx-auto p-6 min-h-screen bg-[#F3E8E0]">
       <div className="flex justify-between items-center">
         <h1 className="font-semibold mt-6 mb-8">
-          <Link to={"/products"}>Sản Phẩm &gt;</Link> {brands.find((b) => b.id === Number(brand_id))?.name}
+          <Link to={"/products"}>Sản Phẩm &gt;</Link>{" "}
+          {brands.find((b) => b.id === Number(brand_id))?.name}
         </h1>
 
         {/* Bộ lọc giá */}
-        <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} className="p-2 border rounded-md">
+        <select
+          value={sortOrder}
+          onChange={(e) => setSortOrder(e.target.value)}
+          className="p-2 border rounded-md"
+        >
           <option value="asc">Giá từ thấp đến cao</option>
           <option value="desc">Giá từ cao đến thấp</option>
         </select>
@@ -92,7 +108,9 @@ const ProductsBrandPage = () => {
               <img src={product.image} alt={product.name} className="h-70" />
             </div>
             <p className="font-semibold mt-2 min-h-[52px]">{product.name}</p>
-            <p className="text-sm font-bold mt-1">{`${product.price.toLocaleString("vi-VN")}`} VND</p>
+            <p className="text-sm font-bold mt-1">
+              {`${product.price.toLocaleString("vi-VN")}`} VND
+            </p>
           </div>
         ))}
       </div>
