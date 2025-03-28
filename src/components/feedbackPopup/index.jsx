@@ -13,6 +13,8 @@ function FeedbackPopup({ mode, visible, onClose, onSubmit }) {
   const [fileList, setFileList] = useState([]);
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
+  const [error, setError] = useState("");
+  const [commentError, setCommentError] = useState("");
 
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
@@ -52,6 +54,17 @@ function FeedbackPopup({ mode, visible, onClose, onSubmit }) {
     console.log(image);
 
     if (mode == "rating") {
+      if (rating === 0) {
+        setError("Hãy chọn số sao để gửi đánh giá!");
+        return;
+      }
+      setError(""); // Xóa lỗi nếu đã chọn sao
+
+      if (comment.length > 250) {
+        setCommentError("Bình luận không được vượt quá 250 ký tự.");
+        return;
+      }
+      setCommentError(""); // Xóa lỗi nếu bình luận hợp lệ
       onSubmit({ rating, comment, image });
     } else {
       onSubmit({ reason, description, image });
@@ -96,15 +109,27 @@ function FeedbackPopup({ mode, visible, onClose, onSubmit }) {
       {mode == "rating" ? (
         <>
           <div>
-            <Rate value={rating} onChange={setRating} />
+            <Rate
+              value={rating}
+              onChange={(value) => {
+                setRating(value);
+                if (value > 0) setError(""); // Xóa lỗi ngay khi người dùng chọn sao
+              }}
+            />
+            {error && <div style={{ color: "red", marginTop: 5 }}>{error}</div>}
           </div>
           <TextArea
             rows={4}
             placeholder="Nhập bình luận của bạn"
             value={comment}
-            onChange={(e) => setComment(e.target.value)}
-            style={{ marginTop: 15 }}
+            onChange={(e) => {
+              setComment(e.target.value);
+              if (e.target.value.length <= 250) setCommentError(""); // Xóa lỗi nếu bình luận hợp lệ
+            }}
           />
+          {commentError && (
+            <div style={{ color: "red", marginTop: 5 }}>{commentError}</div>
+          )}
         </>
       ) : (
         <>
