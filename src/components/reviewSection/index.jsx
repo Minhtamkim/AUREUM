@@ -1,12 +1,11 @@
 /* eslint-disable react/prop-types */
-import { Image } from "antd";
 import { FaShieldAlt } from "react-icons/fa";
 import { MdStarRate } from "react-icons/md";
 
 const ReviewSection = ({ ratings }) => {
   if (!ratings || ratings.length === 0) {
     return (
-      <div className="w-full p-6 mt-8">
+      <div className="w-full p-2 mt-5 mb-10 max-w-6xl mx-auto">
         {/* Tiêu đề và tổng điểm đánh giá */}
         <div className="flex items-center gap-2">
           <h2 className="text-xl font-bold">ĐÁNH GIÁ CỦA KHÁCH HÀNG</h2>
@@ -38,7 +37,7 @@ const ReviewSection = ({ ratings }) => {
   });
 
   return (
-    <div className="p-6 mt-8">
+    <div className="w-full p-2 mt-5 max-w-6xl mx-auto">
       <h2 className="text-2xl font-bold">Đánh giá từ khách hàng</h2>
       <div className="flex items-center justify-between ">
         <div className="flex items-center">
@@ -52,7 +51,7 @@ const ReviewSection = ({ ratings }) => {
                 key={index}
                 className={`text-2xl ${
                   index < Math.round(averageRating)
-                    ? "text-red-500"
+                    ? "text-yellow-500"
                     : "text-gray-300"
                 }`}
               />
@@ -74,18 +73,21 @@ const ReviewSection = ({ ratings }) => {
                       <MdStarRate
                         key={i}
                         className={`text-lg ${
-                          i < stars ? "text-red-500" : "text-gray-300"
+                          i < stars ? "text-yellow-500" : "text-gray-300"
                         }`}
                       />
                     ))}
                   </div>
-                  <div className="ml-2 w-40 h-2 bg-gray-200 rounded-full">
+                  <div className="ml-2 w-40 h-2 bg-gray-300 rounded-full">
                     <div
-                      className="h-2 bg-brown rounded-full"
+                      className="h-2 rounded-full bg-yellow-400"
                       style={{
-                        width: `${
-                          (ratingCounts[stars - 1] / ratings.length) * 100
-                        }%`,
+                        width:
+                          ratingCounts[stars - 1] > 0
+                            ? `${
+                                (ratingCounts[stars - 1] / ratings.length) * 100
+                              }%`
+                            : "0%", // Khi không có đánh giá, thanh vàng có width = 0%
                       }}
                     ></div>
                   </div>
@@ -97,7 +99,7 @@ const ReviewSection = ({ ratings }) => {
         </div>
       </div>
 
-      <div className="mt-6 space-y-4">
+      <div className="mt-10 space-y-4">
         {ratings.map((review, index) => (
           <div
             key={index}
@@ -117,6 +119,7 @@ const ReviewSection = ({ ratings }) => {
                     />
                   ))}
                 </div>
+                <span></span>
               </div>
               <div className="flex items-center mt-1 text-sm text-gray-600">
                 <FaShieldAlt className="text-orange-500 mr-1" />
@@ -125,11 +128,14 @@ const ReviewSection = ({ ratings }) => {
                 </span>
               </div>
               <p className="mt-2 text-gray-700">{review.comment}</p>
-              <Image src=""></Image>
             </div>
-
-            {/* Ngày đánh giá */}
-            <span className="text-sm text-gray-500">{review.date}</span>
+            <span className="text-sm text-gray-600 font-medium">
+              {new Date(review.commentAt).toLocaleDateString("vi-VN", {
+                day: "numeric",
+                month: "long",
+                year: "numeric",
+              })}
+            </span>
           </div>
         ))}
       </div>
