@@ -33,7 +33,10 @@ export default function ProductDetail() {
 
     // Cắt ra theo trang
     const startIndex = (page - 1) * itemsPerPage;
-    const paginatedProducts = sortedProducts.slice(startIndex, startIndex + itemsPerPage);
+    const paginatedProducts = sortedProducts.slice(
+      startIndex,
+      startIndex + itemsPerPage
+    );
 
     setProducts(paginatedProducts);
   }, [sortOrder, page, originalProducts]);
@@ -45,12 +48,18 @@ export default function ProductDetail() {
   };
 
   return (
-    <div className="px-10 my-6 min-h-screen">
+    <div className="px-10 min-h-screen bg-[#F3E8E0]">
       <div className="flex justify-between items-center">
-        <h2 className="font-semibold mt-10 mb-8">Sản Phẩm &gt; Tất Cả Sản Phẩm</h2>
+        <h2 className="font-semibold mt-10 mb-8">
+          Sản Phẩm &gt; Tất Cả Sản Phẩm
+        </h2>
 
         {/* Dropdown Lọc Giá */}
-        <select value={sortOrder} onChange={handleSortChange} className="p-2 border rounded-md">
+        <select
+          value={sortOrder}
+          onChange={handleSortChange}
+          className="p-2 border rounded-md"
+        >
           <option value="asc">Giá từ thấp đến cao</option>
           <option value="desc">Giá từ cao đến thấp</option>
         </select>
@@ -64,10 +73,14 @@ export default function ProductDetail() {
                 hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
             onClick={() => navigate(`/products/details/${product.id}`)}
           >
-            <div className={`p-2 flex items-center justify-center brightness-100 `}>
+            <div
+              className={`p-2 flex items-center justify-center brightness-100 `}
+            >
               <img src={product.image} alt={product.title} className="h-70" />
             </div>
-            <p className="font-semibold items-center justify-center mt-2 min-h-[52px]">{product.name}</p>
+            <p className="font-semibold items-center justify-center mt-2 min-h-[52px]">
+              {product.name}
+            </p>
             <p className="text-sm font-bold whitespace-pre-line mt-2">
               {`${product.price.toLocaleString("vi-VN")}`}VND
             </p>

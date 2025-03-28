@@ -34,14 +34,20 @@ const ProductsPage = () => {
         let filteredProducts = productRes.data;
 
         if (type === "category") {
-          const selectedCategory = categoryRes.data.find((cat) => cat.id === Number(typeId));
+          const selectedCategory = categoryRes.data.find(
+            (cat) => cat.id === Number(typeId)
+          );
           if (!selectedCategory) {
             setError("Danh mục không tồn tại!");
             return;
           }
-          filteredProducts = productRes.data.filter((product) => product.category.id === selectedCategory.id);
+          filteredProducts = productRes.data.filter(
+            (product) => product.category.id === selectedCategory.id
+          );
         } else if (type === "ingredient") {
-          const selectedIngredient = ingredientRes.data.find((ing) => ing.id === Number(typeId));
+          const selectedIngredient = ingredientRes.data.find(
+            (ing) => ing.id === Number(typeId)
+          );
           if (!selectedIngredient) {
             setError("Thành phần không tồn tại!");
             return;
@@ -63,7 +69,9 @@ const ProductsPage = () => {
       }
     };
 
-    const pathType = window.location.pathname.includes("category") ? "category" : "ingredient";
+    const pathType = window.location.pathname.includes("category")
+      ? "category"
+      : "ingredient";
     setCurrentType(pathType);
     fetchData(pathType, id);
   }, [id]);
@@ -82,14 +90,17 @@ const ProductsPage = () => {
   }, [sortOrder, originalProducts]);
 
   // Phân trang
-  const currentProduct = products.slice((page - 1) * itemsPerPage, page * itemsPerPage);
+  const currentProduct = products.slice(
+    (page - 1) * itemsPerPage,
+    page * itemsPerPage
+  );
 
   if (loading) return <p>Đang tải sản phẩm...</p>;
   if (error) return <p>{error}</p>;
   if (!products.length) return <p>Không có sản phẩm nào trong danh mục này.</p>;
 
   return (
-    <div className="container mx-auto p-6 min-h-screen">
+    <div className="container mx-auto p-6 min-h-screen bg-[#F3E8E0]">
       <div className="flex justify-between items-center">
         <h1 className="font-semibold mt-6 mb-8">
           <Link to={"/products"}>Sản Phẩm &gt;</Link>{" "}
@@ -99,7 +110,11 @@ const ProductsPage = () => {
         </h1>
 
         {/* Bộ lọc giá */}
-        <select value={sortOrder} onChange={(e) => setSortOrder(e.target.value)} className="p-2 border rounded-md">
+        <select
+          value={sortOrder}
+          onChange={(e) => setSortOrder(e.target.value)}
+          className="p-2 border rounded-md"
+        >
           <option value="asc">Giá từ thấp đến cao</option>
           <option value="desc">Giá từ cao đến thấp</option>
         </select>
@@ -117,7 +132,9 @@ const ProductsPage = () => {
               <img src={product.image} alt={product.title} className="h-70" />
             </div>
             <p className="font-semibold mt-2 min-h-[52px]">{product.name}</p>
-            <p className="text-sm font-bold mt-1">{product.price.toLocaleString("vi-VN")} VND</p>
+            <p className="text-sm font-bold mt-1">
+              {product.price.toLocaleString("vi-VN")} VND
+            </p>
           </div>
         ))}
       </div>
