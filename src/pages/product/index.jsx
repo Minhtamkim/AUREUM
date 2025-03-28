@@ -48,7 +48,7 @@ export default function ProductDetail() {
   };
 
   return (
-    <div className="px-10 min-h-screen bg-[#F3E8E0]">
+    <div className="px-15 min-h-screen bg-[#FCF9F6]">
       <div className="flex justify-between items-center">
         <h2 className="font-semibold mt-10 mb-8">
           Sản Phẩm &gt; Tất Cả Sản Phẩm

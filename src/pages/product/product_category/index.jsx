@@ -100,7 +100,7 @@ const ProductsPage = () => {
   if (!products.length) return <p>Không có sản phẩm nào trong danh mục này.</p>;
 
   return (
-    <div className="container mx-auto p-6 min-h-screen bg-[#F3E8E0]">
+    <div className=" px-15 min-h-screen bg-[#FCF9F6]">
       <div className="flex justify-between items-center">
         <h1 className="font-semibold mt-6 mb-8">
           <Link to={"/products"}>Sản Phẩm &gt;</Link>{" "}

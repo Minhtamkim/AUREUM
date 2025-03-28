@@ -89,8 +89,8 @@ const ProductDetailPage = () => {
   };
 
   return (
-    <div className="my-6 min-h-screen">
-      <div className="max-w-6xl mx-auto p-8 bg-white">
+    <div className="my-6 min-h-screen ">
+      <div className="max-w-6xl mx-auto p-8 ">
         <div className="flex flex-col md:flex-row items-center bg-gray-100 p-6 rounded-lg shadow-lg">
           {/* Ảnh sản phẩm */}
           <div className="w-full md:w-1/2 flex justify-center">
@@ -159,9 +159,13 @@ const ProductDetailPage = () => {
 
       <ReviewSection ratings={product.ratings || []} />
 
-      <div className=" mx-auto px-4 bg-[#faf0e8] max-w-[100%]">
-        <h2 className="text-xl font-bold text-black mb-2">Tìm hiểu thêm</h2>
-        <h3 className="text-xl font-light text-black">Có thể bạn cũng thích</h3>
+      <div className=" mx-auto px-4 bg-[#] max-w-6xl mt-7 mb-8">
+        <h2 className="text-xl font-bold text-black mb-2 uppercase">
+          Tìm hiểu thêm
+        </h2>
+        <h3 className="text-xl text-gray-600 font-medium">
+          Có thể bạn cũng thích
+        </h3>
         <div className="relative max-w-6xl mx-auto">
           {/* Danh sách sản phẩm */}
           <div className="grid grid-cols-4 gap-6 overflow-hidden transition-transform duration-300 ease-in-out">
@@ -180,8 +184,10 @@ const ProductDetailPage = () => {
                       className="h-70"
                     />
                   </div>
-                  <p className="font-semibold mt-2">{product.name}</p>
-                  <p className="text-sm text-gray-500">
+                  <p className="font-semibold items-center justify-center mt-2 min-h-[52px]">
+                    {product.name}
+                  </p>
+                  <p className="text-sm font-bold whitespace-pre-line mt-2">
                     {`${product.price.toLocaleString("vi-VN")}`}VND
                   </p>
                 </div>
