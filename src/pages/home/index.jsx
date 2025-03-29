@@ -10,10 +10,14 @@ import { useEffect } from "react";
 
 import api from "../../config/axios";
 import { Link, useNavigate } from "react-router-dom";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 function Home() {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate(); // Dùng để điều hướng
+
+  AOS.init();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -131,132 +135,138 @@ function Home() {
           animate={{ x: "-100%" }}
           transition={{ repeat: Infinity, duration: 10, ease: "linear" }}
         >
-          MỸ PHẨM 100% THUẦN CHAY CHO NÉT ĐẸP THUẦN VIỆT
+          MỸ PHẨM 100% TỰ NHIÊN CHO NÉT ĐẸP THUẦN VIỆT
         </motion.div>
       </div>
 
       <div className="bg-[#FAF0E8] py-10 ">
-        <div className="max-w-6xl mx-auto px-4">
-          {/* Tiêu đề */}
-          <h2 className="text-xl font-bold text-black mb-2">KHÁM PHÁ</h2>
-          <h3 className="text-2xl font-extrabold text-black">CÁC SẢN PHẨM NỔI BẬT</h3>
+        <div data-aos="fade-up" data-aos-anchor-placement="top-bottom">
+          <div className="max-w-6xl mx-auto px-4">
+            {/* Tiêu đề */}
+            <h2 className="text-xl font-bold text-black mb-2">KHÁM PHÁ</h2>
+            <h3 className="text-2xl font-extrabold text-black">CÁC SẢN PHẨM NỔI BẬT</h3>
 
-          {/* Grid chứa 4 sản phẩm */}
+            {/* Grid chứa 4 sản phẩm */}
 
-          {/* Sản phẩm 1 */}
-          <div className="grid grid-cols-4 gap-6 mt-6">
-            {products.slice(0, 4).map(
-              (
-                product,
-                index //map 4 items dau tien
-              ) => (
-                <div
-                  key={index}
-                  className="bg-white shadow-md rounded-lg p-4 text-center
+            {/* Sản phẩm 1 */}
+            <div className="grid grid-cols-4 gap-6 mt-6">
+              {products.slice(0, 4).map(
+                (
+                  product,
+                  index //map 4 items dau tien
+                ) => (
+                  <div
+                    key={index}
+                    className="bg-white shadow-md rounded-lg p-4 text-center
                 hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
-                  onClick={() => navigate(`/products/details/${product.id}`)} // Điều hướng khi bấm vào sản phẩm
-                >
-                  <div className={`p-2 flex items-center justify-center brightness-100 }`}>
-                    <img src={product.image} alt={product.title} className="h-70" />
+                    onClick={() => navigate(`/products/details/${product.id}`)} // Điều hướng khi bấm vào sản phẩm
+                  >
+                    <div className={`p-2 flex items-center justify-center brightness-100 }`}>
+                      <img src={product.image} alt={product.title} className="h-70" />
+                    </div>
+                    <p className="font-semibold items-center justify-center mt-2 min-h-[52px]">{product.name}</p>
+                    <p className="text-sm font-bold whitespace-pre-line mt-1">
+                      {`${product.price.toLocaleString("vi-VN")}`}VND
+                    </p>
                   </div>
-                  <p className="font-semibold items-center justify-center mt-2 min-h-[52px]">{product.name}</p>
-                  <p className="text-sm font-bold whitespace-pre-line mt-1">
-                    {`${product.price.toLocaleString("vi-VN")}`}VND
-                  </p>
-                </div>
-              )
-            )}
-          </div>
+                )
+              )}
+            </div>
 
-          {/* dan san pham */}
+            {/* dan san pham */}
+          </div>
         </div>
       </div>
       <section className="bg-[#FAF0E8] py-10 pt-50">
-        <div className="container mx-auto px-4">
-          {/* Tiêu đề */}
-          <div className="flex justify-between items-center mb-6">
-            <h2 className="text-5xl font-semibold italic text-[#835229] pb-4">Bài viết mới nhất</h2>
-            <button
-              onClick={() => navigate("/blogs/tat-ca-bai-viet")}
-              className="bg-[#835229]  rounded-md px-5 py-2  flex items-center  text-white transition
+        <div data-aos="fade-up" data-aos-anchor-placement="top-bottom">
+          <div className="container mx-auto px-4">
+            {/* Tiêu đề */}
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-5xl font-semibold italic text-[#835229] pb-4">Bài viết mới nhất</h2>
+              <button
+                onClick={() => navigate("/blogs/tat-ca-bai-viet")}
+                className="bg-[#835229]  rounded-md px-5 py-2  flex items-center  text-white transition
               hover:shadow-lg hover:scale-105  duration-300 ease-in-out cursor-pointer
               "
-              style={{ borderColor: "#835229" }}
-            >
-              TẤT CẢ BÀI VIẾT <span className="ml-2">→</span>
-            </button>
-          </div>
-
-          {/* Danh sách bài viết */}
-          <div className="grid md:grid-cols-3 gap-6 mb-10">
-            {/* Bài viết 1 */}
-            <Link to="/blogs/chuong-trinh-ung-hong-khong-cu-do-chung-tay-cham-soc-tre-em-vung-cao">
-              <div
-                className="bg-white h-full rounded-lg overflow-hidden shadow-md
-            hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
+                style={{ borderColor: "#835229" }}
               >
-                <img
-                  src="https://image.cocoonvietnam.com/uploads/Hinh_1_Social_Ung_Hong_29d3981238.jpg"
-                  alt="Bài viết 1"
-                  className="w-full"
-                />
-                <div className="p-4">
-                  <p className="text-gray-500 text-sm">Cocoon | 01.01.70</p>
-                  <h3 className="text-lg font-semibold mt-2">
-                    Chương trình "Ứng hồng Không ứng đỏ" - chung tay chăm sóc trẻ em vùng cao
-                  </h3>
-                  <p className="text-gray-700 mt-2">
-                    Chương trình "Ứng Hồng Không Ứng Đỏ" được Cocoon và UNESCO-CEP triển khai nhằm hướng đến...
-                  </p>
-                </div>
-              </div>
-            </Link>
+                TẤT CẢ BÀI VIẾT <span className="ml-2">→</span>
+              </button>
+            </div>
 
-            {/* Bài viết 2 */}
-            <Link to="/blogs/chuong-trinh-cung-aureum-song-xanh-moi-ngay">
-              <div
-                className="bg-white h-full rounded-lg overflow-hidden shadow-md
+            {/* Danh sách bài viết */}
+            <div className="grid md:grid-cols-3 gap-6 mb-10">
+              {/* Bài viết 1 */}
+              <Link to="/blogs/chuong-trinh-ung-hong-khong-cu-do-chung-tay-cham-soc-tre-em-vung-cao">
+                <div
+                  className="bg-white h-full rounded-lg overflow-hidden shadow-md
             hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
-              >
-                <img
-                  src="https://image.cocoonvietnam.com/uploads/CSR_Ra_mat_thu_doi_vo_chai_cu_2024_240909_Hinh_con_2_fe4cd256d2.jpg"
-                  alt="Bài viết 2"
-                  className="w-full"
-                />
-                <div className="p-4">
-                  <p className="text-gray-500 text-sm">Cocoon | 01.09.24</p>
-                  <h3 className="text-lg font-semibold mt-2">Chương trình "Cùng Cocoon Sống Xanh Mỗi Ngày" năm 2024</h3>
-                  <p className="text-gray-700 mt-2">
-                    Từ tháng 9/2024, Cocoon mang lại 115 điểm thu hồi vỏ chai trực tiếp, giúp khách hàng dễ dàng tham
-                    gia...
-                  </p>
+                >
+                  <img
+                    src="https://image.cocoonvietnam.com/uploads/Hinh_1_Social_Ung_Hong_29d3981238.jpg"
+                    alt="Bài viết 1"
+                    className="w-full"
+                  />
+                  <div className="p-4">
+                    <p className="text-gray-500 text-sm">Cocoon | 01.01.70</p>
+                    <h3 className="text-lg font-semibold mt-2">
+                      Chương trình "Ứng hồng Không ứng đỏ" - chung tay chăm sóc trẻ em vùng cao
+                    </h3>
+                    <p className="text-gray-700 mt-2">
+                      Chương trình "Ứng Hồng Không Ứng Đỏ" được Cocoon và UNESCO-CEP triển khai nhằm hướng đến...
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Link>
+              </Link>
 
-            {/* Bài viết 3 */}
-            <Link to="/blogs/chung-tay-cuu-tro-cho-meo-lang-thang">
-              <div
-                className="bg-white h-full rounded-lg overflow-hidden shadow-md
+              {/* Bài viết 2 */}
+              <Link to="/blogs/chuong-trinh-cung-aureum-song-xanh-moi-ngay">
+                <div
+                  className="bg-white h-full rounded-lg overflow-hidden shadow-md
             hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
-              >
-                <img
-                  src="https://image.cocoonvietnam.com/uploads/z5289500671503_2bb0e27d20058692600c5890aa8bbff2_9fbba4729a.jpg"
-                  alt="Bài viết 3"
-                  className="h-120"
-                />
-
-                <div className="p-4">
-                  <p className="text-gray-500 text-sm">Cocoon | 15.05.24</p>
-                  <h3 className="text-lg font-semibold mt-2">
-                    Cocoon x Guardian Vietnam: ra mắt 20 trạm refill tại TP.HCM
-                  </h3>
-                  <p className="text-gray-700 mt-2">
-                    Trạm Refill giúp giảm tải số lượng vỏ chai nhựa cũ thải ra ngoài môi trường...
-                  </p>
+                >
+                  <img
+                    src="https://image.cocoonvietnam.com/uploads/CSR_Ra_mat_thu_doi_vo_chai_cu_2024_240909_Hinh_con_2_fe4cd256d2.jpg"
+                    alt="Bài viết 2"
+                    className="w-full"
+                  />
+                  <div className="p-4">
+                    <p className="text-gray-500 text-sm">Cocoon | 01.09.24</p>
+                    <h3 className="text-lg font-semibold mt-2">
+                      Chương trình "Cùng Cocoon Sống Xanh Mỗi Ngày" năm 2024
+                    </h3>
+                    <p className="text-gray-700 mt-2">
+                      Từ tháng 9/2024, Cocoon mang lại 115 điểm thu hồi vỏ chai trực tiếp, giúp khách hàng dễ dàng tham
+                      gia...
+                    </p>
+                  </div>
                 </div>
-              </div>
-            </Link>
+              </Link>
+
+              {/* Bài viết 3 */}
+              <Link to="/blogs/chung-tay-cuu-tro-cho-meo-lang-thang">
+                <div
+                  className="bg-white h-full rounded-lg overflow-hidden shadow-md
+            hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
+                >
+                  <img
+                    src="https://image.cocoonvietnam.com/uploads/z5289500671503_2bb0e27d20058692600c5890aa8bbff2_9fbba4729a.jpg"
+                    alt="Bài viết 3"
+                    className="h-120"
+                  />
+
+                  <div className="p-4">
+                    <p className="text-gray-500 text-sm">Cocoon | 15.05.24</p>
+                    <h3 className="text-lg font-semibold mt-2">
+                      Cocoon x Guardian Vietnam: ra mắt 20 trạm refill tại TP.HCM
+                    </h3>
+                    <p className="text-gray-700 mt-2">
+                      Trạm Refill giúp giảm tải số lượng vỏ chai nhựa cũ thải ra ngoài môi trường...
+                    </p>
+                  </div>
+                </div>
+              </Link>
+            </div>
           </div>
         </div>
       </section>
