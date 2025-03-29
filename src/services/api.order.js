@@ -10,14 +10,50 @@ export const createOrder = async (data) => {
   }
 };
 
+export const getAllOrders = async () => {
+  try {
+    const response = await api.get("order");
+    return response.data;
+  } catch (error) {
+    toast.error(error.response.data);
+  }
+};
+
+export const cancelOrder = async (id) => {
+  try {
+    const response = await api.put(`order/cancel/${id}`);
+    return response.data;
+  } catch (error) {
+    toast.error(error.response.data);
+  }
+};
+
+export const completedOrder = async (id) => {
+  try {
+    const response = await api.put(`order/completed/${id}`);
+    return response.data;
+  } catch (error) {
+    toast.error(error.response.data);
+  }
+};
+
 export const changeStatusOrder = async (id, status) => {
   try {
     const response = await api.patch(`order/${id}?statusEnum=${status}`);
     return response.data;
   } catch (error) {
     toast.error(error.response.data);
-  } 
-}
+  }
+};
+
+export const refundOrder = async (id) => {
+  try {
+    const response = await api.patch(`order/${id}?statusEnum=REFUNDED`);
+    return response.data;
+  } catch (error) {
+    toast.error(error.response.data);
+  }
+};
 
 export const fetchOrderHistory = async () => {
   try {
@@ -26,6 +62,4 @@ export const fetchOrderHistory = async () => {
   } catch (error) {
     toast.error(error.response.data);
   }
-}
-
-
+};
