@@ -1,31 +1,150 @@
 import { useDispatch, useSelector } from "react-redux";
-import { clearCart, decreaseQuantity, increaseQuantity, removeFromCart } from "../../redux/features/cartSlice";
+import cartSlice, {
+  clearCart,
+  decreaseQuantity,
+  increaseQuantity,
+  removeFromCart,
+  applyVoucher,
+} from "../../redux/features/cartSlice";
 import { MdDelete } from "react-icons/md";
 import { FaShoppingCart } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { useNavigate } from "react-router-dom";
 import { createOrder } from "../../services/api.order";
+import { useEffect, useState } from "react";
+import api from "../../config/axios";
+import { getAllVouchers, getVoucherById } from "../../services/api.voucher";
+import { Store } from "lucide-react";
+import { RiDeleteBin6Line } from "react-icons/ri";
 
 export default function Cart() {
   const cart = useSelector((state) => state.cart);
   console.log(cart);
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  // const { cart, totalPrice, discountedTotal, appliedVoucher } = useSelector((state) => state.cart);
+  const [voucherCode, setVoucherCode] = useState(""); // ✅ State lưu mã voucher
+  const [discountAmount, setDiscountAmount] = useState(0); // ✅ Số tiền giảm giá
   const handleShopNow = () => {
     navigate("/products");
   };
 
-  const handleOrder = async () => {
+  // ✅ Thêm state để lưu ảnh đang xem
+  const [selectedImage, setSelectedImage] = useState(null);
+
+  // ✅ Khi bấm vào ảnh -> Lưu ảnh vào state
+  const handleImageClick = (image) => {
+    setSelectedImage(image);
+  };
+
+  // ✅ Đóng modal xem ảnh
+  const closeModal = () => {
+    setSelectedImage(null);
+  };
+
+  const handleCheckout = async () => {
+    if (selectedItems.length === 0) {
+      alert("Vui lòng chọn ít nhất một sản phẩm để thanh toán!");
+      return;
+    }
+
+    const selectedProducts = cart.cart.filter((item) => selectedItems.includes(item.id));
+
+  
+
     const data = {
-      details: cart?.cart.map((item) => ({
+      details: selectedProducts.map((item) => ({
         productId: item.id,
         quantity: item.quantity,
       })),
+      voucherCode: voucherCode.trim() ? voucherCode : null, 
+      discountAmount: voucherCode.trim() ? discountAmount : 0,
+      totalAmount: finalPrice, 
     };
-    const respone = await createOrder(data);
-    window.location.href = respone;
-    console.log(respone);
+    console.log(data);
+
+    console.log(finalPrice);
+    try {
+      const response = await createOrder(data);
+      if (response) {
+        window.location.href = response; 
+      }
+    } catch (error) {
+      console.error("Lỗi khi tạo đơn hàng:", error);
+      alert("Đã có lỗi xảy ra, vui lòng thử lại!");
+    }
   };
+
+  const [selectedItems, setSelectedItems] = useState([]);
+
+  // Xử lý chọn/bỏ chọn sản phẩm
+  const handleCheckboxChange = (productId) => {
+    setSelectedItems((prevSelected) =>
+      prevSelected.includes(productId) ? prevSelected.filter((id) => id !== productId) : [...prevSelected, productId]
+    );
+  };
+
+  api.get("voucher").then((res) => console.log(res.data));
+
+  const handleApplyVoucher = async () => {
+    let code = voucherCode.trim();
+
+    if (!code) {
+      setDiscountAmount(0);
+      dispatch(applyVoucher(0));
+      alert("Không nhập mã giảm giá, giữ nguyên tổng tiền.");
+      return;
+    }
+
+    try {
+      const vouchers = await getAllVouchers();
+      if (!vouchers || vouchers.length === 0) {
+        alert("Không thể lấy danh sách voucher, vui lòng thử lại!");
+        return;
+      }
+      const foundVoucher = vouchers.find((v) => v.code === code);
+
+      if (foundVoucher) {
+        let cartTotal = calculateCartTotal();
+        let discount = 0;
+
+        if (foundVoucher.discountTypeEnum === "PERCENT") {
+          discount = (cartTotal * foundVoucher.discountPrice) / 100;
+        } else {
+          discount = foundVoucher.discountPrice;
+        }
+
+        // Giảm giá không được lớn hơn tổng tiền
+        discount = Math.min(discount, cartTotal);
+
+        setDiscountAmount(discount);
+        dispatch(applyVoucher(discount));
+        console.log("Discount Amount sau khi dispatch:", discount);
+
+        alert(`Áp dụng mã giảm giá thành công! Giảm ${discount.toLocaleString("vi-VN")} VNĐ`);
+      } else {
+        alert("Mã giảm giá không hợp lệ hoặc đã hết hạn!");
+      }
+    } catch (error) {
+      console.error("Lỗi khi kiểm tra mã giảm giá:", error);
+      alert("Không thể kiểm tra mã giảm giá, vui lòng thử lại!");
+    }
+  };
+
+  const calculateCartTotal = () => {
+    return cart.cart
+      .filter((item) => selectedItems.includes(item.id))
+      .reduce((total, item) => total + (Number(item.price) || 0) * item.quantity, 0);
+  };
+
+  const totalPrice = cart.cart
+    .filter((item) => selectedItems.includes(item.id))
+    .reduce((total, item) => total + item.price * item.quantity, 0);
+
+  // const finalPrice = totalPrice - discountAmount;
+
+  //nee
+  const finalPrice = (totalPrice || 0) - (discountAmount || 0);
 
   return (
     <div className="max-w-6xl mx-auto p-6 bg-white ">
@@ -75,42 +194,55 @@ export default function Cart() {
         <div className="grid grid-cols-3 gap-4">
           <div className="col-span-2  bg-gray-100 p-4 rounded-lg">
             {cart.cart?.map((item) => (
-              <div key={item?.id} className="flex items-center justify-between p-4 border-b">
-                <img src={item?.image} alt={item?.name} className="w-24 h-24 object-cover rounded-lg" />
+              <div
+                key={item?.id}
+                className="flex items-center justify-between p-4 border-2 border-gray-200 rounded-lg shadow-md transition-transform duration-200 hover:scale-105"
+              >
+                <input
+                  type="checkbox"
+                  checked={selectedItems.includes(item.id)}
+                  onChange={() => handleCheckboxChange(item.id)}
+                />
+                {/* <img src={item?.image} alt={item?.name} className="w-24 h-24 object-cover rounded-lg" /> */}
+                <img
+                  src={item?.image}
+                  alt={item?.name}
+                  className="w-24 h-24 object-cover rounded-lg cursor-pointer"
+                  onClick={() => handleImageClick(item.image)}
+                />
                 <div className="flex-1 ml-4">
                   <h3 className="text-lg font-semibold">{item?.name}</h3>
 
                   <div className="flex gap-[100px] items-center">
                     <p className="text-gray-500">{`${item.price.toLocaleString("vi-VN")}`}VND</p>
                     {/* Số lượng sản phẩm */}
-                    <div className="flex items-center border rounded-md px-2">
+                    <div className="flex justify-center items-center bg-white shadow-lg rounded-xl overflow-hidden">
                       <button
                         onClick={() => dispatch(decreaseQuantity(item.id))}
-                        className="px-2 py-1 text-gray-700 hover:bg-gray-200 rounded-md"
+                        className="px-4 py-2 text-xl bg-gray-200 hover:bg-gray-300 active:scale-90 transition-all duration-200"
                       >
-                        ➖
+                        -
                       </button>
                       <input
                         type="number"
                         value={item.quantity}
                         min="1"
-                        className="w-12 text-center border-none outline-none bg-transparent"
+                        className="w-10 h-10 text-center   font-semibold  border-none outline-none"
                         readOnly
                       />
                       <button
                         onClick={() => dispatch(increaseQuantity(item.id))}
-                        className="px-2 py-1 text-gray-700 hover:bg-gray-200 rounded-md"
+                        className="px-4 py-2 text-xl bg-gray-200 hover:bg-gray-300 active:scale-90 transition-all duration-200"
                       >
-                        ➕
+                        +
                       </button>
                     </div>
+
                     <button
                       onClick={() => dispatch(removeFromCart(item?.id))}
-                      className=" 
-                        flex gap-1.5 items-center text-red-500"
+                      className="flex gap-1.5 items-center text-red-500 hover:scale-115 cursor-pointer transition-transform duration-200"
                     >
-                      <MdDelete />
-                      <h3>Xóa Sản Phẩm</h3>
+                      <RiDeleteBin6Line className="text-2xl" />
                     </button>
                   </div>
                 </div>
@@ -118,14 +250,27 @@ export default function Cart() {
             ))}
           </div>
 
-          <div className="bg-gray-100 p-4 rounded-lg h-[200px]">
+          <div className="bg-gray-100 p-4 rounded-lg h-[300px]">
             <h3 className="text-xl font-semibold">🧾 Hóa đơn của bạn</h3>
 
-            <span>Tổng cộng:</span>
-            <span className="text-orange-600">{"  " + cart?.totalPrice.toLocaleString("vi-VN")}VND</span>
-            {/* </p> */}
+            <input
+              type="text"
+              placeholder="Nhập mã giảm giá"
+              value={voucherCode}
+              onChange={(e) => setVoucherCode(e.target.value)}
+              className="w-full p-2 mt-2 border rounded-lg"
+            />
             <button
-              onClick={() => handleOrder()}
+              onClick={handleApplyVoucher}
+              className="w-full bg-blue-500 text-white py-2 mt-2 rounded-lg font-semibold hover:bg-blue-700"
+            >
+              Áp Dụng
+            </button>
+            <p className="mt-2">
+              Tổng cộng: <span className="text-orange-600">{finalPrice.toLocaleString("vi-VN")} VND</span>
+            </p>
+            <button
+              onClick={() => handleCheckout()}
               className="w-full bg-[#494946] text-white py-2 mt-4 rounded-lg font-semibold hover:bg-[#333331]"
             >
               Thanh Toán
@@ -141,6 +286,39 @@ export default function Cart() {
             </button>
           </div>
         </div>
+      )}
+
+      {selectedImage && (
+        <motion.div
+          className="fixed inset-0 bg-white bg-opacity-70 backdrop-blur-md flex items-center justify-center z-50"
+          initial={{ opacity: 0 }}
+          animate={{ opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.5, ease: "easeOut" }}
+        >
+          <motion.div
+            className="relative p-4 bg-white rounded-lg shadow-lg"
+            initial={{ scale: 0.6, opacity: 0 }}
+            animate={{ scale: 1, opacity: 1 }}
+            exit={{ scale: 0.6, opacity: 0 }}
+            transition={{ duration: 0.5, ease: "easeOut" }}
+          >
+            {/* Hình ảnh phóng to */}
+            <img
+              src={selectedImage}
+              alt="Product Preview"
+              className="w-auto h-auto max-w-[80vw] max-h-[90vh] object-contain rounded-lg"
+            />
+
+            {/* Nút đóng đẹp hơn */}
+            <button
+              onClick={closeModal}
+              className="absolute top-2 right-2 bg-gray-600 text-white p-2 rounded-full hover:bg-gray-700-500 transition-all"
+            >
+              ✖
+            </button>
+          </motion.div>
+        </motion.div>
       )}
     </div>
   );
