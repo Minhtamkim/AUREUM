@@ -55,6 +55,8 @@ import OrdersHistory from "./pages/profileAccount/historyOrders";
 import ManageQuestion from "./pages/admin/manage-question";
 import ManageAnswer from "./pages/admin/manage-answer";
 import ReviewSection from "./components/reviewSection";
+import ManageOverview from "./pages/admin/manage-overview";
+import { MessageProvider } from "./provider/MessageProvider";
 
 function App() {
   const router = createBrowserRouter([
@@ -299,11 +301,19 @@ function App() {
           path: "answer",
           element: <ManageAnswer />,
         },
+        {
+          path: "overview",
+          element: <ManageOverview />,
+        },
       ],
     },
   ]);
 
-  return <RouterProvider router={router} />;
+  return (
+    <MessageProvider>
+      <RouterProvider router={router} />
+     </MessageProvider>
+  );
 }
 
 export default App;
