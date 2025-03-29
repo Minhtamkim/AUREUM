@@ -1,8 +1,9 @@
-import { Button, Form, Input, Modal, Popconfirm, Table } from "antd";
+import { Button, Dropdown, Form, Input, Menu, Modal, Popconfirm, Table, Tag } from "antd";
 import { createCategory, deleteCategory, getCategory, updateCategory } from "../../../services/api.category";
 import { useEffect, useState } from "react";
 import { useForm } from "antd/es/form/Form";
 import { toast } from "react-toastify";
+import { CheckCircleOutlined, CloseCircleOutlined, EllipsisOutlined } from "@ant-design/icons";
 
 function ManageCategory() {
   const [searchText, setSearchText] = useState(""); // Lưu từ khóa tìm kiếm
@@ -22,6 +23,38 @@ function ManageCategory() {
     fetchCategories();
   }, []);
 
+  const actionMenu = (id, record) => (
+    <Menu>
+      <Menu.Item
+        key="1"
+        type="primary"
+        onClick={() => {
+          setOpen(true);
+          form.setFieldsValue({
+            ...record,
+          });
+        }}
+      >
+        <Tag color="green" icon={<CheckCircleOutlined />}>
+          Edit
+        </Tag>
+      </Menu.Item>
+      <Menu.Item key="2">
+        <Popconfirm
+          title="Delete the product"
+          description="Are you sure want to delete the product?"
+          onConfirm={() => handleDelete(id)}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Tag color="red" icon={<CloseCircleOutlined />} style={{ cursor: "pointer" }}>
+            Delete
+          </Tag>
+        </Popconfirm>
+      </Menu.Item>
+    </Menu>
+  );
+
   const columns = [
     {
       title: "Id",
@@ -39,35 +72,9 @@ function ManageCategory() {
       key: "id",
       render: (id, record) => {
         return (
-          <>
-            <Button
-              type="primary"
-              onClick={() => {
-                setOpen(true);
-                form.setFieldsValue({
-                  ...record, // chấm hỏi ? đằng sau chữ "record?" là để không hiện bảng báo lỗi (tránh crack webweb)
-                  //lệnh kiểm tra (?. là optional chaining). Nếu record.categories tồn tại,
-                  // nó sẽ lấy tất cả các id từ danh sách categories của record và
-                  // lưu vào trường categoryID. Nếu không có categories, nó sẽ gán
-                  // một mảng rỗng ([]). Việc sử dụng optional chaining giúp tránh
-                  // lỗi khi record.categories không tồn tại.
-                  // categoryID: record?.categories ? record?.categories?.map((item) => item.id) : [],
-                });
-              }}
-            >
-              Edit
-            </Button>
-
-            <Popconfirm
-              title="Delete the product"
-              description="Are you sure want to delete the product ?"
-              onConfirm={() => handleDelete(id)}
-            >
-              <Button danger type="primary">
-                Delete
-              </Button>
-            </Popconfirm>
-          </>
+          <Dropdown overlay={actionMenu(id, record)} trigger={["click"]}>
+            <Button icon={<EllipsisOutlined />}></Button>
+          </Dropdown>
         );
       },
     },
@@ -121,19 +128,19 @@ function ManageCategory() {
         type="primary"
         onClick={() => {
           setOpen(true);
+          form.resetFields(); // Reset form khi mở modal
         }}
       >
         Create New Category
       </Button>
       <Input
-        placeholder="Tìm kiếm danh mục..."
+        placeholder="Tìm kiếm danh mục theo name..."
         allowClear
         onChange={(e) => handleSearch(e.target.value)}
-        style={{ marginBottom: 16, width: 250, marginLeft: 12 }}
+        style={{ marginBottom: 16, width: 300, marginLeft: 12 }}
       />
 
       <Table columns={columns} dataSource={filteredCategories.filter((category) => !category.deleted)} rowKey="id" />
-      {/* <Table columns={columns} dataSource={categories.filter((category) => !category.deleted)} /> */}
 
       <Modal title="Create New Category" open={open} onCancel={() => setOpen(false)} onOk={() => form.submit()}>
         <Form labelCol={{ span: 24 }} form={form} onFinish={handleSubmit}>

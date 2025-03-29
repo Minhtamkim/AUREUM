@@ -1,10 +1,11 @@
 import { useForm } from "antd/es/form/Form";
 import { useEffect, useState } from "react";
 import { createVoucher, deleteVoucher, getAllVouchers, updateVoucher } from "../../../services/api.voucher";
-import { Button, DatePicker, Form, Input, Modal, Popconfirm, Radio, Select, Table } from "antd";
+import { Button, DatePicker, Dropdown, Form, Input, Menu, Modal, Popconfirm, Radio, Select, Table, Tag } from "antd";
 import viVN from "antd/es/date-picker/locale/vi_VN";
 import dayjs from "dayjs";
 import { toast } from "react-toastify";
+import { CheckCircleOutlined, CloseCircleOutlined, EllipsisOutlined } from "@ant-design/icons";
 
 function ManageVoucher() {
   const [searchText, setSearchText] = useState(""); // Lưu từ khóa tìm kiếm
@@ -28,6 +29,39 @@ function ManageVoucher() {
     { value: "EXPIRED", label: "Expired" },
     { value: "USED", label: "Used" },
   ];
+
+  const actionMenu = (id, record) => (
+    <Menu>
+      <Menu.Item
+        key="1"
+        type="primary"
+        onClick={() => {
+          setOpen(true);
+          form.setFieldsValue({
+            ...record,
+            expiryDate: record?.expiryDate ? dayjs(record.expiryDate) : null, // Chuyển đổi thành dayjs
+          });
+        }}
+      >
+        <Tag color="green" icon={<CheckCircleOutlined />}>
+          Edit
+        </Tag>
+      </Menu.Item>
+      <Menu.Item key="2">
+        <Popconfirm
+          title="Delete the product"
+          description="Are you sure want to delete the product?"
+          onConfirm={() => handleDelete(id)}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Tag color="red" icon={<CloseCircleOutlined />} style={{ cursor: "pointer" }}>
+            Delete
+          </Tag>
+        </Popconfirm>
+      </Menu.Item>
+    </Menu>
+  );
 
   const columns = [
     {
@@ -78,30 +112,9 @@ function ManageVoucher() {
       key: "id",
       render: (id, record) => {
         return (
-          <>
-            <Button
-              type="primary"
-              onClick={() => {
-                setOpen(true);
-                form.setFieldsValue({
-                  ...record,
-                  expiryDate: record?.expiryDate ? dayjs(record.expiryDate) : null, // Chuyển đổi thành dayjs
-                });
-              }}
-            >
-              Edit
-            </Button>
-
-            <Popconfirm
-              title="Delete the brand"
-              description="Are you sure want to delete the brand ?"
-              onConfirm={() => handleDelete(id)}
-            >
-              <Button danger type="primary">
-                Delete
-              </Button>
-            </Popconfirm>
-          </>
+          <Dropdown overlay={actionMenu(id, record)} trigger={["click"]}>
+            <Button icon={<EllipsisOutlined />}></Button>
+          </Dropdown>
         );
       },
     },
@@ -172,10 +185,10 @@ function ManageVoucher() {
         Create New Voucher
       </Button>
       <Input
-        placeholder="Tìm kiếm mã giảm giá..."
+        placeholder="Tìm kiếm mã giảm giá theo code..."
         allowClear
         onChange={(e) => handleSearch(e.target.value)}
-        style={{ marginBottom: 16, width: 250, marginLeft: 12 }}
+        style={{ marginBottom: 16, width: 300, marginLeft: 12 }}
       />
       <Table dataSource={filteredVouchers.filter((voucher) => !voucher.deleted)} columns={columns} rowKey="id" />
       <Modal title="Create New Voucher" open={open} onCancel={() => setOpen(false)} onOk={() => form.submit()}>

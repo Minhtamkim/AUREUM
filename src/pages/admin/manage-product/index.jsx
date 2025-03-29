@@ -1,6 +1,12 @@
 import { useEffect, useState } from "react";
-import { Button, Form, Image, Input, Modal, Popconfirm, Select, Table, Upload } from "antd";
-import { PlusOutlined } from "@ant-design/icons";
+import { Button, Dropdown, Form, Image, Input, Menu, Modal, Popconfirm, Select, Table, Tag, Upload } from "antd";
+import {
+  CheckCircleOutlined,
+  CloseCircleOutlined,
+  EditOutlined,
+  EllipsisOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import { useForm } from "antd/es/form/Form";
 import { createProduct, deleteProduct, getProduct, updateProduct } from "../../../services/api.product";
 import { getCategory } from "../../../services/api.category";
@@ -23,6 +29,7 @@ function ManageProduct() {
   const [previewOpen, setPreviewOpen] = useState(false);
   const [previewImage, setPreviewImage] = useState("");
   const [fileList, setFileList] = useState([]);
+
   const handlePreview = async (file) => {
     if (!file.url && !file.preview) {
       file.preview = await getBase64(file.originFileObj);
@@ -94,6 +101,56 @@ function ManageProduct() {
     fetchSkinTypes();
   }, []);
 
+  const actionMenu = (id, record) => (
+    <Menu>
+      <Menu.Item
+        key="1"
+        type="primary"
+        onClick={() => {
+          setOpen(true);
+          form.setFieldsValue({
+            ...record,
+            categoryId: record?.category?.id, // Lấy ID category
+            ingredientId: record?.ingredient?.map((item) => item.id), // Lấy ID ingredient
+            brandId: record?.brand?.id, // Lấy ID brand
+            skinId: record?.skin?.id, // Lấy ID skin
+          });
+          if (record?.image) {
+            // Kiểm tra xem có ảnh không
+            setFileList([
+              // Nếu có ảnh, thêm vào fileList
+              {
+                uid: "-1", // ID duy nhất
+                name: "Uploaded Image",
+                status: "done", // Đánh dấu là upload thành công
+                url: record.image, // URL ảnh từ Firebase
+              },
+            ]);
+          } else {
+            setFileList([]); // Nếu không có ảnh, đặt lại fileList rỗng
+          }
+        }}
+      >
+        <Tag color="green" icon={<CheckCircleOutlined />}>
+          Edit
+        </Tag>
+      </Menu.Item>
+      <Menu.Item key="2">
+        <Popconfirm
+          title="Delete the product"
+          description="Are you sure want to delete the product?"
+          onConfirm={() => handleDeleteProduct(id)}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Tag color="red" icon={<CloseCircleOutlined />} style={{ cursor: "pointer" }}>
+            Delete
+          </Tag>
+        </Popconfirm>
+      </Menu.Item>
+    </Menu>
+  );
+
   const columns = [
     {
       title: "Id",
@@ -125,7 +182,7 @@ function ManageProduct() {
       title: "Price",
       dataIndex: "price",
       key: "price",
-      render: (price) => new Intl.NumberFormat("vi-VN").format(price),
+      render: (price) => new Intl.NumberFormat("vi-VN").format(price) + ".VND",
     },
     {
       title: "Category",
@@ -162,51 +219,9 @@ function ManageProduct() {
       key: "id",
       render: (id, record) => {
         return (
-          <>
-            <Button
-              type="primary"
-              onClick={() => {
-                setOpen(true);
-                form.setFieldsValue({
-                  ...record, // chấm hỏi ? đằng sau chữ "record?" là để không hiện bảng báo lỗi (tránh crack webweb)
-                  //lệnh kiểm tra (?. là optional chaining). Nếu record.categories tồn tại,
-                  // nó sẽ lấy tất cả các id từ danh sách categories của record và
-                  // lưu vào trường categoryID. Nếu không có categories, nó sẽ gán
-                  // một mảng rỗng ([]). Việc sử dụng optional chaining giúp tránh
-                  // lỗi khi record.categories không tồn tại.
-                  categoryId: record?.category?.id, // Lấy ID category
-                  ingredientId: record?.ingredient?.map((item) => item.id), // Lấy ID ingredient
-                  brandId: record?.brand?.id, // Lấy ID brand
-                  skinId: record?.skin?.id, // Lấy ID skin
-                });
-                if (record?.image) {
-                  // Kiểm tra xem có ảnh không
-                  setFileList([
-                    // Nếu có ảnh, thêm vào fileList
-                    {
-                      uid: "-1", // ID duy nhất
-                      name: "Uploaded Image",
-                      status: "done", // Đánh dấu là upload thành công
-                      url: record.image, // URL ảnh từ Firebase
-                    },
-                  ]);
-                } else {
-                  setFileList([]); // Nếu không có ảnh, đặt lại fileList rỗng
-                }
-              }}
-            >
-              Edit
-            </Button>
-            <Popconfirm
-              title="Delete the product"
-              description="Are you sure want to delete the product ?"
-              onConfirm={() => handleDeleteProduct(id)}
-            >
-              <Button danger type="primary">
-                Delete
-              </Button>
-            </Popconfirm>
-          </>
+          <Dropdown overlay={actionMenu(id, record)} trigger={["click"]}>
+            <Button icon={<EllipsisOutlined />}></Button>
+          </Dropdown>
         );
       },
     },
@@ -290,10 +305,10 @@ function ManageProduct() {
         Create New Product
       </Button>
       <Input
-        placeholder="Tìm kiếm sản phẩm..."
+        placeholder="Tìm kiếm theo name, category, brand, skin..."
         allowClear
         onChange={(e) => handleSearch(e.target.value)}
-        style={{ marginBottom: 16, width: 250, marginLeft: 12 }}
+        style={{ marginBottom: 16, width: 350, marginLeft: 12 }}
       />
 
       <Table dataSource={filteredProducts.filter((product) => !product.deleted)} columns={columns} rowKey="id" />
@@ -462,13 +477,17 @@ function ManageProduct() {
                 required: true,
                 message: "Code can not be empty!",
               },
+              {
+                pattern: /^PD\d{5}$/,
+                message: "Code must be in the format PDxxxxx!",
+              },
             ]}
           >
             <Input placeholder="Nhập mã sản phẩm" />
           </Form.Item>
           <Form.Item label="Image" name="image">
             <Upload
-              action="https://14.225.211.152:8081/api"
+              beforeUpload={() => false}
               listType="picture-card"
               fileList={fileList}
               onPreview={handlePreview}
