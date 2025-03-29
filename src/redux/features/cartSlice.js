@@ -1,15 +1,34 @@
 import { createSlice } from "@reduxjs/toolkit";
 
+// const initialState = {
+//   cart: [],
+//   totalQuantity: 0,
+//   totalPrice: 0,
+// };
 const initialState = {
   cart: [],
   totalQuantity: 0,
   totalPrice: 0,
+  appliedVoucher: null, // Lưu voucher đang áp dụng
+  discountedTotal: 0, // Tổng tiền sau khi trừ voucher
 };
 
 export const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
+    //apply voucher
+    applyVoucher: (state, action) => {
+      const voucher = action.payload;
+      state.appliedVoucher = voucher;
+
+      if (voucher.discountTypeEnum === "PERCENT") {
+        state.discountedTotal = state.totalPrice * (1 - voucher.discountPrice / 100);
+      } else {
+        state.discountedTotal = Math.max(state.totalPrice - voucher.discountPrice, 0);
+      }
+    },
+
     //them product vao cart
     addToCart: (state, actions) => {
       const product = actions.payload;
@@ -52,6 +71,8 @@ export const cartSlice = createSlice({
       state.cart = [];
       state.totalQuantity = 0;
       state.totalPrice = 0;
+      state.appliedVoucher = null;
+      state.discountedTotal = 0;
     },
 
     increaseQuantity: (state, action) => {
@@ -77,6 +98,7 @@ export const cartSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { addToCart, removeFromCart, clearCart, increaseQuantity, decreaseQuantity } = cartSlice.actions;
+export const { applyVoucher, addToCart, removeFromCart, clearCart, increaseQuantity, decreaseQuantity } =
+  cartSlice.actions;
 
 export default cartSlice;
