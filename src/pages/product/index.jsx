@@ -1,6 +1,11 @@
+import { FiShoppingCart } from "react-icons/fi";
+import { addToCart } from "../../redux/features/cartSlice";
 import { useEffect, useState } from "react";
-import api from "../../config/axios";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
+import api from "../../config/axios";
+import { Alert } from "antd";
+import { showMessage } from "../../utils/message";
 
 export default function ProductDetail() {
   const [products, setProducts] = useState([]);
@@ -9,9 +14,12 @@ export default function ProductDetail() {
   const [totalPage, setTotalPages] = useState(1);
   const [sortOrder, setSortOrder] = useState("asc"); // Mặc định từ thấp đến cao
   const navigate = useNavigate();
+  const dispatch = useDispatch();
+  const [quantity, setQuantity] = useState(1);
+  const totalQuantity = useSelector((state) => state.cart?.totalQuantity || 0);
+  const [successMessage, setSuccessMessage] = useState(""); // State để hiển thị thông báo
 
   const itemsPerPage = 12;
-
   useEffect(() => {
     const fetchData = async () => {
       const response = await api.get(
@@ -33,10 +41,7 @@ export default function ProductDetail() {
 
     // Cắt ra theo trang
     const startIndex = (page - 1) * itemsPerPage;
-    const paginatedProducts = sortedProducts.slice(
-      startIndex,
-      startIndex + itemsPerPage
-    );
+    const paginatedProducts = sortedProducts.slice(startIndex, startIndex + itemsPerPage);
 
     setProducts(paginatedProducts);
   }, [sortOrder, page, originalProducts]);
@@ -47,19 +52,40 @@ export default function ProductDetail() {
     setPage(1); // Khi thay đổi cách sắp xếp, reset về trang 1
   };
 
+  const handleAddToCart = (product, e) => {
+    e.stopPropagation(); // Ngăn sự kiện click vào sản phẩm kích hoạt
+    const token = localStorage.getItem("token");
+    if (!token) {
+      navigate("/login");
+    } else {
+      const plain = {
+        ...product,
+        quantityPlain: quantity,
+        pricePlain: quantity * product.price,
+      };
+      dispatch(addToCart(plain));
+
+      // Hiển thị thông báo
+      showMessage({ content: "Đã thêm thành công sản phẩm vào giỏ hàng!" });
+      console.log("Thông báo hiển thị:", successMessage);
+
+      // Ẩn thông báo sau 3 giây
+      setTimeout(() => {
+        setSuccessMessage("");
+        console.log("Thông báo ẩn");
+      }, 3000);
+    }
+  };
   return (
     <div className="px-15 min-h-screen bg-[#FCF9F6]">
+      {successMessage && (
+        <Alert message={successMessage} type="success" showIcon className="fixed top-4 right-4 z-50" />
+      )}
       <div className="flex justify-between items-center">
-        <h2 className="font-semibold mt-10 mb-8">
-          Sản Phẩm &gt; Tất Cả Sản Phẩm
-        </h2>
+        <h2 className="font-semibold mt-10 mb-8">Sản Phẩm &gt; Tất Cả Sản Phẩm</h2>
 
         {/* Dropdown Lọc Giá */}
-        <select
-          value={sortOrder}
-          onChange={handleSortChange}
-          className="p-2 border rounded-md"
-        >
+        <select value={sortOrder} onChange={handleSortChange} className="p-2 border rounded-md">
           <option value="asc">Giá từ thấp đến cao</option>
           <option value="desc">Giá từ cao đến thấp</option>
         </select>
@@ -69,21 +95,24 @@ export default function ProductDetail() {
         {products.map((product, index) => (
           <div
             key={index}
-            className="bg-white shadow-md rounded-lg p-4 text-center
-                hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
+            className="bg-white shadow-md rounded-lg p-4 text-center relative
+              hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
             onClick={() => navigate(`/products/details/${product.id}`)}
           >
-            <div
-              className={`p-2 flex items-center justify-center brightness-100 `}
-            >
-              <img src={product.image} alt={product.title} className="h-70" />
+            <div className="relative">
+              <img src={product.image} alt={product.title} className="h-70 w-full object-cover" />
+
+              {/* Icon giỏ hàng nằm bên phải của ảnh */}
+              <button
+                onClick={(e) => handleAddToCart(product, e)}
+                className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md"
+              >
+                <FiShoppingCart className="w-6 h-6 text-[#835229] hover:text-red-500 transition" />
+              </button>
             </div>
-            <p className="font-semibold items-center justify-center mt-2 min-h-[52px]">
-              {product.name}
-            </p>
-            <p className="text-sm font-bold whitespace-pre-line mt-2">
-              {`${product.price.toLocaleString("vi-VN")}`}VND
-            </p>
+
+            <p className="font-semibold mt-2 min-h-[52px]">{product.name}</p>
+            <p className="text-sm font-bold mt-2">{`${product.price.toLocaleString("vi-VN")}`} VND</p>
           </div>
         ))}
       </div>
