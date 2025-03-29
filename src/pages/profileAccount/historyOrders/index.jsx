@@ -4,12 +4,14 @@ import { useNavigate } from "react-router-dom";
 import { FaShoppingCart } from "react-icons/fa";
 import { motion } from "framer-motion";
 import { HiMiniPlusSmall, HiMiniMinusSmall } from "react-icons/hi2"; // Icon xổ xuống
-import { Button } from "antd";
+import { Button, Popconfirm } from "antd";
 import FeedbackPopup from "../../../components/feedbackPopup";
 import { createRating, createReport } from "../../../services/api.feedback";
 import api from "../../../config/axios";
 import { toast } from "react-toastify";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
+import { cancelOrder } from "../../../services/api.order";
+import { QuestionCircleOutlined } from "@ant-design/icons";
 
 const OrdersHistory = () => {
   const navigate = useNavigate();
@@ -58,6 +60,22 @@ const OrdersHistory = () => {
     handleClosePopup();
   };
 
+  const handleCancelOrder = async (orderId) => {
+    try {
+      await cancelOrder(orderId);
+      toast.success("Đơn hàng đã được hủy thành công!");
+
+      // Cập nhật trạng thái đơn hàng sau khi hủy
+      setOrders((prevOrders) =>
+        prevOrders.map((order) =>
+          order.id === orderId ? { ...order, status: "CANCELED" } : order
+        )
+      );
+    } catch (error) {
+      toast.error("Hủy đơn hàng thất bại, vui lòng thử lại!");
+    }
+  };
+
   const fetchOrders = async () => {
     try {
       const response = await api.get("order/user");
@@ -81,14 +99,12 @@ const OrdersHistory = () => {
   console.log(selectedOrderDetail);
   return (
     <div className="min-h-screen bg-[#FAF6EE] px-10 py-5">
-      <h1 className="text-2xl font-semibold text-black mb-4">
-        Lịch Sử Mua Hàng
-      </h1>
+      <h2 className="text-lg py-3 font-semibold ">Đơn Đặt Hàng</h2>
       {loading ? (
         <p>Đang tải...</p>
       ) : orders.length > 0 ? (
         <div className="max-w-4xl mx-auto p-4">
-          <h1 className="text-2xl font-bold">Đơn Đặt Hàng</h1>
+          {/* <h1 className="text-2xl font-bold">Đơn Đặt Hàng</h1> */}
           {orders.map((order) => (
             <div key={order?.id} className="border-b py-4">
               <div className="flex justify-between items-center">
@@ -99,13 +115,19 @@ const OrdersHistory = () => {
                   <p className=" text-gray-600 text-xs mt-2">
                     Mã đơn hàng #<span>{order?.id}</span>
                   </p>
-                  <p className="font-bold flex mt-2">
+                  <p
+                    className={`font-sans font-bold flex mt-2 ${
+                      order?.status === "CANCELLED" ? "text-red-500" : ""
+                    }`}
+                  >
                     {order?.status === "COMPLETED"
                       ? "Đã Hoàn Thành"
                       : order?.status === "PAID"
                       ? "Đã Thanh Toán"
                       : order?.status === "IN_PROCESS"
                       ? "Chưa Thanh Toán"
+                      : order?.status === "CANCELLED"
+                      ? "Đã hủy"
                       : ""}
                   </p>
                 </div>
@@ -189,24 +211,37 @@ const OrdersHistory = () => {
                   </div>
                   <div className="flex justify-end mt-4">
                     {
-                      order?.status === "IN_PROCESS" ? (
-                        // Chỉ hiển thị nút Thanh Toán nếu đơn hàng đang xử lý
-                        <Button
-                          type="default"
-                          className="!bg-transparent !border-[black] !text-black px-4 py-2 rounded-md transition-all duration-300 
-                        hover:!bg-[#EDE0D4] hover:!text-black"
-                        >
-                          Thanh Toán
-                        </Button>
-                      ) : order?.status === "PAID" ? (
+                      // order?.status === "IN_PROCESS" ? (
+                      //   // Chỉ hiển thị nút Thanh Toán nếu đơn hàng đang xử lý
+                      //   <Button
+                      //     type="default"
+                      //     className="!bg-transparent !border-[black] !text-black px-4 py-2 rounded-md transition-all duration-300
+                      //   hover:!bg-[#EDE0D4] hover:!text-black"
+                      //   >
+                      //     Thanh Toán
+                      //   </Button>
+
+                      order?.status === "PAID" ? (
                         // Chỉ hiển thị nút Hủy Đơn Hàng nếu đơn hàng đã thanh toán
-                        <Button
-                          type="default"
-                          className="!bg-transparent !border-[black] !text-black px-4 py-2 rounded-md transition-all duration-300 
-                        hover:!bg-[#EDE0D4] hover:!text-black"
+                        <Popconfirm
+                          title="Hủy đơn hàng"
+                          description="Bạn có chắc chắn muốn hủy đơn hàng này không?"
+                          okText="Hoàn thành"
+                          cancelText="Hủy"
+                          onConfirm={() => handleCancelOrder(order.id)}
+                          okButtonProps={{
+                            className:
+                              "!bg-transparent !border-[#EDE0D4] !text-black px-4 py-2 rounded-md transition-all duration-300 hover:!bg-[#EDE0D4] hover:!text-black",
+                          }}
                         >
-                          Hủy Đơn Hàng
-                        </Button>
+                          <Button
+                            type="default"
+                            className="!bg-transparent !border-[#EDE0D4] !text-black px-4 py-2 rounded-md transition-all duration-300 
+                            hover:!bg-[#EDE0D4] hover:!text-black"
+                          >
+                            Hủy đơn hàng
+                          </Button>
+                        </Popconfirm>
                       ) : null /* Không hiển thị nút nào nếu status là COMPLETED */
                     }
                   </div>
