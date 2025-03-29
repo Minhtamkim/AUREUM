@@ -1,10 +1,20 @@
-import { Button, DatePicker, Form, Input, Modal, Popconfirm, Radio, Select, Table, Tag } from "antd";
+/* eslint-disable no-unused-vars */
+import {
+  Button,
+  DatePicker,
+  Form,
+  Input,
+  Modal,
+  Popconfirm,
+  Radio,
+  Select,
+  Table,
+  Tag,
+} from "antd";
 import { useForm } from "antd/es/form/Form";
 import { useEffect, useState } from "react";
-import { getUser, toggleUserActive, updateUser } from "../../../services/api.user";
-import { toast } from "react-toastify";
+import { getUser, toggleUserActive } from "../../../services/api.user";
 import viVN from "antd/es/date-picker/locale/vi_VN";
-import dayjs from "dayjs";
 import { getSkinType } from "../../../services/api.skin";
 
 function ManageAccount() {
@@ -84,7 +94,11 @@ function ManageAccount() {
       title: "Active",
       dataIndex: "active",
       key: "active",
-      render: (active) => <Tag color={active ? "green" : "red"}>{active ? "Active" : "Inactive"}</Tag>,
+      render: (active) => (
+        <Tag color={active ? "green" : "red"}>
+          {active ? "Active" : "Inactive"}
+        </Tag>
+      ),
     },
     {
       title: "Action",
@@ -93,20 +107,6 @@ function ManageAccount() {
       render: (id, record) => {
         return (
           <>
-            <Button
-              type="primary"
-              onClick={() => {
-                setOpen(true);
-                form.setFieldsValue({
-                  ...record,
-                  dateOfBirth: record?.dateOfBirth ? dayjs(record.dateOfBirth) : null, // Chuyển đổi thành dayjs
-                  skinId: record?.skin?.id,
-                });
-              }}
-            >
-              Edit
-            </Button>
-
             <Popconfirm
               title="Ban user"
               description="Are you sure want to ban user?"
@@ -141,29 +141,18 @@ function ManageAccount() {
 
     const filtered = users.filter(
       (user) =>
-        removeDiacritics(user.fullName?.toLowerCase() || "").includes(normalizedValue) ||
-        removeDiacritics(user.email?.toLowerCase() || "").includes(normalizedValue) ||
-        removeDiacritics(user.phone?.toLowerCase() || "").includes(normalizedValue)
+        removeDiacritics(user.fullName?.toLowerCase() || "").includes(
+          normalizedValue
+        ) ||
+        removeDiacritics(user.email?.toLowerCase() || "").includes(
+          normalizedValue
+        ) ||
+        removeDiacritics(user.phone?.toLowerCase() || "").includes(
+          normalizedValue
+        )
     );
 
     setFilteredUsers(filtered);
-  };
-
-  const handleSubmit = async (formValues) => {
-    const formattedValues = {
-      ...formValues,
-      dateOfBirth: formValues.dateOfBirth ? formValues.dateOfBirth.format("YYYY-MM-DD") : null,
-    };
-
-    if (formValues.id) {
-      // nếu có id thì là update
-      const response = await updateUser({ id: formValues.id, user: formattedValues }); // goi api update
-      console.log(response); // log response
-      toast.success("Successfully update user!"); // thong bao thanh cong
-    }
-    setOpen(false); // dong modal
-    form.resetFields(); // reset form
-    fetchUsers(); // cập nhật lại danh sách product
   };
 
   const disableFutureDate = (current) => {
@@ -174,19 +163,27 @@ function ManageAccount() {
   return (
     <div>
       <Input
-        placeholder="Tìm kiếm người dùng..."
+        placeholder="Tìm kiếm người dùng theo fullName, email, phone..."
         allowClear
         onChange={(e) => handleSearch(e.target.value)}
-        style={{ marginBottom: 16, width: 250, marginLeft: 12 }}
+        style={{ marginBottom: 16, width: 400, marginLeft: 12 }}
       />
-      <Table dataSource={filteredUsers.filter((user) => user)} columns={columns} rowKey="id" />
-      <Modal title="Edit User" open={open} onCancel={() => setOpen(false)} onOk={() => form.submit()}>
+      <Table
+        dataSource={filteredUsers.filter((user) => user)}
+        columns={columns}
+        rowKey="id"
+      />
+      <Modal
+        title="Edit User"
+        open={open}
+        onCancel={() => setOpen(false)}
+        onOk={() => form.submit()}
+      >
         <Form
           labelCol={{
             span: 24,
           }}
           form={form}
-          onFinish={handleSubmit}
         >
           <Form.Item label="Id" name="id" hidden>
             <Input />
@@ -261,7 +258,9 @@ function ManageAccount() {
               showSearch // Cho phép tìm kiếm
               optionFilterProp="children" // Lọc theo nội dung hiển thị
               allowClear
-              filterOption={(input, option) => option.children.toLowerCase().includes(input.toLowerCase())} // Hàm lọc danh sách theo input
+              filterOption={(input, option) =>
+                option.children.toLowerCase().includes(input.toLowerCase())
+              } // Hàm lọc danh sách theo input
             >
               {skinTypes?.map((skin) => (
                 <Select.Option value={skin.id} key={skin.id}>
