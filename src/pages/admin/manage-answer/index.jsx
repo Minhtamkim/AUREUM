@@ -1,11 +1,11 @@
-import { Button, Form, Input, Modal, Popconfirm, Select, Table } from "antd";
+import { Button, Dropdown, Form, Input, Menu, Modal, Popconfirm, Select, Table, Tag } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { useEffect, useState } from "react";
 import { toast } from "react-toastify";
 import { createAnswer, deleteAnswer, getAnswers, updateAnswer } from "../../../services/api.answer";
 import { getQuestions } from "../../../services/api.question";
 import { getSkinType } from "../../../services/api.skin";
-import { render } from "sass";
+import { CheckCircleOutlined, CloseCircleOutlined, EllipsisOutlined } from "@ant-design/icons";
 
 function ManageAnswer() {
   const [searchText, setSearchText] = useState(""); // Lưu từ khóa tìm kiếm
@@ -38,6 +38,40 @@ function ManageAnswer() {
     fetchSkins();
   }, []);
 
+  const actionMenu = (id, record) => (
+    <Menu>
+      <Menu.Item
+        key="1"
+        type="primary"
+        onClick={() => {
+          setOpen(true);
+          form.setFieldsValue({
+            ...record,
+            questionId: record?.question?.id, // Lấy ID question
+            skinId: record?.skin?.id, // Lấy ID skin
+          });
+        }}
+      >
+        <Tag color="green" icon={<CheckCircleOutlined />}>
+          Edit
+        </Tag>
+      </Menu.Item>
+      <Menu.Item key="2">
+        <Popconfirm
+          title="Delete the product"
+          description="Are you sure want to delete the product?"
+          onConfirm={() => handleDelete(id)}
+          okText="Yes"
+          cancelText="No"
+        >
+          <Tag color="red" icon={<CloseCircleOutlined />} style={{ cursor: "pointer" }}>
+            Delete
+          </Tag>
+        </Popconfirm>
+      </Menu.Item>
+    </Menu>
+  );
+
   const columns = [
     {
       title: "Id",
@@ -67,32 +101,9 @@ function ManageAnswer() {
       key: "id",
       render: (id, record) => {
         return (
-          <>
-            <Button
-              type="primary"
-              onClick={() => {
-                setOpen(true);
-                form.setFieldsValue({
-                  ...record,
-
-                  questionId: record?.question?.id, // Lấy ID question
-                  skinId: record?.skin?.id, // Lấy ID skin
-                });
-              }}
-            >
-              Edit
-            </Button>
-
-            <Popconfirm
-              title="Delete the answer!"
-              description="Are you sure want to delete the answer ?"
-              onConfirm={() => handleDelete(id)}
-            >
-              <Button danger type="primary">
-                Delete
-              </Button>
-            </Popconfirm>
-          </>
+          <Dropdown overlay={actionMenu(id, record)} trigger={["click"]}>
+            <Button icon={<EllipsisOutlined />}></Button>
+          </Dropdown>
         );
       },
     },
@@ -150,15 +161,16 @@ function ManageAnswer() {
         type="primary"
         onClick={() => {
           setOpen(true);
+          form.resetFields(); // Reset form khi mở modal
         }}
       >
         Create New Answer
       </Button>
       <Input
-        placeholder="Tìm kiếm Câu Trả Lời..."
+        placeholder="Tìm kiếm câu trả lời theo name, question, skin..."
         allowClear
         onChange={(e) => handleSearch(e.target.value)}
-        style={{ marginBottom: 16, width: 250, marginLeft: 12 }}
+        style={{ marginBottom: 16, width: 350, marginLeft: 12 }}
       />
 
       <Table dataSource={filteredAnswers.filter((answer) => !answer.deleted)} columns={columns} rowKey="id" />
