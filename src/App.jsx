@@ -57,6 +57,8 @@ import ManageAnswer from "./pages/admin/manage-answer";
 import ReviewSection from "./components/reviewSection";
 import ManageOverview from "./pages/admin/manage-overview";
 import { MessageProvider } from "./provider/MessageProvider";
+import ManageOrder from "./pages/admin/manage-order";
+import ManageReport from "./pages/admin/manage-report";
 
 function App() {
   const router = createBrowserRouter([
@@ -278,6 +280,10 @@ function App() {
           element: <ManageAccount />,
         },
         {
+          path: "order",
+          element: <ManageOrder />,
+        },
+        {
           path: "category",
           element: <ManageCategory />,
         },
@@ -305,6 +311,10 @@ function App() {
           path: "overview",
           element: <ManageOverview />,
         },
+        {
+          path: "report",
+          element: <ManageReport />,
+        },
       ],
     },
   ]);
@@ -312,7 +322,7 @@ function App() {
   return (
     <MessageProvider>
       <RouterProvider router={router} />
-     </MessageProvider>
+    </MessageProvider>
   );
 }
 

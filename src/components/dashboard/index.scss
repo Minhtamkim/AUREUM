@@ -1,0 +1,26 @@
+/* Đổi màu mũi tên ở góc dưới sidebar thành màu trắng */
+.ant-layout-sider-trigger {
+  color: white !important; /* Màu mũi tên */
+  background-color: transparent !important; /* Màu nền trong suốt */
+}
+
+/* Đổi màu chữ trong nút mũi tên thành màu cam */
+.ant-layout-sider-trigger {
+  color: orange !important; /* Màu chữ khi hover */
+}
+
+/* index.scss */
+
+.logo-container {
+  padding-top: 20px;
+  padding-bottom: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.logo-container img {
+  width: 100%;
+  max-width: 150px; /* Cập nhật lại kích thước logo */
+  cursor: pointer;
+}

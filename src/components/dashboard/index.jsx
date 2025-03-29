@@ -1,15 +1,11 @@
 import { useState } from "react";
-import {
-  DashboardOutlined,
-  LogoutOutlined,
-  PieChartOutlined,
-  ProductOutlined,
-  ShoppingOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { DashboardOutlined, LogoutOutlined, ShoppingOutlined, UserOutlined } from "@ant-design/icons";
 import { TbBrandCodesandbox } from "react-icons/tb";
+import { BsHandbag } from "react-icons/bs";
 import { BiLeaf } from "react-icons/bi";
+import { FaListUl } from "react-icons/fa";
 import { IoTicketOutline } from "react-icons/io5";
+import { AiOutlineTags } from "react-icons/ai";
 import { Avatar, Breadcrumb, Divider, Dropdown, Layout, Menu, theme } from "antd";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -18,22 +14,23 @@ import { MdFace4 } from "react-icons/md";
 import { clearCart } from "../../redux/features/cartSlice";
 import { MdOutlineQuestionAnswer } from "react-icons/md";
 import { FaQuestion } from "react-icons/fa";
-import { PiGauge } from "react-icons/pi";
+import "./index.scss";
 
 const { Content, Footer, Sider } = Layout;
-function getItem(label, key, icon, children) {
-  return {
-    key,
-    icon,
-    children,
-    label: <Link to={key}>{label}</Link>,
-  };
-}
 
 const Dashboard = () => {
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user); // Lấy user từ Redux
   const userRole = user?.roleEnum; // Lấy role của user
+
+  function getItem(label, key, icon, children) {
+    return {
+      key,
+      icon,
+      children,
+      label: <Link to={key}>{label}</Link>,
+    };
+  }
 
   // const items = [
   //   getItem("Account", "/dashboard/account", <UserOutlined />),
@@ -45,27 +42,31 @@ const Dashboard = () => {
   // ];
 
   const items = [
-    getItem("Overview", "/dashboard/overview", <PiGauge />),
-    ...(userRole === "ADMIN" ? [getItem("Account", "/dashboard/account", <UserOutlined />)] : []),
+    getItem("Overview", "/dashboard/overview", <TbBrandCodesandbox />),
+    ...(userRole === "ADMIN" ? [getItem("Accounts", "/dashboard/account", <UserOutlined />)] : []),
     ...(userRole === "ADMIN" || userRole === "MANAGER"
       ? [
-          getItem("Product", "/dashboard/product", <ProductOutlined />),
-          getItem("Category", "/dashboard/category", <PieChartOutlined />),
-          getItem("Ingredient", "/dashboard/ingredient", <BiLeaf />),
-          getItem("Brand", "/dashboard/brand", <TbBrandCodesandbox />),
+          getItem("Orders", "/dashboard/order", <BsHandbag />),
+          getItem("Products", "/dashboard/product", <FaListUl />),
+          getItem("Categories", "/dashboard/category", <AiOutlineTags />),
+          getItem("Ingredients", "/dashboard/ingredient", <BiLeaf />),
+          getItem("Brands", "/dashboard/brand", <TbBrandCodesandbox />),
         ]
       : []),
     ...(userRole === "ADMIN" || userRole === "STAFF"
       ? [
-          getItem("Voucher", "/dashboard/voucher", <IoTicketOutline />),
-          getItem("Question", "/dashboard/question", <FaQuestion />),
-          getItem("Answer", "/dashboard/answer", <MdOutlineQuestionAnswer />),
+          getItem("Vouchers", "/dashboard/voucher", <IoTicketOutline />),
+          getItem("Questions", "/dashboard/question", <FaQuestion />),
+          getItem("Answers", "/dashboard/answer", <MdOutlineQuestionAnswer />),
+          getItem("Reports", "/dashboard/report", <MdOutlineQuestionAnswer />),
         ]
       : []),
   ];
 
   const navigate = useNavigate();
   const [collapsed, setCollapsed] = useState(false);
+  const [selectedKey, setSelectedKey] = useState("1"); // State lưu trữ mục được chọn
+
   const {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken();
@@ -102,6 +103,9 @@ const Dashboard = () => {
     </Menu>
   );
 
+  const handleMenuClick = (e) => {
+    setSelectedKey(e.key); // Lưu trữ key của mục đang chọn
+  };
   return (
     <Layout style={{ minHeight: "100vh" }}>
       <Sider
@@ -109,26 +113,34 @@ const Dashboard = () => {
         collapsed={collapsed}
         onCollapse={(value) => setCollapsed(value)}
         style={{
-          height: "100vh",
           position: "fixed",
           left: 0,
           top: 0,
           bottom: 0,
           overflow: "auto",
+          background: "white",
         }}
       >
-        <div className="demo-logo-vertical" />
-        <Menu theme="dark" defaultSelectedKeys={["1"]} mode="inline" items={items} />
+        <div className="logo-container flex justify-center p-4">
+          <img className="h-12 cursor-pointer" src="/images/logo-aureum.jpg" alt="Logo" onClick={() => navigate("/")} />
+        </div>
+        {/* <div className="demo-logo-vertical" /> */}
+        <Menu
+          theme="light"
+          defaultSelectedKeys={[selectedKey]}
+          mode="inline"
+          items={items}
+          onClick={handleMenuClick} // Đặt sự kiện click để thay đổi mục được chọn
+        />
       </Sider>
       <Layout style={{ marginLeft: collapsed ? 80 : 200 }}>
-        <div className="bg-white flex justify-between w-[100%] p-3 sticky top-0 z-50 shadow-md">
-          <img className="h-12 " src="/images/logo-aureum.jpg" alt="" onClick={() => navigate("/")} />
+        <div className="bg-white flex justify-end w-[100%] p-5 sticky top-0 z-10">
           <div>
             {user ? (
               <Dropdown overlay={userMenu} trigger={["click"]}>
                 <div className="flex items-center cursor-pointer text-black gap-2.5 font-semibold pr-3 pt-1.5">
                   <Avatar icon={<UserOutlined />} className="mr-2" />
-                  <span>Hi, {user?.fullName || "User"}</span>
+                  <span className="font-semibold text-black">Hi, {user?.fullName || "User"}</span>
                 </div>
               </Dropdown>
             ) : (
@@ -143,17 +155,15 @@ const Dashboard = () => {
             )}
           </div>
         </div>
-        <Content style={{ margin: "0 16px" }}>
-          <Breadcrumb style={{ margin: "16px 0" }}>
-            <Breadcrumb.Item>Admin</Breadcrumb.Item>
-            <Breadcrumb.Item>Manage</Breadcrumb.Item>
+        <Content style={{ margin: "25px" }}>
+          <Breadcrumb style={{ margin: "5px 0" }}>
+            <Breadcrumb.Item>{userRole}</Breadcrumb.Item>
           </Breadcrumb>
           <div
             style={{
               padding: 24,
+              background: "#f0f2f5",
               minHeight: 360,
-              background: colorBgContainer,
-              borderRadius: borderRadiusLG,
             }}
           >
             <Outlet />
