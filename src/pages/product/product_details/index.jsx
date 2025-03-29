@@ -2,9 +2,11 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import api from "../../../config/axios";
 import { FaChevronLeft, FaChevronRight } from "react-icons/fa";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addToCart } from "../../../redux/features/cartSlice";
 import ReviewSection from "../../../components/reviewSection";
+import { createOrder } from "../../../services/api.order";
+import { showMessage } from "../../../utils/message";
 
 const ProductDetailPage = () => {
   const { product_id } = useParams(); // Lấy product_id từ URL
@@ -17,6 +19,8 @@ const ProductDetailPage = () => {
   const [startIndex, setStartIndex] = useState(0);
   const itemsPerRow = 4;
   const dispatch = useDispatch();
+  const cart = useSelector((state) => state.cart);
+  const [successMessage, setSuccessMessage] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,10 +45,7 @@ const ProductDetailPage = () => {
         const productRes = await api.get(`product/${product_id}`);
         setProduct(productRes.data);
       } catch (err) {
-        console.error(
-          "Lỗi API:",
-          err.response ? err.response.data : err.message
-        );
+        console.error("Lỗi API:", err.response ? err.response.data : err.message);
         setError("Không thể tải thông tin sản phẩm.");
       } finally {
         setLoading(false);
@@ -85,20 +86,32 @@ const ProductDetailPage = () => {
       };
       dispatch(addToCart(plain));
       console.log("Adding to cart:", product); // Kiểm tra dữ liệu
+      // setSuccessMessage(`Đã thêm thành công sản phẩm vào giỏ hàng!`);
+      // showMessage({ content: "Đã thêm thành công sản phẩm vào giỏ hàng!", type: "error" });
+      showMessage({ content: "Đã thêm thành công sản phẩm vào giỏ hàng!" });
+      // setTimeout(() => setSuccessMessage(""), 3000); // Ẩn thông báo sau 3 giây
     }
+  };
+  const handleOrder = async () => {
+    const data = {
+      details: cart?.cart.map((item) => ({
+        productId: item.id,
+        quantity: item.quantity,
+      })),
+    };
+    const respone = await createOrder(data);
+    window.location.href = respone;
+    console.log(respone);
   };
 
   return (
     <div className="my-6 min-h-screen ">
+      {/* {successMessage && <Alert message={successMessage} type="success" showIcon className="fixed top-4 z-50" />} */}
       <div className="max-w-6xl mx-auto p-8 ">
         <div className="flex flex-col md:flex-row items-center bg-gray-100 p-6 rounded-lg shadow-lg">
           {/* Ảnh sản phẩm */}
           <div className="w-full md:w-1/2 flex justify-center">
-            <img
-              src={product.image}
-              alt={product.name}
-              className="w-96 h-96 object-cover rounded-lg shadow-md"
-            />
+            <img src={product.image} alt={product.name} className="w-96 h-96 object-cover rounded-lg shadow-md" />
           </div>
 
           {/* Thông tin sản phẩm */}
@@ -111,9 +124,7 @@ const ProductDetailPage = () => {
               </div>
             </div>
 
-            <p className="text-2xl font-semibold text-gray-900 mt-4">
-              {`${product.price.toLocaleString("vi-VN")}`}VND
-            </p>
+            <p className="text-2xl font-semibold text-gray-900 mt-4">{`${product.price.toLocaleString("vi-VN")}`}VND</p>
 
             {/* Thêm phần hiển thị loại da của sản phẩm */}
             <p className="text-lg font-semibold text-gray-700 mt-3">
@@ -135,9 +146,7 @@ const ProductDetailPage = () => {
               >
                 -
               </button>
-              <span className="px-4 py-2 bg-white border text-lg">
-                {quantity}
-              </span>
+              <span className="px-4 py-2 bg-white border text-lg">{quantity}</span>
               <button
                 onClick={increaseQuantity}
                 className="bg-gray-300 text-gray-800 px-3 py-2 rounded-r-lg hover:bg-gray-400"
@@ -145,14 +154,25 @@ const ProductDetailPage = () => {
                 +
               </button>
             </div>
+            <div className="flex gap-4 mt-10">
+              {/* Nút thêm vào giỏ */}
+              <button
+                onClick={() => handleAddToCart(product)}
+                className="flex-1 bg-[#835229] text-white px-15 py-3 rounded-lg text-base font-semibold 
+               hover:bg-[#6c4221] transition duration-300 shadow-md min-w-[220px]"
+              >
+                Thêm vào giỏ {`${product.price.toLocaleString("vi-VN")}`} VND
+              </button>
 
-            {/* Nút thêm vào giỏ */}
-            <button
-              onClick={() => handleAddToCart(product)}
-              className="mt-6 bg-[#835229] text-white px-6 py-3 rounded-lg text-lg font-medium hover:bg-gray-800 transition"
-            >
-              Thêm vào giỏ - {`${product.price.toLocaleString("vi-VN")}`}VND
-            </button>
+              {/* Nút thanh toán */}
+              <button
+                onClick={() => handleOrder()}
+                className="flex-1 bg-[#835229] text-white px-15py-3 rounded-lg text-base font-semibold 
+               hover:bg-[#b9855c] transition duration-300 shadow-md whitespace-nowrap min-w-[220px]"
+              >
+                Thanh Toán Ngay
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -160,38 +180,26 @@ const ProductDetailPage = () => {
       <ReviewSection ratings={product.ratings || []} />
 
       <div className=" mx-auto px-4 bg-[#] max-w-6xl mt-7 mb-8">
-        <h2 className="text-xl font-bold text-black mb-2 uppercase">
-          Tìm hiểu thêm
-        </h2>
-        <h3 className="text-xl text-gray-600 font-medium">
-          Có thể bạn cũng thích
-        </h3>
+        <h2 className="text-xl font-bold text-black mb-2 uppercase">Tìm hiểu thêm</h2>
+        <h3 className="text-xl text-gray-600 font-medium">Có thể bạn cũng thích</h3>
         <div className="relative max-w-6xl mx-auto">
           {/* Danh sách sản phẩm */}
           <div className="grid grid-cols-4 gap-6 overflow-hidden transition-transform duration-300 ease-in-out">
-            {products
-              .slice(startIndex, startIndex + itemsPerRow)
-              .map((product, index) => (
-                <div
-                  key={index}
-                  className="bg-white shadow-md rounded-lg p-4 text-center hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
-                  onClick={() => navigate(`/products/details/${product.id}`)}
-                >
-                  <div className="p-2 flex items-center justify-center">
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      className="h-70"
-                    />
-                  </div>
-                  <p className="font-semibold items-center justify-center mt-2 min-h-[52px]">
-                    {product.name}
-                  </p>
-                  <p className="text-sm font-bold whitespace-pre-line mt-2">
-                    {`${product.price.toLocaleString("vi-VN")}`}VND
-                  </p>
+            {products.slice(startIndex, startIndex + itemsPerRow).map((product, index) => (
+              <div
+                key={index}
+                className="bg-white shadow-md rounded-lg p-4 text-center hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
+                onClick={() => navigate(`/products/details/${product.id}`)}
+              >
+                <div className="p-2 flex items-center justify-center">
+                  <img src={product.image} alt={product.name} className="h-70" />
                 </div>
-              ))}
+                <p className="font-semibold items-center justify-center mt-2 min-h-[52px]">{product.name}</p>
+                <p className="text-sm font-bold whitespace-pre-line mt-2">
+                  {`${product.price.toLocaleString("vi-VN")}`}VND
+                </p>
+              </div>
+            ))}
           </div>
 
           {/* Nút mũi tên điều hướng */}
