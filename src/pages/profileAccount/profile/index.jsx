@@ -1,17 +1,24 @@
-import { useEffect, useState } from "react";
-import { FaEnvelope, FaLock, FaUser, FaPhone, FaCalendar } from "react-icons/fa";
-import { data, useNavigate } from "react-router-dom";
+/* eslint-disable no-unused-vars */
+import { use, useEffect, useState } from "react";
+import {
+  FaEnvelope,
+  FaLock,
+  FaUser,
+  FaPhone,
+  FaCalendar,
+} from "react-icons/fa";
 import { useDispatch, useSelector } from "react-redux";
 import { getUserById, updateUser } from "../../../services/api.user";
 import { MdFace4 } from "react-icons/md";
 import { updateUserInfo } from "../../../redux/features/userSlice";
+import OrdersHistory from "../historyOrders";
+import { useLocation } from "react-router-dom";
 
 function AccountInfo() {
-  const navigate = useNavigate();
   const dispatch = useDispatch();
   const user = useSelector((state) => state.user); // Lấy user từ Redux
   const [showPassword, setShowPassword] = useState(false);
-
+  const location = useLocation();
   const [activeTab, setActiveTab] = useState("account");
   const [customer, setCustomer] = useState({
     email: "",
@@ -45,6 +52,14 @@ function AccountInfo() {
   }, [user]);
 
   useEffect(() => {
+    const params = new URLSearchParams(location.search);
+    const tab = params.get("tab");
+    if (tab === "history" || tab === "account") {
+      setActiveTab(tab);
+    }
+  }, [location]);
+
+  useEffect(() => {
     console.log("customer state:", customer);
   }, [customer]);
   // Hàm xử lý thay đổi input
@@ -71,7 +86,8 @@ function AccountInfo() {
     switch (name) {
       case "email":
         if (!value.trim()) errorMsg = "Email không được để trống.";
-        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value)) errorMsg = "Email không hợp lệ.";
+        else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(value))
+          errorMsg = "Email không hợp lệ.";
         break;
       case "password":
         if (value && value.length < 8) {
@@ -83,7 +99,8 @@ function AccountInfo() {
         if (!value.trim()) errorMsg = "Họ và tên không được để trống.";
         break;
       case "phone":
-        if (!/^\d{10,11}$/.test(value)) errorMsg = "Số điện thoại không hợp lệ.";
+        if (!/^\d{10,11}$/.test(value))
+          errorMsg = "Số điện thoại không hợp lệ.";
         break;
       case "birthDate":
         if (!value) errorMsg = "Vui lòng chọn ngày sinh.";
@@ -145,24 +162,36 @@ function AccountInfo() {
   return (
     <div className="min-h-screen bg-[#FEFBF4] px-25 py-10">
       {/* Tiêu đề */}
-      <h1 className="text-2xl font-bold text-gray-900 mb-4 pb-10">TÀI KHOẢN</h1>
+      <h1 className="tracking-wide font-sans text-2xl font-bold text-gray-900 mb-4 pb-10">
+        TÀI KHOẢN
+      </h1>
 
       {/* Tabs */}
       <div className="flex space-x-6">
         <button
           className={`py-4 px-6 ${
-            activeTab === "account" ? "bg-[#F7F0E4] font-semibold" : "text-gray-500"
+            activeTab === "account"
+              ? "bg-[#F7F0E4] font-semibold"
+              : "text-gray-500"
           } rounded-t-lg`}
-          onClick={() => setActiveTab("account")}
+          onClick={() => {
+            setActiveTab("account");
+            window.history.pushState(null, "", "/profile?tab=account");
+          }}
         >
           👤 Thông tin tài khoản
         </button>
 
         <button
           className={`py-3 px-6 ${
-            activeTab === "history" ? "bg-[#F7F0E4] font-semibold" : "text-gray-500"
+            activeTab === "history"
+              ? "bg-[#F7F0E4] font-semibold"
+              : "text-gray-500"
           } rounded-t-lg`}
-          onClick={() => navigate(`/historyOrders`)}
+          onClick={() => {
+            setActiveTab("history");
+            window.history.pushState(null, "", "/profile?tab=history");
+          }}
         >
           ⏳ Lịch sử mua hàng
         </button>
@@ -171,7 +200,9 @@ function AccountInfo() {
       {/* Nội dung tab Thông tin tài khoản */}
       {activeTab === "account" && (
         <div className="bg-[#F7F0E4] p-6 rounded-b-lg text-gray-800">
-          <h2 className="text-lg py-3 font-semibold mb-4">Thông tin tài khoản</h2>
+          {/* <h2 className="text-lg py-3 font-semibold mb-4">
+            Thông tin tài khoản
+          </h2> */}
 
           {/* Email */}
           <div className="grid grid-cols-2 gap-6">
@@ -185,7 +216,9 @@ function AccountInfo() {
                 className="bg-transparent border-b border-gray-400 focus:outline-none focus:border-black w-80 p-1"
                 placeholder="Nhập email"
               />
-              {errors.email && <p className="text-red-500 text-sm">{errors.email}</p>}
+              {errors.email && (
+                <p className="text-red-500 text-sm">{errors.email}</p>
+              )}
             </div>
             <div className="flex items-center space-x-4 pb-4">
               <MdFace4 className="text-gray-500" />
@@ -232,13 +265,20 @@ function AccountInfo() {
                 className="bg-transparent border-b border-gray-400 focus:outline-none focus:border-black w-80 p-1"
                 placeholder="Nhập họ và tên"
               />
-              {errors.fullName && <p className="text-red-500 text-sm">{errors.fullName}</p>}
+              {errors.fullName && (
+                <p className="text-red-500 text-sm">{errors.fullName}</p>
+              )}
             </div>
 
             {/* Ngày sinh */}
             <div className="flex items-center space-x-4 pb-4">
               <FaCalendar className="text-gray-500" />
-              <input type="date" name="dateOfBirth" value={customer.dateOfBirth} onChange={handleChange} />
+              <input
+                type="date"
+                name="dateOfBirth"
+                value={customer.dateOfBirth}
+                onChange={handleChange}
+              />
             </div>
 
             {/* Số điện thoại */}
@@ -252,7 +292,9 @@ function AccountInfo() {
                 className="bg-transparent border-b border-gray-400 focus:outline-none focus:border-black w-80 p-1"
                 placeholder="Nhập số điện thoại"
               />
-              {errors.phone && <p className="text-red-500 text-sm">{errors.phone}</p>}
+              {errors.phone && (
+                <p className="text-red-500 text-sm">{errors.phone}</p>
+              )}
             </div>
 
             {/* Giới tính */}
@@ -279,12 +321,18 @@ function AccountInfo() {
             >
               HỦY BỎ
             </button>
-            <button onClick={handleSubmit} className="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800">
+            <button
+              onClick={handleSubmit}
+              className="bg-black text-white px-6 py-2 rounded-md hover:bg-gray-800"
+            >
               LƯU THÔNG TIN MỚI
             </button>
           </div>
         </div>
       )}
+
+      {/* Nội dung tab Lịch Sử Mua Hàng */}
+      {activeTab === "history" && <OrdersHistory />}
     </div>
   );
 }
