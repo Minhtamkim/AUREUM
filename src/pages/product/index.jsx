@@ -6,8 +6,11 @@ import { useNavigate } from "react-router-dom";
 import api from "../../config/axios";
 import { Alert } from "antd";
 import { showMessage } from "../../utils/message";
+import AOS from "aos";
+import "aos/dist/aos.css";
 
 export default function ProductDetail() {
+  AOS.init();
   const [products, setProducts] = useState([]);
   const [originalProducts, setOriginalProducts] = useState([]); // Lưu toàn bộ dữ liệu gốc
   const [page, setPage] = useState(1);
@@ -90,31 +93,32 @@ export default function ProductDetail() {
           <option value="desc">Giá từ cao đến thấp</option>
         </select>
       </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12 mt-6">
-        {products.map((product, index) => (
-          <div
-            key={index}
-            className="bg-white shadow-md rounded-lg p-4 text-center relative
+      <div data-aos="fade-up" data-aos-anchor-placement="top-bottom">
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-12 mt-6">
+          {products.map((product, index) => (
+            <div
+              key={index}
+              className="bg-white shadow-md rounded-lg p-4 text-center relative
               hover:shadow-lg hover:scale-105 transition duration-300 ease-in-out cursor-pointer"
-            onClick={() => navigate(`/products/details/${product.id}`)}
-          >
-            <div className="relative">
-              <img src={product.image} alt={product.title} className="h-70 w-full object-cover" />
+              onClick={() => navigate(`/products/details/${product.id}`)}
+            >
+              <div className="relative">
+                <img src={product.image} alt={product.title} className="h-70 w-full object-cover" />
 
-              {/* Icon giỏ hàng nằm bên phải của ảnh */}
-              <button
-                onClick={(e) => handleAddToCart(product, e)}
-                className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md"
-              >
-                <FiShoppingCart className="w-6 h-6 text-[#835229] hover:text-red-500 transition" />
-              </button>
+                {/* Icon giỏ hàng nằm bên phải của ảnh */}
+                <button
+                  onClick={(e) => handleAddToCart(product, e)}
+                  className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md"
+                >
+                  <FiShoppingCart className="w-6 h-6 text-[#835229] hover:text-red-500 transition" />
+                </button>
+              </div>
+
+              <p className="font-semibold mt-2 min-h-[52px]">{product.name}</p>
+              <p className="text-sm font-bold mt-2">{`${product.price.toLocaleString("vi-VN")}`} VND</p>
             </div>
-
-            <p className="font-semibold mt-2 min-h-[52px]">{product.name}</p>
-            <p className="text-sm font-bold mt-2">{`${product.price.toLocaleString("vi-VN")}`} VND</p>
-          </div>
-        ))}
+          ))}
+        </div>
       </div>
 
       <div className="flex justify-center items-center space-x-4 mt-6">
