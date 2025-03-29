@@ -170,7 +170,14 @@ const RegisterPage = () => {
     }
   };
   return (
-    <div className="min-h-screen flex items-center justify-center bg-[#f8f2ea]">
+    <div className="min-h-screen flex items-center justify-center ">
+      <div
+        className="fixed inset-0 min-h-screen bg-[url('/images/backgroundLogin.jpg')] bg-cover bg-center bg-no-repeat"
+        style={{
+          filter: "blur(5px)", // Giảm độ mờ nếu cần
+          zIndex: "-1", // Đảm bảo lớp nền nằm phía sau
+        }}
+      ></div>
       <div className="max-w-md w-full bg-white p-8 rounded-lg shadow-lg">
         <h2 className="text-2xl font-bold text-center mb-4">Xin chào thành viên mới</h2>
         <p className="text-center text-gray-600 mb-6">Để tạo tài khoản, xin hãy nhập thông tin dưới đây:</p>
