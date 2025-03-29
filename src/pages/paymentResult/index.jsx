@@ -59,7 +59,7 @@ const PaymentResult = () => {
       statusEnums = "PAID";
     } else {
       setPaymentStatus(false);
-      statusEnums = "CANCEL";
+      statusEnums = "IN_PROCESS";
     }
 
     const response = await changeStatusOrder(orderId, statusEnums);
