@@ -19,9 +19,9 @@ export const getAllOrders = async () => {
   }
 };
 
-export const cancelOrder = async (id) => {
+export const cancelOrder = async (orderId) => {
   try {
-    const response = await api.put(`order/cancel/${id}`);
+    const response = await api.put(`order/cancel/${orderId}`);
     return response.data;
   } catch (error) {
     toast.error(error.response.data);
@@ -63,3 +63,5 @@ export const fetchOrderHistory = async () => {
     toast.error(error.response.data);
   }
 };
+
+

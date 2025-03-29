@@ -51,7 +51,6 @@ import RedirectToSkinPage from "./pages/Routine";
 import ForgotPassword from "./pages/password/forgot-password";
 import ResetPassword from "./pages/password/reset-password";
 import ManageVoucher from "./pages/admin/manage-voucher";
-import OrdersHistory from "./pages/profileAccount/historyOrders";
 import ManageQuestion from "./pages/admin/manage-question";
 import ManageAnswer from "./pages/admin/manage-answer";
 import ReviewSection from "./components/reviewSection";
@@ -198,10 +197,6 @@ function App() {
         {
           path: "profile",
           element: <ProfileAccount />,
-        },
-        {
-          path: "historyOrders",
-          element: <OrdersHistory />,
         },
         {
           path: "quiz",
