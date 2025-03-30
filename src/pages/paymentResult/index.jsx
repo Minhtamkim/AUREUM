@@ -1,5 +1,11 @@
+/* eslint-disable no-unused-vars */
 import { useState, useEffect } from "react";
-import { FaCheckCircle, FaTimesCircle, FaHome, FaHistory } from "react-icons/fa";
+import {
+  FaCheckCircle,
+  FaTimesCircle,
+  FaHome,
+  FaHistory,
+} from "react-icons/fa";
 import useGetParams from "../../hooks/useGetParams";
 import { changeStatusOrder } from "../../services/api.order";
 import { useDispatch } from "react-redux";
@@ -95,32 +101,42 @@ const PaymentResult = () => {
           {paymentStatus ? (
             <div className="text-center">
               <FaCheckCircle className="mx-auto h-16 w-16 text-green-500 animate-bounce" />
-              <h2 className="mt-4 text-3xl font-bold text-green-800">Payment Successful!</h2>
+              <h2 className="mt-4 text-3xl font-bold text-green-800">
+                Thanh toán thành công!
+              </h2>
               <div className="mt-6 space-y-4 text-left">
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Order Number:</span>
+                  <span className="text-gray-600">Số đơn hàng:</span>
                   <span className="font-semibold">{orderDetails.orderId}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Amount:</span>
-                  <span className="font-semibold">{`${orderDetails.amount.toLocaleString("vi-VN")} VND`}</span>
+                  <span className="text-gray-600">Tổng số tiền:</span>
+                  <span className="font-semibold">{`${orderDetails.amount.toLocaleString(
+                    "vi-VN"
+                  )} VND`}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Bank:</span>
+                  <span className="text-gray-600">Ngân hàng:</span>
                   <span className="font-semibold">{orderDetails.bank}</span>
                 </div>
                 <div className="flex justify-between items-center">
-                  <span className="text-gray-600">Date & Time:</span>
-                  <span className="font-semibold">{formatVNPayDate(orderDetails.date)}</span>
+                  <span className="text-gray-600">Ngày & Giờ:</span>
+                  <span className="font-semibold">
+                    {formatVNPayDate(orderDetails.date)}
+                  </span>
                 </div>
               </div>
             </div>
           ) : (
             <div className="text-center">
               <FaTimesCircle className="mx-auto h-16 w-16 text-red-500 animate-bounce" />
-              <h2 className="mt-4 text-3xl font-bold text-red-800">Payment Failed!</h2>
+              <h2 className="mt-4 text-3xl font-bold text-red-800">
+                Thanh toán thất bại!
+              </h2>
               <div className="mt-6">
-                <h3 className="text-lg font-semibold text-red-700 mb-4">Possible Reasons:</h3>
+                <h3 className="text-lg font-semibold text-red-700 mb-4">
+                  Nguyên nhân có thể xảy ra:{" "}
+                </h3>
                 <ul className="text-left space-y-2">
                   {failureReasons.map((reason, index) => (
                     <li key={index} className="flex items-start">
@@ -129,7 +145,9 @@ const PaymentResult = () => {
                     </li>
                   ))}
                 </ul>
-                <p className="mt-6 text-gray-600">Please try again or contact support if the issue persists.</p>
+                <p className="mt-6 text-gray-600">
+                  Vui lòng thử lại hoặc liên hệ hỗ trợ nếu vấn đề vẫn tiếp diễn.{" "}
+                </p>
               </div>
             </div>
           )}
@@ -140,13 +158,13 @@ const PaymentResult = () => {
             className="w-full flex justify-center items-center px-4 py-3 border border-transparent text-sm font-medium rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
             onClick={() => (window.location.href = "/")}
           >
-            <FaHome className="mr-2" /> Return to Home
+            <FaHome className="mr-2" /> Trở về trang chủ
           </button>
           <button
             className="w-full flex justify-center items-center px-4 py-3 border border-gray-300 text-sm font-medium rounded-md text-gray-700 bg-white hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-blue-500 transition-colors duration-200"
-            onClick={() => navigate("/historyOrders")}
+            onClick={() => navigate("/profile?tab=history")}
           >
-            <FaHistory className="mr-2" /> View Order History
+            <FaHistory className="mr-2" /> Xem lịch sử đơn hàng
           </button>
         </div>
       </div>

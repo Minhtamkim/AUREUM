@@ -129,14 +129,16 @@ const ReviewSection = ({ ratings }) => {
                 </span>
               </div>
               <p className="mt-2 text-gray-700">{review.comment}</p>
-              <Image.PreviewGroup items={[review.image]}>
-                <Image
-                  width={150}
-                  height={200}
-                  src={review.image}
-                  className="mt-2"
-                />
-              </Image.PreviewGroup>
+              {review.image && (
+                <Image.PreviewGroup items={[review.image]}>
+                  <Image
+                    width={150}
+                    height={200}
+                    src={review.image}
+                    className="mt-2"
+                  />
+                </Image.PreviewGroup>
+              )}
             </div>
             <span className="text-sm text-gray-600 font-medium">
               {new Date(review.commentAt).toLocaleDateString("vi-VN", {

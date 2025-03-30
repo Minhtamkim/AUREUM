@@ -167,7 +167,7 @@ const Header = () => {
         danger
         onClick={handleLogout}
       >
-        Logout
+        Đăng xuất
       </Menu.Item>
     </Menu>
   );

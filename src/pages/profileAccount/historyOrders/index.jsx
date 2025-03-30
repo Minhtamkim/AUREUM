@@ -8,10 +8,9 @@ import { Button, Popconfirm } from "antd";
 import FeedbackPopup from "../../../components/feedbackPopup";
 import { createRating, createReport } from "../../../services/api.feedback";
 import api from "../../../config/axios";
-import { toast } from "react-toastify";
 import { AiOutlineExclamationCircle } from "react-icons/ai";
 import { cancelOrder } from "../../../services/api.order";
-import { QuestionCircleOutlined } from "@ant-design/icons";
+import { showMessage } from "../../../utils/message";
 
 const OrdersHistory = () => {
   const navigate = useNavigate();
@@ -22,6 +21,7 @@ const OrdersHistory = () => {
 
   const [selectedOrder, setSelectedOrder] = useState(null);
   const [selectedOrderDetail, setSelectedOrderDetail] = useState(null);
+  const [successMessage, setSuccessMessage] = useState("");
 
   const handleOpenPopup = (mode) => {
     setPopupModel(mode);
@@ -39,9 +39,15 @@ const OrdersHistory = () => {
       };
       const response = await createRating(newData);
       console.log(response);
-      toast.success("Đánh giá thành công!", {
-        position: "top-right",
-      });
+      // Hiển thị thông báo
+      showMessage({ content: "Đánh giá thành công!" });
+      console.log("Thông báo hiển thị:", successMessage);
+
+      // Ẩn thông báo sau 3 giây
+      setTimeout(() => {
+        setSuccessMessage("");
+        console.log("Thông báo ẩn");
+      }, 3000);
       fetchOrders();
     } else {
       const newData = {
@@ -50,9 +56,15 @@ const OrdersHistory = () => {
         image: data.image,
       };
       const response = await createReport(newData);
-      toast.success("Báo cáo thành công!", {
-        position: "top-right",
-      });
+      // Hiển thị thông báo
+      showMessage({ content: "Báo cáo thành công!" });
+      console.log("Thông báo hiển thị:", successMessage);
+
+      // Ẩn thông báo sau 3 giây
+      setTimeout(() => {
+        setSuccessMessage("");
+        console.log("Thông báo ẩn");
+      }, 3000);
 
       console.log(response);
       fetchOrders();
@@ -63,7 +75,14 @@ const OrdersHistory = () => {
   const handleCancelOrder = async (orderId) => {
     try {
       await cancelOrder(orderId);
-      toast.success("Đơn hàng đã được hủy thành công!");
+
+      // Hiển thị thông báo
+      showMessage({ content: "Đơn hàng đã hủy thành công!" });
+
+      // Ẩn thông báo sau 3 giây
+      setTimeout(() => {
+        setSuccessMessage("");
+      }, 3000);
 
       // Cập nhật trạng thái đơn hàng sau khi hủy
       setOrders((prevOrders) =>
@@ -72,7 +91,17 @@ const OrdersHistory = () => {
         )
       );
     } catch (error) {
-      toast.error("Hủy đơn hàng thất bại, vui lòng thử lại!");
+      // Hiển thị thông báo
+      showMessage({
+        content: "Hủy đơn hàng thất bại, Vui lòng thử lại!",
+        type: "error",
+      });
+
+      // Ẩn thông báo sau 3 giây
+      setTimeout(() => {
+        setSuccessMessage("");
+        console.log("Thông báo ẩn");
+      }, 3000);
     }
   };
 
