@@ -70,8 +70,6 @@ export default function ProductDetail() {
 
       // Hiển thị thông báo
       showMessage({ content: "Đã thêm thành công sản phẩm vào giỏ hàng!" });
-      console.log("Thông báo hiển thị:", successMessage);
-
       // Ẩn thông báo sau 3 giây
       setTimeout(() => {
         setSuccessMessage("");
@@ -108,9 +106,9 @@ export default function ProductDetail() {
                 {/* Icon giỏ hàng nằm bên phải của ảnh */}
                 <button
                   onClick={(e) => handleAddToCart(product, e)}
-                  className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md"
+                  className="absolute top-2 right-2 hover:text-[#835229] transition duration-300"
                 >
-                  <FiShoppingCart className="w-6 h-6 text-[#835229] hover:text-red-500 transition" />
+                  <FiShoppingCart className="w-7 h-7 text-[#835229] hover:text-red-600" />
                 </button>
               </div>
 
