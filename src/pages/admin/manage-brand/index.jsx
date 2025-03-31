@@ -59,6 +59,7 @@ function ManageBrand() {
       title: "Id",
       dataIndex: "id",
       key: "id",
+      sorter: (a, b) => b.id - a.id,
     },
     {
       title: "Name",

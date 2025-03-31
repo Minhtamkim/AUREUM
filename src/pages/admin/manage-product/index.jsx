@@ -155,6 +155,7 @@ function ManageProduct() {
       title: "Id",
       dataIndex: "id",
       key: "id",
+      sorter: (a, b) => b.id - a.id,
     },
     {
       title: "Name",
@@ -200,6 +201,14 @@ function ManageProduct() {
       dataIndex: "skin",
       key: "skin",
       render: (skin) => skin?.name,
+      filters: [
+        { text: "Da Thường", value: "Da Thường" },
+        { text: "Da Dầu", value: "Da Dầu" },
+        { text: "Da Khô", value: "Da Khô" },
+        { text: "Da Hỗn Hợp", value: "Da Hỗn Hợp" },
+        { text: "Da Nhạy Cảm", value: "Da Nhạy Cảm" },
+      ],
+      onFilter: (value, record) => record.skin.name.includes(value),
     },
     {
       title: "Image",

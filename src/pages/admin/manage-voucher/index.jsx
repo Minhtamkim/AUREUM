@@ -68,6 +68,7 @@ function ManageVoucher() {
       title: "Id",
       dataIndex: "id",
       key: "id",
+      sorter: (a, b) => b.id - a.id,
     },
     {
       title: "Voucher Code",
@@ -78,7 +79,7 @@ function ManageVoucher() {
       title: "Discount Price",
       dataIndex: "discountPrice",
       key: "discountPrice",
-      render: (price) => new Intl.NumberFormat("vi-VN").format(price),
+      render: (price) => new Intl.NumberFormat("vi-VN").format(price) + "VND",
     },
     {
       title: "Discount Type",

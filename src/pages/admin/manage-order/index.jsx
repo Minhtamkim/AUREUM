@@ -69,7 +69,7 @@ function ManageOrder() {
       title: "Order",
       dataIndex: "id",
       key: "id",
-      sorter: (a, b) => a.id - b.id, // Sắp xếp theo giá trị số giảm dần để ID mới nhất lên đầu
+      sorter: (a, b) => b.id - a.id, // Sắp xếp theo giá trị số giảm dần để ID mới nhất lên đầu
       render: (text) => `#${text}`, // Thêm dấu "#" trước ID
       // Add an onClick event to navigate to order detail
       onCell: (record) => ({

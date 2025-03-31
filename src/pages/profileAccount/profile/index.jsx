@@ -229,11 +229,11 @@ function AccountInfo() {
                 className="bg-transparent border-b border-gray-400 focus:outline-none focus:border-black w-80 p-1"
               >
                 <option value="">Chọn loại da</option>
-                <option value="1">da thường</option>
-                <option value="2">da dầu</option>
-                <option value="3">da khô</option>
-                <option value="4">da hỗ hợp</option>
-                <option value="5">da nhạy cảm</option>
+                <option value="1">Da Thường</option>
+                <option value="2">Da Dầu</option>
+                <option value="3">Da Khô</option>
+                <option value="4">Da Hỗn Hợp</option>
+                <option value="5">Da Nhạy Cảm</option>
               </select>
             </div>
             {/* Mật khẩu */}

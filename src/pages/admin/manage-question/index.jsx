@@ -59,6 +59,7 @@ function ManageQuestion() {
       title: "Id",
       dataIndex: "id",
       key: "id",
+      sorter: (a, b) => b.id - a.id,
     },
     {
       title: "Question",
@@ -105,11 +106,10 @@ function ManageQuestion() {
 
   const handleSubmit = async (formValues) => {
     if (formValues.id) {
-      const response = await updateQuestion({ id: formValues.id, brand: formValues });
+      const response = await updateQuestion({ id: formValues.id, question: formValues });
       console.log(response);
       showMessage({
         content: "Cập nhật câu hỏi thành công!",
-        duration: 3,
       });
     }
 
@@ -119,7 +119,6 @@ function ManageQuestion() {
       console.log(response);
       showMessage({
         content: "Tạo mới câu hỏi thành công!",
-        duration: 3,
       });
     }
 
