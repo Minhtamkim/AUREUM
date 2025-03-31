@@ -16,8 +16,34 @@ import "aos/dist/aos.css";
 function Home() {
   const [products, setProducts] = useState([]);
   const navigate = useNavigate(); // Dùng để điều hướng
+  const [isLoaded, setIsLoaded] = useState(false);
 
   AOS.init();
+
+  useEffect(() => {
+    const preloadImages = async () => {
+      const imgList = [
+        "/images/Slide1.jpg",
+        "/images/Slide2.jpg",
+        "/images/Slide3.jpg",
+        "/images/Slide4.jpg",
+        "/images/Slide5.jpg",
+      ];
+
+      const promises = imgList.map((src) => {
+        return new Promise((resolve) => {
+          const img = new Image();
+          img.src = src;
+          img.onload = resolve;
+        });
+      });
+
+      await Promise.all(promises);
+      setIsLoaded(true);
+    };
+
+    preloadImages();
+  }, []);
 
   useEffect(() => {
     const fetchData = async () => {
@@ -34,7 +60,7 @@ function Home() {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true, // Tự động lướt qua
-    autoplaySpeed: 3000, // Thời gian hiển thị mỗi ảnh (3s)
+    autoplaySpeed: 2000, // Thời gian hiển thị mỗi ảnh (3s)
     cssEase: "ease-in-out",
     centerMode: false,
     centerPadding: "50px",
@@ -46,26 +72,27 @@ function Home() {
     <>
       <div className="body_content bg-[#FAF0E8] py-5">
         <div className="flex items-center justify-center 	">
-          <Slider className="overflow-hidden max-w-[1200px]  " {...settings}>
-            <div>
-              <img src="https://template.canva.com/EAGSe-jkm2o/1/0/1600w-MyX8gsmbwVA.jpg" alt="Slide 1" />
-            </div>
-            <div>
-              <img src="https://template.canva.com/EAGSe-jkm2o/1/2/1600w-TPAlZ_aih2c.jpg" alt="Slide 2" />
-            </div>
-            <div>
-              <img src="https://template.canva.com/EAGSe-jkm2o/1/5/1600w-cIpDDJpgc_U.jpg" alt="Slide 3" />
-            </div>
-            <div>
-              <img src="https://template.canva.com/EAGSe-jkm2o/1/6/1600w-lHmU2V9LHCY.jpg" alt="Slide 3" />
-            </div>
-            <div>
-              <img src="https://template.canva.com/EAGSe-jkm2o/1/4/1600w-qBUXtF5gU6A.jpg" alt="Slide 3" />
-            </div>
-            <div>
-              <img src="https://template.canva.com/EAGSe-jkm2o/1/3/1600w-EvEyLCp3dzw.jpg" alt="Slide 3" />
-            </div>
-          </Slider>
+          {isLoaded ? (
+            <Slider className="overflow-hidden max-w-[1200px]" {...settings}>
+              <div>
+                <img src="/images/Slide1.jpg" alt="Slide 1" />
+              </div>
+              <div>
+                <img src="/images/Slide2.jpg" alt="Slide 2" />
+              </div>
+              <div>
+                <img src="/images/Slide3.jpg" alt="Slide 3" />
+              </div>
+              <div>
+                <img src="/images/Slide4.jpg" alt="Slide 4" />
+              </div>
+              <div>
+                <img src="/images/Slide5.jpg" alt="Slide 5" />
+              </div>
+            </Slider>
+          ) : (
+            <p>Loading...</p>
+          )}
         </div>
       </div>
       <div className="bg-[#FAF0E8] h-1 flex items-center justify-center">
