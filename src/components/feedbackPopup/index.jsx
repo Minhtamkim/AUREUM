@@ -87,20 +87,19 @@ function FeedbackPopup({ mode, visible, onClose, onSubmit }) {
       footer={[
         <Button
           key="cancel"
+          onClick={onClose}
+          type="default"
+          className="!bg-transparent !border-[#EDE0D4] !text-black px-4 py-2 rounded-md transition-all duration-300 
+          hover:!bg-[#EDE0D4] hover:!text-black"
+        >
+          Hủy
+        </Button>,
+        <Button
+          key="submit"
           onClick={handleSubmit}
-          style={{
-            width: "100%",
-            backgroundColor: "#1A1919",
-            color: "#FFFFFF",
-            fontWeight: "bold",
-            padding: "14px 0",
-            borderRadius: "8px",
-            fontSize: "16px",
-            textTransform: "uppercase",
-            letterSpacing: "1px",
-            boxShadow: "none",
-            border: "none",
-          }}
+          type="default"
+          className="!bg-transparent !border-[#EDE0D4] !text-black px-4 py-2 rounded-md transition-all duration-300 
+          hover:!bg-[#EDE0D4] hover:!text-black"
         >
           Gửi
         </Button>,
@@ -135,13 +134,21 @@ function FeedbackPopup({ mode, visible, onClose, onSubmit }) {
         <>
           <Select
             style={{ width: "100%", marginBottom: 10 }}
-            value={reason}
+            value={reason || undefined}
             onChange={setReason}
-            placeholder="Lý do"
+            placeholder="Chọn lý do"
+            allowClear // Thêm nút xóa lựa chọn
             options={[
-              { value: "Spam", lable: "Spam" },
-              { value: "Fake", lable: "Fake" },
-              { value: "Khác", lable: "Khác" },
+              { value: "Tôi muốn thay đổi sản phẩm", lable: "Change product" },
+              { value: "Thiếu hàng", lable: "Deficient" },
+              { value: "Hàng bể vỡ", lable: "Broken" },
+              { value: "Hàng lỗi", lable: "Faulty" },
+              { value: "Hàng đã qua sử dụng", lable: "Used" },
+              { value: "Hàng giả, nhái", lable: "Fake" },
+              {
+                value: "Hàng còn nguyên vẹn nhưng không còn nhu cầu nữa",
+                lable: "Item is intact but no longer needed",
+              },
             ]}
           />
           <TextArea
