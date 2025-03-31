@@ -157,14 +157,14 @@ const ProductDetailPage = () => {
             <div className="flex items-center mt-4">
               <button
                 onClick={decreaseQuantity}
-                className="bg-gray-300 text-gray-800 px-3 py-2 rounded-l-lg hover:bg-gray-400"
+                className="cursor-pointer bg-gray-300 text-gray-800 px-3 py-2 rounded-l-lg hover:bg-gray-400"
               >
                 -
               </button>
               <span className="px-4 py-2 bg-white border text-lg">{quantity}</span>
               <button
                 onClick={increaseQuantity}
-                className="bg-gray-300 text-gray-800 px-3 py-2 rounded-r-lg hover:bg-gray-400"
+                className="cursor-pointer bg-gray-300 text-gray-800 px-3 py-2 rounded-r-lg hover:bg-gray-400"
               >
                 +
               </button>
@@ -173,7 +173,7 @@ const ProductDetailPage = () => {
               {/* Nút thêm vào giỏ */}
               <button
                 onClick={() => handleAddToCart(product)}
-                className="flex-1 bg-[#835229] text-white px-15 py-3 rounded-lg text-base font-semibold 
+                className="cursor-pointer flex-1 bg-[#835229] text-white px-15 py-3 rounded-lg text-base font-semibold 
                hover:bg-[#6c4221] transition duration-300 shadow-md min-w-[220px]"
               >
                 Thêm vào giỏ {`${product.price.toLocaleString("vi-VN")}`} VND
@@ -182,7 +182,7 @@ const ProductDetailPage = () => {
               {/* Nút thanh toán */}
               <button
                 onClick={handleOrder}
-                className="flex-1 bg-[#835229] text-white px-15 py-3 rounded-lg text-base font-semibold 
+                className="cursor-pointer flex-1 bg-[#835229] text-white px-15 py-3 rounded-lg text-base font-semibold 
   hover:bg-[#b9855c] transition duration-300 shadow-md whitespace-nowrap min-w-[220px]"
               >
                 Thanh Toán Ngay
