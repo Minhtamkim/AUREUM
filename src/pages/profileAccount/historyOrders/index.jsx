@@ -52,7 +52,7 @@ const OrdersHistory = () => {
     } else {
       const newData = {
         ...data,
-        orderDetailId: selectedOrderDetail?.id,
+        orderId: selectedOrder?.id,
         image: data.image,
       };
       const response = await createReport(newData);
@@ -66,7 +66,6 @@ const OrdersHistory = () => {
         console.log("Thông báo ẩn");
       }, 3000);
 
-      console.log(response);
       fetchOrders();
     }
     handleClosePopup();
@@ -90,6 +89,7 @@ const OrdersHistory = () => {
           order.id === orderId ? { ...order, status: "CANCELED" } : order
         )
       );
+      fetchOrders();
     } catch (error) {
       // Hiển thị thông báo
       showMessage({
@@ -146,7 +146,11 @@ const OrdersHistory = () => {
                   </p>
                   <p
                     className={`font-sans font-bold flex mt-2 ${
-                      order?.status === "CANCELLED" ? "text-red-500" : ""
+                      order?.status === "CANCELLED"
+                        ? "text-red-500"
+                        : order?.status === "COMPLETED"
+                        ? "text-green-500"
+                        : ""
                     }`}
                   >
                     {order?.status === "COMPLETED"
@@ -155,8 +159,10 @@ const OrdersHistory = () => {
                       ? "Đã Thanh Toán"
                       : order?.status === "IN_PROCESS"
                       ? "Chưa Thanh Toán"
+                      : order?.status === "REFUNDED"
+                      ? "Đã Hoàn Tiền"
                       : order?.status === "CANCELLED"
-                      ? "Đã hủy"
+                      ? "Đã Hủy"
                       : ""}
                   </p>
                 </div>
@@ -215,21 +221,6 @@ const OrdersHistory = () => {
                             Đánh Giá
                           </Button>
                         )}
-                      {order?.status === "COMPLETED" &&
-                        !orderDetails?.isReported && (
-                          <Button
-                            type="default"
-                            className="!bg-transparent !border-[#EDE0D4] !text-black px-4 py-2 rounded-md transition-all duration-300 
-                          hover:!bg-[#EDE0D4] hover:!text-black "
-                            onClick={() => {
-                              console.log("Order được chọn:", order);
-                              handleOpenPopup("report");
-                              setSelectedOrderDetail(orderDetails);
-                            }}
-                          >
-                            <AiOutlineExclamationCircle className="w-5 h-5 group-hover:text-red-600 transition-all duration-300" />
-                          </Button>
-                        )}
                     </div>
                   ))}
                   <hr className="border-t border-gray-300 my-4" />
@@ -238,41 +229,48 @@ const OrdersHistory = () => {
                       Tổng: {order.total.toLocaleString()} VNĐ
                     </p>
                   </div>
-                  <div className="flex justify-end mt-4">
-                    {
-                      // order?.status === "IN_PROCESS" ? (
-                      //   // Chỉ hiển thị nút Thanh Toán nếu đơn hàng đang xử lý
-                      //   <Button
-                      //     type="default"
-                      //     className="!bg-transparent !border-[black] !text-black px-4 py-2 rounded-md transition-all duration-300
-                      //   hover:!bg-[#EDE0D4] hover:!text-black"
-                      //   >
-                      //     Thanh Toán
-                      //   </Button>
 
-                      order?.status === "PAID" ? (
-                        // Chỉ hiển thị nút Hủy Đơn Hàng nếu đơn hàng đã thanh toán
-                        <Popconfirm
-                          title="Hủy đơn hàng"
-                          description="Bạn có chắc chắn muốn hủy đơn hàng này không?"
-                          okText="Hoàn thành"
-                          cancelText="Hủy"
-                          onConfirm={() => handleCancelOrder(order.id)}
-                          okButtonProps={{
-                            className:
-                              "!bg-transparent !border-[#EDE0D4] !text-black px-4 py-2 rounded-md transition-all duration-300 hover:!bg-[#EDE0D4] hover:!text-black",
+                  <div className="flex justify-end mt-4 gap-4">
+                    {order?.status === "PAID" ||
+                    order?.status === "COMPLETED" ? (
+                      order?.isReported ? (
+                        <span className="text-gray-500">Đã gửi yêu cầu</span>
+                      ) : (
+                        <Button
+                          type="default"
+                          className="!bg-transparent !border-[#EDE0D4] !text-black px-4 py-2 rounded-md transition-all duration-300 
+                        hover:!bg-[#EDE0D4] hover:!text-black"
+                          onClick={() => {
+                            handleOpenPopup("report");
+                            setSelectedOrder(order);
                           }}
                         >
-                          <Button
-                            type="default"
-                            className="!bg-transparent !border-[#EDE0D4] !text-black px-4 py-2 rounded-md transition-all duration-300 
-                            hover:!bg-[#EDE0D4] hover:!text-black"
-                          >
-                            Hủy đơn hàng
-                          </Button>
-                        </Popconfirm>
-                      ) : null /* Không hiển thị nút nào nếu status là COMPLETED */
-                    }
+                          Yêu Cầu Hoàn Tiền
+                        </Button>
+                      )
+                    ) : null}
+
+                    {order?.status === "IN_PROCESS" && (
+                      <Popconfirm
+                        title="Hủy đơn hàng"
+                        description="Bạn có chắc chắn muốn hủy đơn hàng này không?"
+                        okText="Hoàn thành"
+                        cancelText="Hủy"
+                        onConfirm={() => handleCancelOrder(order.id)}
+                        okButtonProps={{
+                          className:
+                            "!bg-transparent !border-[#EDE0D4] !text-black px-4 py-2 rounded-md transition-all duration-300 hover:!bg-[#EDE0D4] hover:!text-black",
+                        }}
+                      >
+                        <Button
+                          type="default"
+                          className="!bg-transparent !border-[#EDE0D4] !text-black px-4 py-2 rounded-md transition-all duration-300 
+                        hover:!bg-[#EDE0D4] hover:!text-black"
+                        >
+                          Hủy đơn hàng
+                        </Button>
+                      </Popconfirm>
+                    )}
                   </div>
                 </div>
               )}
