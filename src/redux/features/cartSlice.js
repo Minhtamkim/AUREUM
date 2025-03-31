@@ -84,6 +84,16 @@ export const cartSlice = createSlice({
       }
     },
 
+    removeSelectedItems: (state, action) => {
+      const selectedItemIds = action.payload; // Danh sách ID sản phẩm được chọn
+
+      state.cart = state.cart.filter((item) => !selectedItemIds.includes(item.id));
+
+      // Cập nhật lại totalQuantity và totalPrice
+      state.totalQuantity = state.cart.reduce((total, item) => total + item.quantity, 0);
+      state.totalPrice = state.cart.reduce((total, item) => total + item.price * item.quantity, 0);
+    },
+
     decreaseQuantity: (state, action) => {
       const product = state.cart.find((item) => item.id === action.payload);
       if (product && product.quantity > 1) {
@@ -98,7 +108,14 @@ export const cartSlice = createSlice({
 });
 
 // Action creators are generated for each case reducer function
-export const { applyVoucher, addToCart, removeFromCart, clearCart, increaseQuantity, decreaseQuantity } =
-  cartSlice.actions;
+export const {
+  removeSelectedItems,
+  applyVoucher,
+  addToCart,
+  removeFromCart,
+  clearCart,
+  increaseQuantity,
+  decreaseQuantity,
+} = cartSlice.actions;
 
 export default cartSlice;
