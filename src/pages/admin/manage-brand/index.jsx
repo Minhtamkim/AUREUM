@@ -1,9 +1,9 @@
 import { Button, Dropdown, Form, Input, Menu, Modal, Popconfirm, Table, Tag } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { createBrand, deleteBrand, getBrand, updateBrand } from "../../../services/api.brand";
 import { CheckCircleOutlined, CloseCircleOutlined, EllipsisOutlined } from "@ant-design/icons";
+import { showMessage } from "../../../utils/message";
 
 function ManageBrand() {
   const [searchText, setSearchText] = useState(""); // Lưu từ khóa tìm kiếm
@@ -105,14 +105,14 @@ function ManageBrand() {
     if (formValues.id) {
       const response = await updateBrand({ id: formValues.id, brand: formValues });
       console.log(response);
-      toast.success("Successfully update brand!");
+      showMessage({ content: "Cập nhật thương hiệu thành công!" });
     }
 
     // khong co id thi la create
     else {
       const response = await createBrand(formValues);
       console.log(response);
-      toast.success("Successfully create new brand!");
+      showMessage({ content: "Tạo mới thương hiệu thành công!" });
     }
 
     setOpen(false);

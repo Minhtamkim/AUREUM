@@ -2,8 +2,8 @@ import { Button, Dropdown, Form, Input, Menu, Modal, Popconfirm, Table, Tag } fr
 import { createCategory, deleteCategory, getCategory, updateCategory } from "../../../services/api.category";
 import { useEffect, useState } from "react";
 import { useForm } from "antd/es/form/Form";
-import { toast } from "react-toastify";
 import { CheckCircleOutlined, CloseCircleOutlined, EllipsisOutlined } from "@ant-design/icons";
+import { showMessage } from "../../../utils/message";
 
 function ManageCategory() {
   const [searchText, setSearchText] = useState(""); // Lưu từ khóa tìm kiếm
@@ -107,14 +107,14 @@ function ManageCategory() {
     if (formValues.id) {
       const response = await updateCategory({ id: formValues.id, category: formValues });
       console.log(response);
-      toast.success("Successfully update category!");
+      showMessage({ content: "Cập nhật danh mục thành công!" });
     }
 
     // tạo mới
     else {
       const response = await createCategory(formValues);
       console.log(response);
-      toast.success("Successfully create new category!");
+      showMessage({ content: "Tạo mới danh mục thành công!" });
     }
 
     setOpen(false);

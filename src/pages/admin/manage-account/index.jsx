@@ -1,16 +1,5 @@
 /* eslint-disable no-unused-vars */
-import {
-  Button,
-  DatePicker,
-  Form,
-  Input,
-  Modal,
-  Popconfirm,
-  Radio,
-  Select,
-  Table,
-  Tag,
-} from "antd";
+import { Button, DatePicker, Form, Input, Modal, Popconfirm, Radio, Select, Table, Tag } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { useEffect, useState } from "react";
 import { getUser, toggleUserActive } from "../../../services/api.user";
@@ -81,11 +70,6 @@ function ManageAccount() {
       render: (skin) => skin?.name,
     },
     {
-      title: "Address",
-      dataIndex: "address",
-      key: "address",
-    },
-    {
       title: "Role",
       dataIndex: "roleEnum",
       key: "roleEnum",
@@ -94,11 +78,7 @@ function ManageAccount() {
       title: "Active",
       dataIndex: "active",
       key: "active",
-      render: (active) => (
-        <Tag color={active ? "green" : "red"}>
-          {active ? "Active" : "Inactive"}
-        </Tag>
-      ),
+      render: (active) => <Tag color={active ? "green" : "red"}>{active ? "Active" : "Inactive"}</Tag>,
     },
     {
       title: "Action",
@@ -141,139 +121,24 @@ function ManageAccount() {
 
     const filtered = users.filter(
       (user) =>
-        removeDiacritics(user.fullName?.toLowerCase() || "").includes(
-          normalizedValue
-        ) ||
-        removeDiacritics(user.email?.toLowerCase() || "").includes(
-          normalizedValue
-        ) ||
-        removeDiacritics(user.phone?.toLowerCase() || "").includes(
-          normalizedValue
-        )
+        removeDiacritics(user.fullName?.toLowerCase() || "").includes(normalizedValue) ||
+        removeDiacritics(user.email?.toLowerCase() || "").includes(normalizedValue) ||
+        removeDiacritics(user.phone?.toLowerCase() || "").includes(normalizedValue)
     );
 
     setFilteredUsers(filtered);
   };
 
-  const disableFutureDate = (current) => {
-    // hàm disable ngày sau ngày hiện tại
-    return current && current > new Date(); // nếu ngày hiện tại lớn hơn ngày hiện tại thì disable
-  };
-
   return (
     <div>
+      <h1>Manage Account</h1>
       <Input
         placeholder="Tìm kiếm người dùng theo fullName, email, phone..."
         allowClear
         onChange={(e) => handleSearch(e.target.value)}
         style={{ marginBottom: 16, width: 400, marginLeft: 12 }}
       />
-      <Table
-        dataSource={filteredUsers.filter((user) => user)}
-        columns={columns}
-        rowKey="id"
-      />
-      <Modal
-        title="Edit User"
-        open={open}
-        onCancel={() => setOpen(false)}
-        onOk={() => form.submit()}
-      >
-        <Form
-          labelCol={{
-            span: 24,
-          }}
-          form={form}
-        >
-          <Form.Item label="Id" name="id" hidden>
-            <Input />
-          </Form.Item>
-          <Form.Item
-            label="Full Name"
-            name="fullName"
-            rules={[
-              {
-                required: true,
-                message: "Name can not be empty!",
-              },
-              {
-                min: 3,
-                message: "Name must be at least 3 characters!",
-              },
-            ]}
-          >
-            <Input placeholder="Nhập tên sản phẩm" />
-          </Form.Item>
-          <Form.Item
-            label="Email"
-            name="email"
-            rules={[
-              {
-                required: true,
-                message: "Email can not be empty!",
-              },
-              {
-                type: "email",
-                message: "Email is not valid!",
-              },
-            ]}
-          >
-            <Input placeholder="Nhập email" />
-          </Form.Item>
-          <Form.Item
-            label="Phone"
-            name="phone"
-            rules={[
-              {
-                required: true,
-                message: "Phone can not be empty!",
-              },
-              {
-                pattern: /^[0-9\b]+$/,
-                message: "Phone is not valid!",
-              },
-            ]}
-          >
-            <Input placeholder="Nhập số điện thoại" />
-          </Form.Item>
-          <Form.Item label="Date of Birth" name="dateOfBirth">
-            <DatePicker
-              format="DD/MM/YYYY"
-              locale={viVN}
-              style={{ width: "100%" }}
-              placeholder="Chọn ngày sinh"
-              disabledDate={disableFutureDate}
-              allowClear
-            />
-          </Form.Item>
-          <Form.Item label="Gender" name="gender">
-            <Radio.Group>
-              <Radio value="Nam">Nam</Radio>
-              <Radio value="Nữ">Nữ</Radio>
-            </Radio.Group>
-          </Form.Item>
-          <Form.Item label="SkinType" name="skinId">
-            <Select
-              placeholder="Chọn loại da"
-              showSearch // Cho phép tìm kiếm
-              optionFilterProp="children" // Lọc theo nội dung hiển thị
-              allowClear
-              filterOption={(input, option) =>
-                option.children.toLowerCase().includes(input.toLowerCase())
-              } // Hàm lọc danh sách theo input
-            >
-              {skinTypes?.map((skin) => (
-                <Select.Option value={skin.id} key={skin.id}>
-                  {skin.name}
-                </Select.Option>
-              ))}
-            </Select>
-          </Form.Item>
-          <Form.Item label="Address" name="address">
-            <Input.TextArea placeholder="Nhập địa chỉ" />
-          </Form.Item>
-        </Form>
-      </Modal>
+      <Table dataSource={filteredUsers.filter((user) => user)} columns={columns} rowKey="id" />
     </div>
   );
 }

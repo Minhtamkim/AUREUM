@@ -58,6 +58,7 @@ import ManageOverview from "./pages/admin/manage-overview";
 import { MessageProvider } from "./provider/MessageProvider";
 import ManageOrder from "./pages/admin/manage-order";
 import ManageReport from "./pages/admin/manage-report";
+import ManageOrderDetails from "./pages/admin/manage-orderDetail";
 
 function App() {
   const router = createBrowserRouter([
@@ -267,39 +268,39 @@ function App() {
       ),
       children: [
         {
-          path: "product",
+          path: "products",
           element: <ManageProduct />,
         },
         {
-          path: "account",
+          path: "accounts",
           element: <ManageAccount />,
         },
         {
-          path: "order",
+          path: "orders",
           element: <ManageOrder />,
         },
         {
-          path: "category",
+          path: "categories",
           element: <ManageCategory />,
         },
         {
-          path: "ingredient",
+          path: "ingredients",
           element: <ManageIngredient />,
         },
         {
-          path: "brand",
+          path: "brands",
           element: <ManageBrand />,
         },
         {
-          path: "voucher",
+          path: "vouchers",
           element: <ManageVoucher />,
         },
         {
-          path: "question",
+          path: "questions",
           element: <ManageQuestion />,
         },
         {
-          path: "answer",
+          path: "answers",
           element: <ManageAnswer />,
         },
         {
@@ -307,8 +308,12 @@ function App() {
           element: <ManageOverview />,
         },
         {
-          path: "report",
+          path: "reports",
           element: <ManageReport />,
+        },
+        {
+          path: "orders/:orderId",
+          element: <ManageOrderDetails />,
         },
       ],
     },

@@ -1,9 +1,9 @@
 import { Button, Dropdown, Form, Input, Menu, Modal, Popconfirm, Table, Tag } from "antd";
 import { useForm } from "antd/es/form/Form";
 import { useEffect, useState } from "react";
-import { toast } from "react-toastify";
 import { createQuestion, deleteQuestion, getQuestions, updateQuestion } from "../../../services/api.question";
 import { CheckCircleOutlined, CloseCircleOutlined, EllipsisOutlined } from "@ant-design/icons";
+import { showMessage } from "../../../utils/message";
 
 function ManageQuestion() {
   const [searchText, setSearchText] = useState(""); // Lưu từ khóa tìm kiếm
@@ -107,14 +107,20 @@ function ManageQuestion() {
     if (formValues.id) {
       const response = await updateQuestion({ id: formValues.id, brand: formValues });
       console.log(response);
-      toast.success("Successfully update question!");
+      showMessage({
+        content: "Cập nhật câu hỏi thành công!",
+        duration: 3,
+      });
     }
 
     // khong co id thi la create
     else {
       const response = await createQuestion(formValues);
       console.log(response);
-      toast.success("Successfully create new question!");
+      showMessage({
+        content: "Tạo mới câu hỏi thành công!",
+        duration: 3,
+      });
     }
 
     setOpen(false);

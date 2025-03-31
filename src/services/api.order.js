@@ -48,7 +48,7 @@ export const changeStatusOrder = async (id, status) => {
 
 export const refundOrder = async (id) => {
   try {
-    const response = await api.patch(`order/${id}?statusEnum=REFUNDED`);
+    const response = await api.put(`order/refund/${id}`);
     return response.data;
   } catch (error) {
     toast.error(error.response.data);
@@ -63,5 +63,3 @@ export const fetchOrderHistory = async () => {
     toast.error(error.response.data);
   }
 };
-
-

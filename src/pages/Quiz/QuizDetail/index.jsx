@@ -9,19 +9,22 @@ import { determineSkinType, getSkinById, getSkinType } from "../../../services/a
 import { updateUserSkin } from "../../../services/api.user";
 import { useDispatch, useSelector } from "react-redux";
 import { setSkin } from "../../../redux/features/userSlice";
+import { showMessage } from "../../../utils/message";
 
 const QuizDetail = () => {
   const navigate = useNavigate();
-  const [currentPage, setCurrentPage] = useState(0);
   const [answers, setAnswers] = useState([]);
   const [questions, setQuestions] = useState([]);
   const [users, setUsers] = useState([]);
   const [skins, setSkins] = useState([]);
-  const questionsPerPage = 10;
-  const totalPages = Math.ceil(questions.length / questionsPerPage);
-  const questionRefs = useRef(questions.map(() => React.createRef()));
   const userId = useSelector((state) => state.user?.id); // Sử dụng useSelector để lấy userId từ store
   const dispatch = useDispatch();
+
+  const questionRefs = useRef([]);
+
+  useEffect(() => {
+    questionRefs.current = questions.map(() => React.createRef());
+  }, [questions]);
 
   const fetchSkins = async () => {
     const data = await getSkinType();
@@ -65,11 +68,6 @@ const QuizDetail = () => {
     }
   }, [users]);
 
-  const handleNextPage = () => {
-    setCurrentPage((prev) => (prev + 1 < totalPages ? prev + 1 : prev));
-    window.scrollTo({ top: 0, behavior: "smooth" });
-  };
-
   const handleAnswer = (questionIndex, option) => {
     setAnswers((prevAnswers) => {
       const updatedAnswers = [...prevAnswers];
@@ -80,22 +78,41 @@ const QuizDetail = () => {
 
   const handleSubmit = async () => {
     if (!userId) {
-      // Kiểm tra nếu userId không có
       toast.error("Không thể xác định người dùng!");
       return;
     }
 
-    // Kiểm tra xem có câu hỏi nào chưa được trả lời
-    const unansweredQuestions = answers.filter((answer) => answer === undefined || answer === null);
+    // Kiểm tra câu hỏi chưa được trả lời
+    const unansweredQuestions = questions.filter((question, index) => !answers[index]);
+
     if (unansweredQuestions.length > 0) {
-      toast.error("Bạn chưa điền câu trả lời cho một số câu hỏi!");
+      // Hiển thị thông báo lỗi cho câu hỏi chưa trả lời
+      showMessage({
+        content: `Vui lòng trả lời tất cả các câu hỏi. Câu hỏi chưa trả lời: ${unansweredQuestions
+          .map((q) => q.questionId)
+          .join(", ")}`,
+        type: "error", // Đặt type là "error" cho thông báo lỗi
+      });
+
+      // Lấy questionId của câu hỏi chưa trả lời đầu tiên
+      const firstUnansweredQuestionId = unansweredQuestions[0].questionId;
+
+      // Tìm ra câu hỏi tương ứng trong ref
+      const questionIndex = questions.findIndex((q) => q.questionId === firstUnansweredQuestionId);
+
+      // Cuộn đến câu hỏi chưa trả lời
+      if (questionRefs.current[questionIndex]) {
+        questionRefs.current[questionIndex].current.scrollIntoView({
+          behavior: "smooth",
+          block: "center",
+        });
+      }
       return;
     }
 
     // Chuyển danh sách câu trả lời thành danh sách ID
     const answerIds = questions
       .map((question, index) => {
-        if (!answers[index]) return null;
         const selectedAnswer = question.answers.find((a) => a.text === answers[index]);
         return selectedAnswer ? selectedAnswer.id : null;
       })
@@ -107,7 +124,7 @@ const QuizDetail = () => {
     }
 
     try {
-      const result = await determineSkinType(answerIds, userId); // Gửi userId từ useSelector
+      const result = await determineSkinType(answerIds, userId);
       console.log("Kết quả loại da:", result);
 
       if (result && result.id) {
@@ -115,14 +132,14 @@ const QuizDetail = () => {
         console.log("Cập nhật loại da cho user:", newUserSkin);
 
         // Dispatch action để cập nhật skinId vào Redux store
-        dispatch(setSkin({ id: result.id, name: result.name })); // Cập nhật thông tin loại da vào Redux
+        dispatch(setSkin({ id: result.id, name: result.name }));
 
         // Điều hướng đến trang quizResult và truyền thông tin về loại da
-        const skinData = await getSkinById(result.id); // Lấy thông tin chi tiết loại da
+        const skinData = await getSkinById(result.id);
         navigate("/quizResult", {
           state: {
             skinId: result.id,
-            skinType: skinData.name, // Truyền thông tin loại da
+            skinType: skinData.name,
           },
         });
       } else {
@@ -133,9 +150,6 @@ const QuizDetail = () => {
       toast.error("Lỗi khi xác định loại da. Vui lòng thử lại!");
     }
   };
-
-  const startIndex = currentPage * questionsPerPage;
-  const currentQuestions = questions.slice(startIndex, startIndex + questionsPerPage);
 
   return (
     <div className="min-h-screen w-screen flex flex-col items-center justify-center bg-[#FAF0E8] text-center">
@@ -148,7 +162,7 @@ const QuizDetail = () => {
         <div className="space-y-6">
           <div>
             {questions.map((question, index) => (
-              <div key={index} className="bg-gray-50 p-6 rounded-xl">
+              <div key={index} ref={questionRefs.current[index]} className="bg-gray-50 p-6 rounded-xl">
                 <h2 className="text-xl font-semibold mb-4">{question.questionText}</h2>
                 <div className="space-y-3">
                   {question.answers.map((option, i) => (
@@ -172,37 +186,14 @@ const QuizDetail = () => {
             ))}
           </div>
 
-          <div className="flex justify-between mt-8">
+          <div className="mt-8">
+            {/* Chỉ hiển thị nút Hoàn thành */}
             <button
-              onClick={() => setCurrentPage((prev) => (prev > 0 ? prev - 1 : 0))}
-              disabled={currentPage === 0}
-              className={`px-6 py-3 rounded-full font-semibold ${
-                currentPage === 0
-                  ? "bg-gray-200 text-gray-500 cursor-not-allowed"
-                  : "bg-gray-300 text-gray-700 hover:bg-gray-400"
-              }`}
+              onClick={handleSubmit}
+              className="px-6 py-3 bg-gradient-to-r from-[#C8A45D] to-black text-white rounded-full font-semibold"
             >
-              Trang trước
+              Hoàn thành
             </button>
-
-            {currentPage === totalPages - 1 ? (
-              <button
-                onClick={handleSubmit}
-                className="px-6 py-3 bg-gradient-to-r from-[#C8A45D] to-black text-white rounded-full font-semibold"
-              >
-                Hoàn thành
-              </button>
-            ) : (
-              <button
-                onClick={handleNextPage}
-                className="px-6 py-3 bg-gradient-to-r from-[#C8A45D] to-black text-white rounded-full font-semibold"
-              >
-                Trang tiếp theo
-              </button>
-            )}
-          </div>
-          <div className="mt-4 text-center text-gray-500">
-            Trang {currentPage + 1}/{totalPages}
           </div>
         </div>
       </div>

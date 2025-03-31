@@ -3,18 +3,17 @@ import { Button, Dropdown, Form, Image, Input, Menu, Modal, Popconfirm, Select, 
 import {
   CheckCircleOutlined,
   CloseCircleOutlined,
-  EditOutlined,
   EllipsisOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
 import { useForm } from "antd/es/form/Form";
 import { createProduct, deleteProduct, getProduct, updateProduct } from "../../../services/api.product";
 import { getCategory } from "../../../services/api.category";
-import { toast } from "react-toastify";
 import uploadFile from "../../../utils/upload";
 import { getBrand } from "../../../services/api.brand";
 import { getIngredient } from "../../../services/api.ingredient";
 import { getSkinType } from "../../../services/api.skin";
+import { showMessage } from "../../../utils/message";
 
 function ManageProduct() {
   const [searchText, setSearchText] = useState(""); // Lưu từ khóa tìm kiếm
@@ -182,7 +181,7 @@ function ManageProduct() {
       title: "Price",
       dataIndex: "price",
       key: "price",
-      render: (price) => new Intl.NumberFormat("vi-VN").format(price) + ".VND",
+      render: (price) => new Intl.NumberFormat("vi-VN").format(price) + "VND",
     },
     {
       title: "Category",
@@ -277,14 +276,14 @@ function ManageProduct() {
       // nếu có id thì là update
       const response = await updateProduct({ id: formValues.id, product: formValues }); // goi api update
       console.log(response); // log response
-      toast.success("Successfully update product!"); // thong bao thanh cong
+      showMessage({ content: "Cập nhật sản phẩm thành công!" });
     }
 
     // khong co id thi la create
     else {
       const response = await createProduct(formValues); // goi api create
       console.log(response); // log response
-      toast.success("Successfully create new product!"); // thong bao thanh cong
+      showMessage({ content: "Tạo mới sản phẩm thành công!" });
     }
 
     setOpen(false); // dong modal
