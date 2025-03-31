@@ -105,28 +105,39 @@ const generateBotResponse = async (history: ChatMessage[]): Promise<Message | nu
     Product Catalog:
     ${JSON.stringify([
       {
-        name: "Sữa rửa mặt Tẩy tế bào chết Obagi Clenziderm M.D. Foaming Blemish",
-        price: 1139000,
+        name: "Sữa Rửa Mặt La Roche-Posay Effaclar Purifying Foaming Gel 200ML",
+        price: 390000,
         description:
-          "Sữa rửa mặt 7 trong 1 Obagi Clenziderm M.D. Foaming Blemish cho làn da dầu mụn. Với công thức cải tiến chứa 2% Salicylic Acid (BHA) được kiểm nghiệm lâm sàng, sản phẩm giúp làm sạch lỗ chân lông, loại bỏ tế bào chết và mang lại 7 lợi ích chính chăm sóc toàn diện, cho làn da khoẻ mạnh và mịn màng.",
+          "Sữa Rửa Mặt La Roche-Posay Dạng Gel Cho Da Dầu Mụn là sữa rửa mặt giúp nhẹ nhàng làm sạch bụi bẩn và bã nhờn dư thừa.",
+        skinType: "Da Dầu",
       },
       {
-        name: "Nước Hoa HồngToner Cân Bằng pH Trên Da Obagi Nu-Derm 2",
-        price: 1020000 + "\\n",
+        name: "Kem Chống Nắng Cho Da Dầu, Mụn Bioderma Photoderm AKN Mat SPF30 40ml",
+        price: 430000,
         description:
-          "Nước Hoa Hồng Toner Không Cồn Cân Bằng pH Chiết Xuất Cây Phỉ & Lô Hội Obagi Nu-Derm \\n Là một bước thiết yếu trong chu trình chăm sóc da hàng ngày, Toner Obagi Nu-Derm là loại toner không cồn, giải pháp tối ưu giúp duy trì độ pH tự nhiên cho làn da của bạn. Loại bỏ bụi bẩn và tế bào chết, tạo tiền đề giúp các bước chăm sóc phía sau được thẩm thấu vào da tốt hơn.",
+          "Sản phẩm mang lại hiệu quả 2 trong 1 chỉ số chống nắng cao và ngăn ngừa sự phát triển của mụn với kết cấu mịn màng, không màu, không bết dính hay để lại vệt trắng.",
+        skinType: "Da Dầu",
       },
       {
-        name: "Kem Chống Nắng Phổ Rộng Obagi Sun Shield Matte Broad Spectrum SPF50",
-        price: 950000,
+        name: "Tẩy Da Chết Dear, Klairs Gentle Black Sugar Facial Polish 60g",
+        price: 430000,
         description:
-          "Kem chống nắng Obagi Sun Shield Matte Broad Spectrum SPF 50 giúp bảo vệ da khỏi tia UVB và UVA, khi thoa trên da tạo lớp nền mỏng nhẹ, không gây bít tắc lỗ chân lông, không gây mụn và đã được kiểm nghiệm bởi chuyên gia da liễu. Phù hợp cho mọi loại da.",
+          "Tẩy tế bào da chết Klairs Gentle Black Sugar với những thành phần tự nhiên. Sản phẩm giúp chị em tẩy hết các tế bào da chết trên da mặt khiến da nhẹ hơn và sáng hơn.",
+        skinType: "Da Dầu",
       },
       {
-        name: "Lotion Tẩy Tế Bào Chết Chứa AHA - Obagi Nu-Derm Fx Exfoderm Forte",
-        price: 1950000,
+        name: "Sữa Tắm & Rửa Mặt La Roche-Posay Cho Da Khô Nhạy Cảm 200ml",
+        price: 415000,
         description:
-          "Lotion Tẩy Da Chết Cho Da Dầu Chứa AHA Obagi Nu-Derm Exfoderm Forte. Obagi Nu-Derm Exfoderm Forte là kem tẩy da chết được thiết kế riêng dành cho da dầu",
+          "La Roche-Posay Lipikar Syndet AP+\nLa Roche-Posay Lipikar Syndet AP+ là sản phẩm thuộc dòng Lipikar của thương hiệu dược mỹ phẩm La Roche-Posay từ Pháp.",
+        skinType: "Da Khô",
+      },
+      {
+        name: "Dưỡng Ẩm Nâng Tone Hỗ Trợ Dưỡng Da Sáng Mịn Innisfree 50ml",
+        price: 459000,
+        description:
+          "Kem Dưỡng Nâng Tone Hỗ Trợ Dưỡng Da Sáng Mịn Innisfree Jeju Cherry Blossom Tone-up Cream là kem dưỡng thuộc thương hiệu Innisfree với các chiết xuất thiên nhiên vừa giúp da dưỡng ẩm.",
+        skinType: "Da Nhạy Cảm",
       },
     ])}`;
 
