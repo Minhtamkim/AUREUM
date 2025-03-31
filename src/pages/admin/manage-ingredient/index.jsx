@@ -2,8 +2,8 @@ import { Button, Dropdown, Form, Input, Menu, Modal, Popconfirm, Table, Tag } fr
 import { useForm } from "antd/es/form/Form";
 import { useEffect, useState } from "react";
 import { createIngredient, deleteIngredient, getIngredient, updateIngredient } from "../../../services/api.ingredient";
-import { toast } from "react-toastify";
 import { CheckCircleOutlined, CloseCircleOutlined, EllipsisOutlined } from "@ant-design/icons";
+import { showMessage } from "../../../utils/message";
 
 function ManageIngredient() {
   const [ingredients, setIngredients] = useState([]);
@@ -104,14 +104,14 @@ function ManageIngredient() {
     if (formValues.id) {
       const response = await updateIngredient({ id: formValues.id, ingredient: formValues });
       console.log(response);
-      toast.success("Successfully update ingredient!");
+      showMessage({ content: "Cập nhật thành phần thành công!" });
     }
 
     // khong co id thi la create
     else {
       const response = await createIngredient(formValues);
       console.log(response);
-      toast.success("Successfully create new ingredient!");
+      showMessage({ content: "Tạo mới thành phần thành công!" });
     }
 
     setOpen(false);

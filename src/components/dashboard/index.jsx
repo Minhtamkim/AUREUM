@@ -1,25 +1,12 @@
 import { useState } from "react";
-import {
-  DashboardOutlined,
-  LogoutOutlined,
-  ShoppingOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
+import { DashboardOutlined, LogoutOutlined, ShoppingOutlined, UserOutlined } from "@ant-design/icons";
 import { TbBrandCodesandbox } from "react-icons/tb";
 import { BsHandbag } from "react-icons/bs";
 import { BiLeaf } from "react-icons/bi";
 import { FaListUl } from "react-icons/fa";
 import { IoTicketOutline } from "react-icons/io5";
 import { AiOutlineTags } from "react-icons/ai";
-import {
-  Avatar,
-  Breadcrumb,
-  Divider,
-  Dropdown,
-  Layout,
-  Menu,
-  theme,
-} from "antd";
+import { Avatar, Breadcrumb, Divider, Dropdown, Layout, Menu, theme } from "antd";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/features/userSlice";
@@ -27,6 +14,7 @@ import { MdFace4 } from "react-icons/md";
 import { clearCart } from "../../redux/features/cartSlice";
 import { MdOutlineQuestionAnswer } from "react-icons/md";
 import { FaQuestion } from "react-icons/fa";
+import { MdOutlineReport } from "react-icons/md";
 import "./index.scss";
 
 const { Content, Footer, Sider } = Layout;
@@ -45,35 +33,25 @@ const Dashboard = () => {
     };
   }
 
-  // const items = [
-  //   getItem("Account", "/dashboard/account", <UserOutlined />),
-  //   getItem("Product", "/dashboard/product", <ProductOutlined />),
-  //   getItem("Category", "/dashboard/category", <PieChartOutlined />),
-  //   getItem("Ingredient", "/dashboard/ingredient", <BiLeaf />),
-  //   getItem("Brand", "/dashboard/brand", <TbBrandCodesandbox />),
-  //   getItem("voucher", "/dashboard/voucher", <IoTicketOutline />),
-  // ];
-
   const items = [
-    getItem("Overview", "/dashboard/overview", <TbBrandCodesandbox />),
-    ...(userRole === "ADMIN"
-      ? [getItem("Accounts", "/dashboard/account", <UserOutlined />)]
-      : []),
+    // ...(userRole === "ADMIN" ? [getItem("Accounts", "/dashboard/accounts", <UserOutlined />)] : []),
     ...(userRole === "ADMIN" || userRole === "MANAGER"
       ? [
-          getItem("Orders", "/dashboard/order", <BsHandbag />),
-          getItem("Products", "/dashboard/product", <FaListUl />),
-          getItem("Categories", "/dashboard/category", <AiOutlineTags />),
-          getItem("Ingredients", "/dashboard/ingredient", <BiLeaf />),
-          getItem("Brands", "/dashboard/brand", <TbBrandCodesandbox />),
+          getItem("Overview", "/dashboard/overview", <TbBrandCodesandbox />),
+          getItem("Accounts", "/dashboard/accounts", <UserOutlined />),
+          getItem("Products", "/dashboard/products", <FaListUl />),
+          getItem("Categories", "/dashboard/categories", <AiOutlineTags />),
+          getItem("Ingredients", "/dashboard/ingredients", <BiLeaf />),
+          getItem("Brands", "/dashboard/brands", <TbBrandCodesandbox />),
+          getItem("Vouchers", "/dashboard/vouchers", <IoTicketOutline />),
         ]
       : []),
-    ...(userRole === "ADMIN" || userRole === "STAFF"
+    ...(userRole === "ADMIN" || userRole === "MANAGER" || userRole === "STAFF"
       ? [
-          getItem("Vouchers", "/dashboard/voucher", <IoTicketOutline />),
-          getItem("Questions", "/dashboard/question", <FaQuestion />),
-          getItem("Answers", "/dashboard/answer", <MdOutlineQuestionAnswer />),
-          getItem("Reports", "/dashboard/report", <MdOutlineQuestionAnswer />),
+          getItem("Orders", "/dashboard/orders", <BsHandbag />),
+          getItem("Reports", "/dashboard/reports", <MdOutlineReport />),
+          getItem("Questions", "/dashboard/questions", <FaQuestion />),
+          getItem("Answers", "/dashboard/answers", <MdOutlineQuestionAnswer />),
         ]
       : []),
   ];
@@ -105,21 +83,14 @@ const Dashboard = () => {
       <Menu.Item key="routine" icon={<MdFace4 />}>
         <Link to="/redirecttoskinPage">Lộ trình chăm sóc da </Link>
       </Menu.Item>
-      {(userRole === "ADMIN" ||
-        userRole === "MANAGER" ||
-        userRole === "STAFF") && (
+      {(userRole === "ADMIN" || userRole === "MANAGER" || userRole === "STAFF") && (
         <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
           <Link to="/dashboard">Manage Dashboard</Link>
         </Menu.Item>
       )}
 
       <Divider className="my-2" />
-      <Menu.Item
-        key="logout"
-        icon={<LogoutOutlined />}
-        danger
-        onClick={handleLogout}
-      >
+      <Menu.Item key="logout" icon={<LogoutOutlined />} danger onClick={handleLogout}>
         Đăng xuất
       </Menu.Item>
     </Menu>
@@ -144,12 +115,7 @@ const Dashboard = () => {
         }}
       >
         <div className="logo-container flex justify-center p-4">
-          <img
-            className="h-12 cursor-pointer"
-            src="/images/logo-aureum.jpg"
-            alt="Logo"
-            onClick={() => navigate("/")}
-          />
+          <img className="h-12 cursor-pointer" src="/images/logo-aureum.jpg" alt="Logo" onClick={() => navigate("/")} />
         </div>
         {/* <div className="demo-logo-vertical" /> */}
         <Menu
@@ -167,9 +133,7 @@ const Dashboard = () => {
               <Dropdown overlay={userMenu} trigger={["click"]}>
                 <div className="flex items-center cursor-pointer text-black gap-2.5 font-semibold pr-3 pt-1.5">
                   <Avatar icon={<UserOutlined />} className="mr-2" />
-                  <span className="font-semibold text-black">
-                    Hi, {user?.fullName || "User"}
-                  </span>
+                  <span className="font-semibold text-black">Hi, {user?.fullName || "User"}</span>
                 </div>
               </Dropdown>
             ) : (
@@ -198,9 +162,7 @@ const Dashboard = () => {
             <Outlet />
           </div>
         </Content>
-        <Footer style={{ textAlign: "center" }}>
-          Ant Design ©{new Date().getFullYear()} Created by Ant UED
-        </Footer>
+        <Footer style={{ textAlign: "center" }}>Ant Design ©{new Date().getFullYear()} Created by Ant UED</Footer>
       </Layout>
     </Layout>
   );

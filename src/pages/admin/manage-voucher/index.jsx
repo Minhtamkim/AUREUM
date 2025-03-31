@@ -4,8 +4,8 @@ import { createVoucher, deleteVoucher, getAllVouchers, updateVoucher } from "../
 import { Button, DatePicker, Dropdown, Form, Input, Menu, Modal, Popconfirm, Radio, Select, Table, Tag } from "antd";
 import viVN from "antd/es/date-picker/locale/vi_VN";
 import dayjs from "dayjs";
-import { toast } from "react-toastify";
 import { CheckCircleOutlined, CloseCircleOutlined, EllipsisOutlined } from "@ant-design/icons";
+import { showMessage } from "../../../utils/message";
 
 function ManageVoucher() {
   const [searchText, setSearchText] = useState(""); // Lưu từ khóa tìm kiếm
@@ -153,14 +153,14 @@ function ManageVoucher() {
     if (formValues.id) {
       const response = await updateVoucher({ id: formValues.id, voucher: formattedValues });
       console.log(response);
-      toast.success("Successfully update voucher!");
+      showMessage({ content: "Cập nhật mã giảm giá thành công!" });
     }
 
     // khong co id thi la create
     else {
       const response = await createVoucher(formValues);
       console.log(response);
-      toast.success("Successfully create new voucher!");
+      showMessage({ content: "Tạo mới mã giảm giá thành công!" });
     }
 
     setOpen(false);

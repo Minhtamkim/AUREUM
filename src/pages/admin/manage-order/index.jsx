@@ -10,16 +10,21 @@ import {
 } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { toast } from "react-toastify";
+import { showMessage } from "../../../utils/message";
+import { useNavigate } from "react-router-dom";
 
 function ManageOrder() {
   const [searchText, setSearchText] = useState(""); // Lưu từ khóa tìm kiếm
   const [filteredOrders, setFilteredOrders] = useState([]); // Lưu danh sách danh mục sau khi lọc
   const [orders, setOrders] = useState([]);
+  const navigate = useNavigate();
 
   const fetchOrders = async () => {
     const data = await getAllOrders();
-    setOrders(data);
-    setFilteredOrders(data); // Sao chép danh sách gốc để lọc
+    const sortedData = data.sort((a, b) => b.id - a.id);
+
+    setOrders(sortedData); // Lưu dữ liệu đã sắp xếp vào state
+    setFilteredOrders(sortedData); // Sao chép danh sách gốc để lọc
   };
 
   useEffect(() => {
@@ -48,8 +53,8 @@ function ManageOrder() {
         key="2"
         onClick={() => handleCancelOrder(id, status)} // Gọi hàm handleCancel
         style={{
-          opacity: status === "CANCELLED" || status === "COMPLETED" ? 0.5 : 1, // Làm mờ nút khi trạng thái là CANCELLED hoặc COMPLETED
-          cursor: status === "CANCELLED" || status === "COMPLETED" ? "not-allowed" : "pointer", // Đổi con trỏ khi không thể click
+          opacity: status === "CANCELLED" || status === "COMPLETED" || status === "PAID" ? 0.5 : 1, // Làm mờ nút khi trạng thái là CANCELLED hoặc COMPLETED
+          cursor: status === "CANCELLED" || status === "COMPLETED" || status === "PAID" ? "not-allowed" : "pointer", // Đổi con trỏ khi không thể click
         }}
       >
         <Tag color="red" icon={<CloseCircleOutlined />}>
@@ -61,10 +66,15 @@ function ManageOrder() {
 
   const columns = [
     {
-      title: "Id",
+      title: "Order",
       dataIndex: "id",
       key: "id",
-      sorter: (a, b) => a.id - b.id, // Sắp xếp theo giá trị số
+      sorter: (a, b) => a.id - b.id, // Sắp xếp theo giá trị số giảm dần để ID mới nhất lên đầu
+      render: (text) => `#${text}`, // Thêm dấu "#" trước ID
+      // Add an onClick event to navigate to order detail
+      onCell: (record) => ({
+        onClick: () => navigate(`${record.id}`), // Navigate to the order detail page
+      }),
     },
     {
       title: "Status",
@@ -110,6 +120,9 @@ function ManageOrder() {
       ],
       onFilter: (value, record) => record.status.includes(value),
       sorter: (a, b) => a.status.localeCompare(b.status),
+      onCell: (record) => ({
+        onClick: () => navigate(`${record.id}`), // Navigate to the order detail page
+      }),
     },
     {
       title: "Products",
@@ -132,19 +145,28 @@ function ManageOrder() {
           ))}
         </div>
       ),
+      onCell: (record) => ({
+        onClick: () => navigate(`${record.id}`), // Navigate to the order detail page
+      }),
     },
     {
       title: "Amount",
       dataIndex: "finalTotal",
       key: "finalTotal",
-      render: (price) => new Intl.NumberFormat("vi-VN").format(price) + ".VND",
+      render: (price) => new Intl.NumberFormat("vi-VN").format(price) + "VND",
       sorter: (a, b) => a.finalTotal - b.finalTotal, // Sắp xếp theo giá trị số
+      onCell: (record) => ({
+        onClick: () => navigate(`${record.id}`), // Navigate to the order detail page
+      }),
     },
     {
       title: "Customer",
       dataIndex: "account",
       key: "accountName",
       render: (account) => account?.fullName, // Hiển thị tên tài khoản
+      onCell: (record) => ({
+        onClick: () => navigate(`${record.id}`), // Navigate to the order detail page
+      }),
     },
     {
       title: "Created Date",
@@ -157,6 +179,9 @@ function ManageOrder() {
       },
       sorter: (a, b) => (dayjs(a.CreateAt).isBefore(dayjs(b.CreateAt)) ? -1 : 1), // Sắp xếp theo thời gian
       sortDirections: ["ascend", "descend"], // Chỉ sắp xếp theo 2 hướng
+      onCell: (record) => ({
+        onClick: () => navigate(`${record.id}`), // Navigate to the order detail page
+      }),
     },
     {
       title: "Action",
@@ -194,26 +219,26 @@ function ManageOrder() {
       try {
         const response = await completedOrder(id); // Sử dụng API completedOrder
         console.log(response);
-        toast.success("Order status updated to COMPLETED");
+        showMessage({ content: "Trạng thái đơn hàng được cập nhật" });
       } catch (error) {
-        toast.error(error.response.data);
+        showMessage({ content: error.response.data, type: "error" }); 
       }
     } else {
-      toast.error("Cannot complete an order that is not paid.");
+      showMessage({ content: "Cannot complete an order that is not paid.", type: "error" });
     }
     fetchOrders(); // Cập nhật lại danh sách đơn hàng sau khi thay đổi trạng thái
   };
 
   const handleCancelOrder = async (id, status) => {
-    if (status === "COMPLETED" || status === "CANCELLED") {
-      toast.error("Cannot cancel a completed order.");
+    if (status === "COMPLETED" || status === "CANCELLED" || status === "PAID") {
+      toast.error("Cannot cancel a order.");
     } else {
       try {
         const response = await cancelOrder(id); // Sử dụng API cancelOrder
         console.log(response);
-        toast.success("Order status updated to CANCELLED");
+        showMessage({ content: "Order status updated to CANCELLED" });
       } catch (error) {
-        toast.error(error.response.data);
+        showMessage({ content: error.response.data, type: "error" });
       }
     }
     fetchOrders(); // Cập nhật lại danh sách đơn hàng sau khi thay đổi trạng thái

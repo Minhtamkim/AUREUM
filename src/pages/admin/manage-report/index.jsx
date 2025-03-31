@@ -1,19 +1,23 @@
-import { Button, Dropdown, Input, Menu, Table, Tag } from "antd";
+import { Button, Dropdown, Image, Input, Menu, Table, Tag } from "antd";
 import { useEffect, useState } from "react";
-import { CloseCircleOutlined, EllipsisOutlined } from "@ant-design/icons";
+import { BellOutlined, CheckCircleOutlined, CloseCircleOutlined, EllipsisOutlined } from "@ant-design/icons";
 import dayjs from "dayjs";
 import { getAllReports } from "../../../services/api.report";
 import { refundOrder } from "../../../services/api.order";
+import { showMessage } from "../../../utils/message";
+import { useNavigate } from "react-router-dom";
 
 function ManageReport() {
   const [searchText, setSearchText] = useState(""); // Lưu từ khóa tìm kiếm
   const [filteredReports, setFilteredReports] = useState([]); // Lưu danh sách danh mục sau khi lọc
   const [reports, setReports] = useState([]);
+  const navigate = useNavigate();
 
   const fetchReports = async () => {
     const data = await getAllReports(); // Lấy danh sách đơn hàng từ API
-    setReports(data);
-    setFilteredReports(data); // Sao chép danh sách gốc để lọc
+    const sortedDate = data.sort((a, b) => b.id - a.id); // Sắp xếp theo ID giảm dần
+    setReports(sortedDate);
+    setFilteredReports(sortedDate); // Sao chép danh sách gốc để lọc
   };
 
   useEffect(() => {
@@ -25,11 +29,10 @@ function ManageReport() {
     <Menu>
       {/* Reject button chỉ hiển thị khi status không phải là CANCELLED hoặc COMPLETED */}
       <Menu.Item
-        key="2"
         onClick={() => handleRefundOrder(id)} // Gọi hàm handleCancel
         style={{
-          opacity: status === "CANCELLED" || status === "COMPLETED" ? 0.5 : 1, // Làm mờ nút khi trạng thái là CANCELLED hoặc COMPLETED
-          cursor: status === "CANCELLED" || status === "COMPLETED" ? "not-allowed" : "pointer", // Đổi con trỏ khi không thể click
+          opacity: status === "REFUNDED" ? 0.5 : 1, // Làm mờ nút khi trạng thái là CANCELLED hoặc COMPLETED
+          cursor: status === "REFUNDED" ? "not-allowed" : "pointer", // Đổi con trỏ khi không thể click
         }}
       >
         <Tag color="red" icon={<CloseCircleOutlined />}>
@@ -44,55 +47,53 @@ function ManageReport() {
       title: "OrderID",
       dataIndex: "order", // Dùng "order.id" để truy cập id của order
       key: "orderId",
-      render: (order) => <span>{order.id}</span>, // Hiển thị ID của order
-      //   sorter: (a, b) => a.order.id - b.order.id, // Sắp xếp theo ID của order
+      render: (order) => `#${order.id}`, // Thêm dấu "#" trước ID
+      sorter: (a, b) => a.order.id - b.order.id, // Sắp xếp theo ID của order
+      onCell: (record) => ({
+        onClick: () => navigate(`/dashboard/orders/${record.order.id}`), // Navigate to the order detail page
+      }),
     },
     {
       title: "Status",
-      dataIndex: "order",
+      dataIndex: "order", // Dữ liệu trong "order"
       key: "status",
-      render: (order) => <span>{order.status}</span>,
-      //   render: (status) => {
-      //     let color;
-      //     let icon;
+      render: (order) => {
+        let color;
+        let icon;
 
-      //     switch (status) {
-      //       case "IN_PROCESS":
-      //         color = "orange";
-      //         icon = <ClockCircleOutlined />;
-      //         break;
-      //       case "PAID":
-      //         color = "blue";
-      //         icon = <BellOutlined />;
-      //         icon;
-      //         break;
-      //       case "COMPLETED":
-      //         color = "green";
-      //         icon = <CheckCircleOutlined />;
-      //         break;
-      //       case "CANCELLED":
-      //         color = "red";
-      //         icon = <CloseCircleOutlined />;
-      //         break;
-      //       default:
-      //         color = "default";
-      //         icon = null;
-      //     }
-      //     return (
-      //       <Tag color={color} icon={icon}>
-      //         {status}
-      //       </Tag>
-      //     );
-      //   },
-      //   filters: [
-      //     { text: "In Process", value: "IN_PROCESS" },
-      //     { text: "Paid", value: "PAID" },
-      //     { text: "Completed", value: "COMPLETED" },
-      //     { text: "Cancelled", value: "CANCELLED" },
-      //   ],
-      //   onFilter: (value, record) => record.status.includes(value),
-      //   sorter: (a, b) => a.status.localeCompare(b.status),
+        switch (order.status) {
+          case "PAID":
+            color = "blue";
+            icon = <BellOutlined />;
+            break;
+          case "COMPLETED":
+            color = "green";
+            icon = <CheckCircleOutlined />;
+            break;
+
+          default:
+            color = "default";
+            icon = null;
+        }
+
+        return (
+          <Tag color={color} icon={icon}>
+            {order.status} {/* Hiển thị status của order */}
+          </Tag>
+        );
+      },
+      filters: [
+        { text: "PAID", value: "PAID" },
+        { text: "COMPLETED", value: "COMPLETED" },
+        { text: "REFUNDED", value: "REFUNDED" },
+      ],
+      onFilter: (value, record) => record.order.status.includes(value), // Kiểm tra theo status trong order
+      sorter: (a, b) => a.order.status.localeCompare(b.order.status), // Sắp xếp theo status trong order
+      onCell: (record) => ({
+        onClick: () => navigate(`/dashboard/orders/${record.order.id}`), // Navigate to the order detail page
+      }),
     },
+
     {
       title: "Products",
       dataIndex: "order", // Truy cập vào mảng orderDetails
@@ -114,6 +115,9 @@ function ManageReport() {
           ))}
         </div>
       ),
+      onCell: (record) => ({
+        onClick: () => navigate(`/dashboard/orders/${record.order.id}`), // Navigate to the order detail page
+      }),
     },
 
     {
@@ -122,36 +126,67 @@ function ManageReport() {
       key: "accountName",
       render: (order) => <span>{order.account.fullName}</span>, // Hiển thị tên đầy đủ của khách hàng
       sorter: (a, b) => a.order.account.fullName.localeCompare(b.order.account.fullName),
+      onCell: (record) => ({
+        onClick: () => navigate(`/dashboard/orders/${record.order.id}`), // Navigate to the order detail page
+      }),
     },
     {
-      title: "Created Date",
-      dataIndex: "createAt",
-      key: "createAt",
-      render: (createAt) => {
-        // Sử dụng dayjs để xử lý ngày tháng
-        const formattedDate = dayjs(createAt).format("YYYY-MM-DD HH:mm:ss"); // Định dạng theo nhu cầu
-        return dayjs(createAt).isValid() ? formattedDate : "Invalid Date";
+      title: "Phone", // Tiêu đề của cột
+      dataIndex: "order", // Truy cập vào fullName của account
+      key: "phone",
+      render: (order) => <span>{order.account.phone}</span>, // Hiển thị tên đầy đủ của khách hàng
+      sorter: (a, b) => a.order.account.phone.localeCompare(b.order.account.phone),
+      onCell: (record) => ({
+        onClick: () => navigate(`/dashboard/orders/${record.order.id}`), // Navigate to the order detail page
+      }),
+    },
+    {
+      title: "Report Date",
+      dataIndex: "reportAt",
+      key: "reportAt",
+      render: (reportAt) => {
+        // Ensure the 'reportAt' field contains only the date part and set time to 00:00:00
+        const formattedDate = dayjs(reportAt).startOf("day").format("YYYY-MM-DD ");
+        return dayjs(reportAt).isValid() ? formattedDate : "Invalid Date";
       },
-      sorter: (a, b) => (dayjs(a.CreateAt).isBefore(dayjs(b.CreateAt)) ? -1 : 1), // Sắp xếp theo thời gian
-      sortDirections: ["ascend", "descend"], // Chỉ sắp xếp theo 2 hướng
+      sorter: (a, b) => (dayjs(a.reportAt).isBefore(dayjs(b.reportAt)) ? -1 : 1),
+      sortDirections: ["ascend", "descend"],
+      onCell: (record) => ({
+        onClick: () => navigate(`/dashboard/orders/${record.order.id}`), // Navigate to the order detail page
+      }),
     },
-    {
-      title: "Id",
-      dataIndex: "id",
-      key: "id",
-      sorter: (a, b) => a.id - b.id, // Sắp xếp theo giá trị số
-    },
+    // {
+    //   title: "Report Id",
+    //   dataIndex: "id",
+    //   key: "id",
+    //   sorter: (a, b) => a.id - b.id, // Sắp xếp theo giá trị số
+    // },
     {
       title: "Reason",
       dataIndex: "reason",
       key: "reason",
       sorter: (a, b) => a.reason.localeCompare(b.reason),
+      onCell: (record) => ({
+        onClick: () => navigate(`/dashboard/orders/${record.order.id}`), // Navigate to the order detail page
+      }),
     },
     {
       title: "Description",
       dataIndex: "description",
       key: "description",
       sorter: (a, b) => a.description.localeCompare(b.description),
+      onCell: (record) => ({
+        onClick: () => navigate(`/dashboard/orders/${record.order.id}`), // Navigate to the order detail page
+      }),
+    },
+    {
+      title: "Image",
+      dataIndex: "image",
+      key: "image",
+      render: (image) => <Image src={image} width={100} />,
+      onCell: (record) => ({
+        onClick: () => navigate(`/dashboard/orders/${record.order.id}`), // Navigate to the order detail page
+      }),
     },
     {
       title: "Action",
@@ -159,7 +194,7 @@ function ManageReport() {
       key: "id",
       render: (order, record) => {
         return (
-          <Dropdown overlay={menu(order.id, record.status)} trigger={["click"]}>
+          <Dropdown overlay={menu(order.id, record.order.status)} trigger={["click"]}>
             <Button icon={<EllipsisOutlined />} />
           </Dropdown>
         );
@@ -186,9 +221,17 @@ function ManageReport() {
 
   const handleRefundOrder = async (id) => {
     // Gọi API cập nhật trạng thái đơn hàng
-    console.log("dd");
-    const response = await refundOrder(id);
-    // Sau khi cập nhật thành công, cập nhật lại danh sách đơn hàng
+
+    try {
+      const response = await refundOrder(id);
+      console.log(response);
+      showMessage({
+        content: "Hoàn tiền đơn hàng thành công!",
+      });
+    } catch (error) {
+      showMessage({ content: error.response.data, type: "error" }); // Hiển thị thông báo lỗi
+    }
+    fetchReports(); // Cập nhật lại danh sách đơn hàng sau khi thay đổi trạng thái
   };
 
   return (
