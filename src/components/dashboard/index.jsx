@@ -1,12 +1,25 @@
 import { useState } from "react";
-import { DashboardOutlined, LogoutOutlined, ShoppingOutlined, UserOutlined } from "@ant-design/icons";
+import {
+  DashboardOutlined,
+  LogoutOutlined,
+  ShoppingOutlined,
+  UserOutlined,
+} from "@ant-design/icons";
 import { TbBrandCodesandbox } from "react-icons/tb";
 import { BsHandbag } from "react-icons/bs";
 import { BiLeaf } from "react-icons/bi";
 import { FaListUl } from "react-icons/fa";
 import { IoTicketOutline } from "react-icons/io5";
 import { AiOutlineTags } from "react-icons/ai";
-import { Avatar, Breadcrumb, Divider, Dropdown, Layout, Menu, theme } from "antd";
+import {
+  Avatar,
+  Breadcrumb,
+  Divider,
+  Dropdown,
+  Layout,
+  Menu,
+  theme,
+} from "antd";
 import { Link, Outlet, useNavigate } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { logout } from "../../redux/features/userSlice";
@@ -43,7 +56,9 @@ const Dashboard = () => {
 
   const items = [
     getItem("Overview", "/dashboard/overview", <TbBrandCodesandbox />),
-    ...(userRole === "ADMIN" ? [getItem("Accounts", "/dashboard/account", <UserOutlined />)] : []),
+    ...(userRole === "ADMIN"
+      ? [getItem("Accounts", "/dashboard/account", <UserOutlined />)]
+      : []),
     ...(userRole === "ADMIN" || userRole === "MANAGER"
       ? [
           getItem("Orders", "/dashboard/order", <BsHandbag />),
@@ -85,20 +100,27 @@ const Dashboard = () => {
         <Link to="/profile">Thông tin tài khoản</Link>
       </Menu.Item>
       <Menu.Item key="history" icon={<ShoppingOutlined />}>
-        <Link to="/historyOrders">Lịch sử mua hàng</Link>
+        <Link to="/profile?tab=history">Lịch sử mua hàng</Link>
       </Menu.Item>
       <Menu.Item key="routine" icon={<MdFace4 />}>
         <Link to="/redirecttoskinPage">Lộ trình chăm sóc da </Link>
       </Menu.Item>
-      {(userRole === "ADMIN" || userRole === "MANAGER" || userRole === "STAFF") && (
+      {(userRole === "ADMIN" ||
+        userRole === "MANAGER" ||
+        userRole === "STAFF") && (
         <Menu.Item key="dashboard" icon={<DashboardOutlined />}>
           <Link to="/dashboard">Manage Dashboard</Link>
         </Menu.Item>
       )}
 
       <Divider className="my-2" />
-      <Menu.Item key="logout" icon={<LogoutOutlined />} danger onClick={handleLogout}>
-        Logout
+      <Menu.Item
+        key="logout"
+        icon={<LogoutOutlined />}
+        danger
+        onClick={handleLogout}
+      >
+        Đăng xuất
       </Menu.Item>
     </Menu>
   );
@@ -122,7 +144,12 @@ const Dashboard = () => {
         }}
       >
         <div className="logo-container flex justify-center p-4">
-          <img className="h-12 cursor-pointer" src="/images/logo-aureum.jpg" alt="Logo" onClick={() => navigate("/")} />
+          <img
+            className="h-12 cursor-pointer"
+            src="/images/logo-aureum.jpg"
+            alt="Logo"
+            onClick={() => navigate("/")}
+          />
         </div>
         {/* <div className="demo-logo-vertical" /> */}
         <Menu
@@ -140,7 +167,9 @@ const Dashboard = () => {
               <Dropdown overlay={userMenu} trigger={["click"]}>
                 <div className="flex items-center cursor-pointer text-black gap-2.5 font-semibold pr-3 pt-1.5">
                   <Avatar icon={<UserOutlined />} className="mr-2" />
-                  <span className="font-semibold text-black">Hi, {user?.fullName || "User"}</span>
+                  <span className="font-semibold text-black">
+                    Hi, {user?.fullName || "User"}
+                  </span>
                 </div>
               </Dropdown>
             ) : (
@@ -169,7 +198,9 @@ const Dashboard = () => {
             <Outlet />
           </div>
         </Content>
-        <Footer style={{ textAlign: "center" }}>Ant Design ©{new Date().getFullYear()} Created by Ant UED</Footer>
+        <Footer style={{ textAlign: "center" }}>
+          Ant Design ©{new Date().getFullYear()} Created by Ant UED
+        </Footer>
       </Layout>
     </Layout>
   );
