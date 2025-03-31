@@ -93,6 +93,12 @@ const ProductDetailPage = () => {
     }
   };
   const handleOrder = async () => {
+    const token = localStorage.getItem("token");
+    if (!token) {
+      showMessage({ content: "Bạn cần phải đăng nhập để thực hiện thanh toán!", type: "error" });
+      navigate("/login");
+      return;
+    }
     const data = {
       details: [
         {
