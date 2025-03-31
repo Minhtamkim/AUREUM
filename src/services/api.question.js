@@ -29,7 +29,7 @@ export const createQuestion = async (question) => {
   }
 };
 
-export const updateQuestion = async (id, question) => {
+export const updateQuestion = async ({id, question}) => {
   try {
     const response = await api.put(`question/${id}`, question);
     return response.data;

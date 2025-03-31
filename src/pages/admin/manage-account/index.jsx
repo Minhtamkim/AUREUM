@@ -37,6 +37,7 @@ function ManageAccount() {
       dataIndex: "id",
       key: "id",
       render: (text) => <a>{text}</a>,
+      sorter: (a, b) => b.id - a.id,
     },
     {
       title: "Full Name",
@@ -73,7 +74,15 @@ function ManageAccount() {
       title: "Role",
       dataIndex: "roleEnum",
       key: "roleEnum",
+      filters: [
+        { text: "Manager", value: "MANAGER" },
+        { text: "Customer", value: "CUSTOMER" },
+        { text: "Staff", value: "STAFF" },
+        { text: "Admin", value: "ADMIN" },
+      ],
+      onFilter: (value, record) => record.roleEnum === value, // So sánh với roleEnum
     },
+    
     {
       title: "Active",
       dataIndex: "active",

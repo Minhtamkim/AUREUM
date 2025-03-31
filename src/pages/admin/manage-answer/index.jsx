@@ -77,6 +77,7 @@ function ManageAnswer() {
       title: "Id",
       dataIndex: "id",
       key: "id",
+      sorter: (a, b) => b.id - a.id,
     },
     {
       title: "Question",
@@ -138,7 +139,7 @@ function ManageAnswer() {
 
   const handleSubmit = async (formValues) => {
     if (formValues.id) {
-      const response = await updateAnswer({ id: formValues.id, brand: formValues });
+      const response = await updateAnswer({ id: formValues.id, answer: formValues });
       console.log(response);
       showMessage({
         content: "Cập nhật câu trả lời thành công!",
