@@ -231,8 +231,7 @@ const OrdersHistory = () => {
                   </div>
 
                   <div className="flex justify-end mt-4 gap-4">
-                    {order?.status === "PAID" ||
-                    order?.status === "COMPLETED" ? (
+                    {order?.status === "PAID" ? (
                       order?.isReported ? (
                         <span className="text-gray-500">Đã gửi yêu cầu</span>
                       ) : (
