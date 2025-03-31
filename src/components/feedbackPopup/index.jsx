@@ -98,8 +98,12 @@ function FeedbackPopup({ mode, visible, onClose, onSubmit }) {
           key="submit"
           onClick={handleSubmit}
           type="default"
-          className="!bg-transparent !border-[#EDE0D4] !text-black px-4 py-2 rounded-md transition-all duration-300 
-          hover:!bg-[#EDE0D4] hover:!text-black"
+          className={`!bg-transparent !border-[#EDE0D4] !text-black px-4 py-2 rounded-md transition-all duration-300 
+          hover:!bg-[#EDE0D4] hover:!text-black 
+          ${
+            mode !== "rating" && !reason ? "opacity-50 cursor-not-allowed" : ""
+          }`}
+          disabled={mode !== "rating" && !reason}
         >
           Gửi
         </Button>,
@@ -139,15 +143,27 @@ function FeedbackPopup({ mode, visible, onClose, onSubmit }) {
             placeholder="Chọn lý do"
             allowClear // Thêm nút xóa lựa chọn
             options={[
-              { value: "Tôi muốn thay đổi sản phẩm", lable: "Change product" },
-              { value: "Thiếu hàng", lable: "Deficient" },
-              { value: "Hàng bể vỡ", lable: "Broken" },
-              { value: "Hàng lỗi", lable: "Faulty" },
-              { value: "Hàng đã qua sử dụng", lable: "Used" },
-              { value: "Hàng giả, nhái", lable: "Fake" },
+              { value: "Muốn thay đổi sản phẩm", lable: "Change product" },
               {
-                value: "Hàng còn nguyên vẹn nhưng không còn nhu cầu nữa",
-                lable: "Item is intact but no longer needed",
+                value: "Muốn thay đổi Mã giảm giá",
+                lable: "change the discount code",
+              },
+              {
+                value: "Sản phẩm không phù hợp với loại da",
+                lable: "The product is not suitable",
+              },
+              {
+                value: "Đánh giá sản phẩm không tốt",
+                lable: "Has poor ratings.",
+              },
+              { value: "Có Mã Giảm Giá Hấp Dẫn Hơn", lable: "A better promo" },
+              {
+                value: "Không có nhu cầu mua nữa",
+                lable: "No longer need to purchase this",
+              },
+              {
+                value: "Không thấy lí do hủy phù hợp",
+                lable: "Can not find a suitable cancellation reason.",
               },
             ]}
           />
