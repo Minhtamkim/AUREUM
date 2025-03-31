@@ -94,14 +94,23 @@ const ProductDetailPage = () => {
   };
   const handleOrder = async () => {
     const data = {
-      details: cart?.cart.map((item) => ({
-        productId: item.id,
-        quantity: item.quantity,
-      })),
+      details: [
+        {
+          productId: product.id,
+          quantity: quantity,
+        },
+      ],
     };
-    const respone = await createOrder(data);
-    window.location.href = respone;
-    console.log(respone);
+
+    try {
+      const response = await createOrder(data);
+      if (response) {
+        window.location.href = response;
+      }
+    } catch (error) {
+      console.error("Lỗi khi tạo đơn hàng:", error);
+      alert("Đã có lỗi xảy ra, vui lòng thử lại!");
+    }
   };
 
   return (
@@ -166,9 +175,9 @@ const ProductDetailPage = () => {
 
               {/* Nút thanh toán */}
               <button
-                onClick={() => handleOrder()}
-                className="flex-1 bg-[#835229] text-white px-15py-3 rounded-lg text-base font-semibold 
-               hover:bg-[#b9855c] transition duration-300 shadow-md whitespace-nowrap min-w-[220px]"
+                onClick={handleOrder}
+                className="flex-1 bg-[#835229] text-white px-15 py-3 rounded-lg text-base font-semibold 
+  hover:bg-[#b9855c] transition duration-300 shadow-md whitespace-nowrap min-w-[220px]"
               >
                 Thanh Toán Ngay
               </button>
