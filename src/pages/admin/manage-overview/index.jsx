@@ -213,6 +213,22 @@ function ManageOverview() {
       percentageChange: percentageChange.toFixed(2), // Giữ 2 số thập phân
     };
   });
+
+  // Tạo danh sách đủ 12 tháng với mặc định Revenue = 0
+  const allMonths = Array.from({ length: 12 }, (_, i) => ({
+    name: `Tháng ${i + 1}`,
+    Revenue: 0, // Mặc định doanh thu = 0
+  }));
+
+  // Ghép dữ liệu thực tế từ API vào danh sách 12 tháng
+  const fullYearData = allMonths.map((month) => {
+    const found = revenueData.find((data) => data.name === month.name);
+    return found ? found : month;
+  });
+
+  // Tìm giá trị lớn nhất để làm tròn trục Y
+  const maxRevenue = Math.max(...fullYearData.map((item) => item.Revenue));
+
   return (
     <div>
       <Button type="primary" icon={<FileExcelOutlined />} onClick={handleExport} style={{ marginBottom: 20 }}>
@@ -302,7 +318,7 @@ function ManageOverview() {
       {/* Biểu đồ ComposedChart */}
       <div>
         <Select value={selectedYear} onChange={setSelectedYear} style={{ width: 120, marginBottom: 20 }}>
-          {[...Array(4)].map((_, i) => {
+          {[...Array(2)].map((_, i) => {
             const year = new Date().getFullYear() - i;
             return (
               <Select.Option key={year} value={year}>
@@ -312,10 +328,16 @@ function ManageOverview() {
           })}
         </Select>
         <h3 className="text-lg font-semibold mt-2 mb-10">Biểu Đồ Doanh Thu</h3>
-        <ResponsiveContainer width="100%" height={400}>
-          <ComposedChart width={500} height={400} data={revenueData}>
+        <ResponsiveContainer width="100%" height={500}>
+          <ComposedChart data={fullYearData}>
             <XAxis dataKey="name" interval={0} />
-            <YAxis domain={[0, "dataMax + 500000"]} />
+            <YAxis
+              domain={[0, Math.ceil(((maxRevenue + 500000) * 1.1) / 1000000) * 1000000]}
+              tickFormatter={(value) => `${value.toLocaleString()} VND`}
+              tick={{ fontSize: 10 }}
+              padding={{ top: 20 }} // Thêm khoảng trống phía trên
+            />
+
             <Tooltip />
             <Legend />
             <CartesianGrid stroke="#f5f5f5" />
@@ -323,12 +345,13 @@ function ManageOverview() {
               <LabelList
                 dataKey="Revenue"
                 position="top"
-                formatter={(value) => `${value.toLocaleString()} VND`}
+                formatter={(value) => (value > 0 ? `${value.toLocaleString()} VND` : "")}
                 style={{ fontSize: 10 }}
               />
             </Bar>
           </ComposedChart>
         </ResponsiveContainer>
+
         <h3 className="text-m  text-center">Biểu đồ thể hiện doanh thu theo từng tháng trong năm</h3>
       </div>
       <div>
