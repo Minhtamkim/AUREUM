@@ -60,7 +60,7 @@ function Home() {
     slidesToShow: 1,
     slidesToScroll: 1,
     autoplay: true, // Tự động lướt qua
-    autoplaySpeed: 2000, // Thời gian hiển thị mỗi ảnh (3s)
+    autoplaySpeed: 3000, // Thời gian hiển thị mỗi ảnh (3s)
     cssEase: "ease-in-out",
     centerMode: false,
     centerPadding: "50px",

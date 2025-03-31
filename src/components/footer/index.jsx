@@ -2,13 +2,7 @@ import { useState } from "react";
 import { FaFacebook, FaInstagram, FaArrowRight } from "react-icons/fa";
 
 const Footer = () => {
-  const [email, setEmail] = useState("");
-
-  const handleSubscribe = (e) => {
-    e.preventDefault();
-    console.log("Subscribed with email:", email);
-    setEmail("");
-  };
+  
 
   return (
     <footer className="bg-[#2d2d2b] text-gray-300 pt-2">
@@ -20,30 +14,7 @@ const Footer = () => {
               <h3 className="text-white text-lg font-semibold mb-4">
                 Cập Nhật Tin Tức Cùng AREUM
               </h3>
-              <form onSubmit={handleSubscribe} className="space-y-4">
-                <div>
-                  <label htmlFor="email" className="sr-only">
-                    Email address
-                  </label>
-                  <div>
-                    <input
-                      type="email"
-                      id="email"
-                      required
-                      placeholder="Email của bạn"
-                      className="focus:outline-none"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                    />
-                    <button
-                      type="submit"
-                      className="px-4 py-2 bg-[#2d2d2b] text-white rounded-md p-2 transition-colors duration-300"
-                    >
-                      <FaArrowRight />
-                    </button>
-                  </div>
-                </div>
-              </form>
+
             </div>
             <a href="/">
               {" "}
@@ -78,7 +49,7 @@ const Footer = () => {
 
           {/* Hổ Trợ*/}
           <div>
-            <h3 className="text-white text-lg font-semibold mb-4">Hổ Trợ</h3>
+            <h3 className="text-white text-lg font-semibold mb-4">Hỗ Trợ</h3>
             <ul className="space-y-4">
               <li className="flex items-center">
                 <a

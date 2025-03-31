@@ -6,7 +6,6 @@ import React from "react";
 import { toast } from "react-toastify";
 import { getAnswers } from "../../../services/api.answer";
 import { determineSkinType, getSkinById, getSkinType } from "../../../services/api.skin";
-import { updateUserSkin } from "../../../services/api.user";
 import { useDispatch, useSelector } from "react-redux";
 import { setSkin } from "../../../redux/features/userSlice";
 import { showMessage } from "../../../utils/message";
@@ -128,8 +127,6 @@ const QuizDetail = () => {
       console.log("Kết quả loại da:", result);
 
       if (result && result.id) {
-        const newUserSkin = await updateUserSkin(userId, result.id);
-        console.log("Cập nhật loại da cho user:", newUserSkin);
 
         // Dispatch action để cập nhật skinId vào Redux store
         dispatch(setSkin({ id: result.id, name: result.name }));
