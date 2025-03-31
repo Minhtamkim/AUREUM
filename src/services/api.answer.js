@@ -27,7 +27,7 @@ export const createAnswer = async (answer) => {
   }
 };
 
-export const updateAnswer = async (id, answer) => {
+export const updateAnswer = async ({id, answer}) => {
   try {
     const response = await api.put(`answer/${id}`, answer);
     return response.data;

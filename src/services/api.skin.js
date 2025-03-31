@@ -28,7 +28,7 @@ export const createSkinType = async () => {
   }
 };
 
-export const updateSkinType = async (id, skin) => {
+export const updateSkinType = async ({id, skin}) => {
   try {
     const response = await api.put(`skin/${id}`, skin);
     return response.data;
