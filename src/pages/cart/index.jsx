@@ -5,6 +5,7 @@ import cartSlice, {
   increaseQuantity,
   removeFromCart,
   applyVoucher,
+  removeSelectedItems,
 } from "../../redux/features/cartSlice";
 import { MdDelete } from "react-icons/md";
 import { FaShoppingCart } from "react-icons/fa";
@@ -16,6 +17,7 @@ import api from "../../config/axios";
 import { getAllVouchers, getVoucherById } from "../../services/api.voucher";
 import { Store } from "lucide-react";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import { showError, showMessage } from "../../utils/message";
 
 export default function Cart() {
   const cart = useSelector((state) => state.cart);
@@ -44,22 +46,20 @@ export default function Cart() {
 
   const handleCheckout = async () => {
     if (selectedItems.length === 0) {
-      alert("Vui lòng chọn ít nhất một sản phẩm để thanh toán!");
+      showError({ content: "Cần chọn ít nhất 1 sản phẩm để mua!!" });
       return;
     }
 
     const selectedProducts = cart.cart.filter((item) => selectedItems.includes(item.id));
-
-  
 
     const data = {
       details: selectedProducts.map((item) => ({
         productId: item.id,
         quantity: item.quantity,
       })),
-      voucherCode: voucherCode.trim() ? voucherCode : null, 
+      voucherCode: voucherCode.trim() ? voucherCode : null,
       discountAmount: voucherCode.trim() ? discountAmount : 0,
-      totalAmount: finalPrice, 
+      totalAmount: finalPrice,
     };
     console.log(data);
 
@@ -67,11 +67,12 @@ export default function Cart() {
     try {
       const response = await createOrder(data);
       if (response) {
-        window.location.href = response; 
+        window.location.href = response;
+        // dispatch(removeSelectedItems(selectedItems)); // Xóa các sản phẩm đã chọn
       }
     } catch (error) {
       console.error("Lỗi khi tạo đơn hàng:", error);
-      alert("Đã có lỗi xảy ra, vui lòng thử lại!");
+      showError("Đã có lỗi xảy ra, vui lòng thử lại!");
     }
   };
 
@@ -92,14 +93,13 @@ export default function Cart() {
     if (!code) {
       setDiscountAmount(0);
       dispatch(applyVoucher(0));
-      alert("Không nhập mã giảm giá, giữ nguyên tổng tiền.");
       return;
     }
 
     try {
       const vouchers = await getAllVouchers();
       if (!vouchers || vouchers.length === 0) {
-        alert("Không thể lấy danh sách voucher, vui lòng thử lại!");
+        showError("Không thể lấy danh sách voucher, vui lòng thử lại!");
         return;
       }
       const foundVoucher = vouchers.find((v) => v.code === code);
@@ -121,13 +121,13 @@ export default function Cart() {
         dispatch(applyVoucher(discount));
         console.log("Discount Amount sau khi dispatch:", discount);
 
-        alert(`Áp dụng mã giảm giá thành công! Giảm ${discount.toLocaleString("vi-VN")} VNĐ`);
+        showMessage(`Áp dụng mã giảm giá thành công! Giảm ${discount.toLocaleString("vi-VN")} VNĐ`);
       } else {
-        alert("Mã giảm giá không hợp lệ hoặc đã hết hạn!");
+        showError("Mã giảm giá không hợp lệ hoặc đã hết hạn!");
       }
     } catch (error) {
       console.error("Lỗi khi kiểm tra mã giảm giá:", error);
-      alert("Không thể kiểm tra mã giảm giá, vui lòng thử lại!");
+      showError("Không thể kiểm tra mã giảm giá, vui lòng thử lại!");
     }
   };
 
@@ -200,6 +200,7 @@ export default function Cart() {
               >
                 <input
                   type="checkbox"
+                  className="mr-4 cursor-pointer"
                   checked={selectedItems.includes(item.id)}
                   onChange={() => handleCheckboxChange(item.id)}
                 />
@@ -219,7 +220,7 @@ export default function Cart() {
                     <div className="flex justify-center items-center bg-white shadow-lg rounded-xl overflow-hidden">
                       <button
                         onClick={() => dispatch(decreaseQuantity(item.id))}
-                        className="px-4 py-2 text-xl bg-gray-200 hover:bg-gray-300 active:scale-90 transition-all duration-200"
+                        className="cursor-pointer px-4 py-2 text-xl bg-gray-200 hover:bg-gray-300 active:scale-90 transition-all duration-200"
                       >
                         -
                       </button>
@@ -227,12 +228,12 @@ export default function Cart() {
                         type="number"
                         value={item.quantity}
                         min="1"
-                        className="w-10 h-10 text-center   font-semibold  border-none outline-none"
+                        className=" w-10 h-10 text-center   font-semibold  border-none outline-none"
                         readOnly
                       />
                       <button
                         onClick={() => dispatch(increaseQuantity(item.id))}
-                        className="px-4 py-2 text-xl bg-gray-200 hover:bg-gray-300 active:scale-90 transition-all duration-200"
+                        className="cursor-pointer px-4 py-2 text-xl bg-gray-200 hover:bg-gray-300 active:scale-90 transition-all duration-200"
                       >
                         +
                       </button>
@@ -240,7 +241,7 @@ export default function Cart() {
 
                     <button
                       onClick={() => dispatch(removeFromCart(item?.id))}
-                      className="flex gap-1.5 items-center text-red-500 hover:scale-115 cursor-pointer transition-transform duration-200"
+                      className=" flex gap-1.5 items-center text-red-500 hover:scale-115 cursor-pointer transition-transform duration-200"
                     >
                       <RiDeleteBin6Line className="text-2xl" />
                     </button>
@@ -262,7 +263,7 @@ export default function Cart() {
             />
             <button
               onClick={handleApplyVoucher}
-              className="w-full bg-blue-500 text-white py-2 mt-2 rounded-lg font-semibold hover:bg-blue-700"
+              className="cursor-pointer w-full bg-blue-500 text-white py-2 mt-2 rounded-lg font-semibold hover:bg-blue-700"
             >
               Áp Dụng
             </button>
@@ -271,7 +272,7 @@ export default function Cart() {
             </p>
             <button
               onClick={() => handleCheckout()}
-              className="w-full bg-[#494946] text-white py-2 mt-4 rounded-lg font-semibold hover:bg-[#333331]"
+              className="cursor-pointer w-full bg-[#494946] text-white py-2 mt-4 rounded-lg font-semibold hover:bg-[#333331]"
             >
               Thanh Toán
             </button>
@@ -280,7 +281,7 @@ export default function Cart() {
                 dispatch(clearCart());
               }}
               type="primary"
-              className="w-full bg-[#494946] text-white py-2 mt-4 rounded-lg font-semibold hover:bg-[#333331]"
+              className="cursor-pointer w-full bg-[#494946] text-white py-2 mt-4 rounded-lg font-semibold hover:bg-[#333331]"
             >
               Xóa Giỏ Hàng
             </button>
