@@ -106,7 +106,7 @@ export default function ProductDetail() {
                 {/* Icon giỏ hàng nằm bên phải của ảnh */}
                 <button
                   onClick={(e) => handleAddToCart(product, e)}
-                  className="absolute top-2 right-2 hover:text-[#835229] transition duration-300"
+                  className="cursor-pointer absolute top-2 right-2 hover:text-[#835229] transition duration-300"
                 >
                   <FiShoppingCart className="w-7 h-7 text-[#835229] hover:text-red-600" />
                 </button>
