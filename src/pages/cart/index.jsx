@@ -99,7 +99,7 @@ export default function Cart() {
     try {
       const vouchers = await getAllVouchers();
       if (!vouchers || vouchers.length === 0) {
-        showError("Không thể lấy danh sách voucher, vui lòng thử lại!");
+        showError({ content: "Không thể lấy danh sách voucher, vui lòng thử lại!" });
         return;
       }
       const foundVoucher = vouchers.find((v) => v.code === code);
@@ -121,13 +121,13 @@ export default function Cart() {
         dispatch(applyVoucher(discount));
         console.log("Discount Amount sau khi dispatch:", discount);
 
-        showMessage(`Áp dụng mã giảm giá thành công! Giảm ${discount.toLocaleString("vi-VN")} VNĐ`);
+        showMessage({ content: `Áp dụng mã giảm giá thành công! Giảm ${discount.toLocaleString("vi-VN")} VNĐ` });
       } else {
-        showError("Mã giảm giá không hợp lệ hoặc đã hết hạn!");
+        showError({ content: "Mã giảm giá không hợp lệ hoặc đã hết hạn!" });
       }
     } catch (error) {
       console.error("Lỗi khi kiểm tra mã giảm giá:", error);
-      showError("Không thể kiểm tra mã giảm giá, vui lòng thử lại!");
+      showError({ content: "Không thể kiểm tra mã giảm giá, vui lòng thử lại!" });
     }
   };
 
