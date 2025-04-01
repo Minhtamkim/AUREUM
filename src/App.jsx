@@ -59,6 +59,7 @@ import { MessageProvider } from "./provider/MessageProvider";
 import ManageOrder from "./pages/admin/manage-order";
 import ManageReport from "./pages/admin/manage-report";
 import ManageOrderDetails from "./pages/admin/manage-orderDetail";
+import SkinProducts from "./pages/product/product_skin";
 
 function App() {
   const router = createBrowserRouter([
@@ -170,6 +171,10 @@ function App() {
         {
           path: "productList/:category_id",
           element: <ProductList />,
+        },
+        {
+          path: "/products/skin/:skin_id",
+          element: <SkinProducts />,
         },
         {
           path: "forgotPassword",
